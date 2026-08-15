@@ -70,26 +70,6 @@ This project solves that problem autonomously.
 - Mixed Arabic/English product name handling
 
 ---
-
-## Data Strategy
-
-### No proprietary data available — use these public sources:
-
-1. **Kaggle retail datasets** — search "retail sales dataset Arabic" or "e-commerce product catalogue"
-2. **UCI ML Repository** — Online Retail dataset (real transaction data, adaptable to UAE context)
-3. **noon public product listings** — scrape publicly available product catalogue structure
-4. **Synthetic data generation** — use Claude to generate realistic UAE retail product catalogue with Arabic/English fields, Ramadan/DSF seasonality patterns baked in
-
-### Recommended starting point:
-Generate a synthetic dataset of 500 SKUs across 5 categories (fashion, electronics, home, food, beauty) with:
-- Arabic and English product names
-- 24 months of sales history with Ramadan/DSF spikes
-- Current inventory levels
-- Supplier lead times
-- Price points in AED
-
----
-
 ## Architecture Overview
 
 ```
@@ -129,46 +109,6 @@ Audit Log (PostgreSQL)
 
 ---
 
-## Target Company Relevance
-
-| Company | Why This Project Is Relevant |
-|---------|----------------------------|
-| noon | Directly solves noon seller ecosystem pain point |
-| Talabat | Inventory and demand forecasting for F&B retail |
-| Careem | Last-mile retail delivery demand signals |
-| G42 | Agentic AI + Arabic NLP + sovereign data patterns |
-| Presight | Predictive retail analytics architecture |
-
----
-
-## Newsletter Arc (Arc 3) — Editions 19–24
-
-| Edition | Title | Core Engineering Story |
-|---------|-------|----------------------|
-| 19 | Why I Am Building a Third Project | The retail problem I keep watching Dubai operators get wrong |
-| 20 | LangGraph vs LangChain | Why the agent loop changes everything — not just chains |
-| 21 | Building Bilingual RAG | The Arabic tokenization problem in actual code |
-| 22 | Connecting Forecasting to Agentic Reasoning | The architecture decision that ties Prophet to LangGraph |
-| 23 | The Reorder Recommendation Engine | What autonomous actually means in production |
-| 24 | What Three Production AI Systems Taught Me | Synthesis — the Dubai AI engineer's real curriculum |
-
----
-
-## LinkedIn Positioning
-
-Every edition and every GitHub commit on this project should reinforce this narrative:
-
-**"I am an AI engineer who builds production systems for the Dubai market — bilingual, agentic, and grounded in the specific operational rhythms of this market."**
-
-That narrative connects:
-- Logistics Oracle (JAFZA seasonality, dual-LLM, forecasting)
-- Dubai Property Intelligence (RAG, hallucination prevention, DLD data)
-- Dubai Retail Intelligence Agent (agentic AI, Arabic NLP, noon seller market)
-
-Three projects. One coherent story. One market. One engineer.
-
----
-
 ## GitHub Repository Structure
 
 ```
@@ -192,39 +132,6 @@ dubai-retail-intelligence-agent/
 ├── tests/                       # Automated test suite
 └── README.md
 ```
-
----
-
-## Instructions for Claude When Working on This Project
-
-### Context
-You are working with Dulasi Nethma — an AI/ML Engineer and Full-Stack Developer based in Dubai. This is the third production AI project in a portfolio targeting a full-time AI Software Engineer role by December 2026, with a Tech Lead trajectory by 2031.
-
-### How to help
-- Always write production-grade code, not prototype code
-- Every architectural decision should be explainable — document the why, not just the what
-- Keep UAE market context in mind — Ramadan/DSF seasonality, Arabic/English bilingual requirements, data residency considerations
-- Reference Logistics Oracle patterns where relevant (dual-LLM routing, Redis caching, Prophet forecasting, Pydantic validation)
-- Reference DPI patterns where relevant (RAG pipeline, confidence gating, hallucination prevention, grounding prompts)
-- When suggesting new approaches, explain the trade-off clearly
-
-### Code standards
-- FastAPI with async/await throughout
-- Pydantic for all data validation
-- Type hints on every function
-- Docstrings on every class and public method
-- Tests written alongside implementation, not after
-- Redis caching on all expensive operations
-- Structured logging via structlog
-- Environment variables for all secrets and config
-
-### Priority order when making decisions
-1. Does it work correctly?
-2. Is it production-safe (auth, validation, error handling)?
-3. Is it fast enough (caching, async, efficient queries)?
-4. Is it documented clearly enough that a hiring manager reading the GitHub understands every decision?
-
----
 
 *Project started: August 2026*
 *Target completion: November 2026*
