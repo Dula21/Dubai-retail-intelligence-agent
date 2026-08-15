@@ -1,5 +1,5 @@
 # Dubai Retail Intelligence Agent
-## Project Brief & Claude Project Instructions
+## Project Brief & Overview
 
 ---
 
