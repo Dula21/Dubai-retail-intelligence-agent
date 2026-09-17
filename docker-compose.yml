@@ -1,0 +1,103 @@
+# ============================================================
+# Dubai Retail Intelligence Agent — Docker Compose
+# ============================================================
+# Three services:
+#   api      — FastAPI + embedding model + ChromaDB
+#   redis    — caching layer (used in Phase 2, wired now)
+#   postgres — persistent storage (used in Phase 2, wired now)
+#
+# HOW TO RUN:
+#   First time:  docker compose up --build
+#   After that:  docker compose up
+#   Stop:        docker compose down
+#   Full reset:  docker compose down -v   ← also deletes volumes
+
+services:
+
+  # ── API Service ───────────────────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: retail_agent_api
+    ports:
+      - "8000:8000"       # localhost:8000 → container:8000
+    volumes:
+      # CRITICAL: These named volumes persist data between container restarts.
+      # Without them, Docker re-downloads the 300MB model every rebuild.
+      - model_cache:/app/.model_cache     # embedding model files
+      - chroma_db:/app/.chroma_db         # vector store (don't lose your index!)
+      # Mount the data folder so CSV files are accessible
+      - ./data:/app/data
+    env_file:
+      - .env
+    environment:
+      # Tell the app where to find things inside the container
+      - DATA_DIR=data/synthetic
+      - CHROMA_DIR=.chroma_db
+      - FORCE_REINGEST=false
+      # Redis and Postgres connection strings (used in Phase 2)
+      - REDIS_URL=redis://redis:6379
+      - DATABASE_URL=postgresql+asyncpg://dulasi:${POSTGRES_PASSWORD}@postgres:5432/retail_agent
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    # Resource limits — prevents the ML model from eating all RAM
+    deploy:
+      resources:
+        limits:
+          memory: 4G      # multilingual-e5-large needs ~1.5GB RAM
+          cpus: '2.0'
+
+  # ── Redis Service ─────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: retail_agent_redis
+    ports:
+      - "6379:6379"       # expose to localhost for debugging
+    volumes:
+      - redis_data:/data  # persist Redis data between restarts
+    command: redis-server --appendonly yes  # enable persistence
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+  # ── PostgreSQL Service ────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: retail_agent_postgres
+    ports:
+      - "5432:5432"       # expose to localhost for debugging with pgAdmin
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      - POSTGRES_DB=retail_agent
+      - POSTGRES_USER=dulasi
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dulasi -d retail_agent"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+# ── Named Volumes ─────────────────────────────────────────────────────────
+# Docker manages these — they live at:
+# Mac/Windows: inside the Docker Desktop VM
+# Linux: /var/lib/docker/volumes/
+volumes:
+  model_cache:
+    name: retail_agent_model_cache
+  chroma_db:
+    name: retail_agent_chroma_db
+  redis_data:
+    name: retail_agent_redis_data
+  postgres_data:
+    name: retail_agent_postgres_data

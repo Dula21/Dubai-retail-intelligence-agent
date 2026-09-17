@@ -1,0 +1,46 @@
+{
+  "generated_by": "dubai_retail_intelligence_agent/data/synthetic/generate_dataset.py",
+  "generated_at": "2026-08-15",
+  "data_type": "SYNTHETIC — not real retailer data",
+  "random_seed": 42,
+  "sku_count": 500,
+  "sales_rows": 365000,
+  "date_range": {
+    "start": "2024-08-16",
+    "end": "2026-08-15"
+  },
+  "categories": {
+    "fashion": 120,
+    "electronics": 100,
+    "home": 100,
+    "food": 80,
+    "beauty": 100
+  },
+  "uae_events_modeled": [
+    "Ramadan_2025",
+    "Eid_Fitr_2025",
+    "Eid_Adha_2025",
+    "Ramadan_2026",
+    "Eid_Fitr_2026",
+    "DSF_2025",
+    "DSF_2026",
+    "National_Day_2024",
+    "National_Day_2025",
+    "BTS_2024",
+    "BTS_2025"
+  ],
+  "seasonality_notes": {
+    "ramadan": "Demand spike 1.3x–3.2x depending on category",
+    "dsf": "Demand spike 1.6x–2.8x — electronics and fashion peak",
+    "national_day": "Demand spike 1.3x–1.8x — food and fashion",
+    "eid": "Additional 1.2x on top of Ramadan multiplier",
+    "weekend": "1.15x every Fri–Sat (UAE weekend)"
+  },
+  "known_limitations": [
+    "Hijri calendar dates are approximated — use hijri-converter in production",
+    "Sales distribution is Gaussian — real retail is more fat-tailed",
+    "No returns/refunds modeled",
+    "Cross-SKU demand correlation not modeled (basket effects)"
+  ],
+  "calibration_note": "All distribution parameters (base_demand, multipliers) are exposed as constants in generate_dataset.py. When real retailer data is available, fit these parameters against actual sales before running Prophet."
+}

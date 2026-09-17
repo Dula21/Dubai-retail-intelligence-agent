@@ -1,0 +1,49 @@
+# ============================================================
+# Dubai Retail Intelligence Agent — .gitignore
+# ============================================================
+
+# ── SECRETS — never commit these ─────────────────────────────────────────
+.env
+
+# ── Python ────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
+dist/
+build/
+venv/
+.venv/
+
+# ── ML Model cache (300MB — don't commit to git) ─────────────────────────
+.model_cache/
+
+# ── Vector store (regenerate with FORCE_REINGEST=true) ───────────────────
+.chroma_db/
+
+# ── Data files (large CSVs — use Git LFS or document generation steps) ───
+# Commit the generator script, not the generated data
+data/synthetic/*.csv
+data/synthetic/*.json
+# Exception: keep metadata file (small, documents the dataset)
+!data/synthetic/dataset_metadata.json
+
+# ── IDE ───────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+
+# ── OS ────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Docker ────────────────────────────────────────────────────────────────
+# Don't ignore docker-compose.yml — that should be committed
+# But ignore any local override files
+docker-compose.override.yml
+
+# ── Logs ──────────────────────────────────────────────────────────────────
+*.log
+logs/
