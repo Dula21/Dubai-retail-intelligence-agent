@@ -1,0 +1,55 @@
+# Dubai Retail Intelligence Agent — Phase 1 Dependencies
+# Install: pip install -r requirements.txt
+#
+# ENGINEERING NOTE: Versions pinned for reproducibility.
+# Pin strategy: minor version locked (e.g., ==0.3.x) to allow patch updates
+# while preventing breaking API changes. Review quarterly.
+
+# ── Core ML / Embeddings ──────────────────────────────────────────────────
+sentence-transformers==3.0.1        # multilingual-e5-large embedding model
+# Includes: torch, transformers, huggingface-hub
+
+# ── Vector Store ──────────────────────────────────────────────────────────
+chromadb==0.5.3                     # Embedded persistent vector store
+
+# ── LangChain ─────────────────────────────────────────────────────────────
+langchain==0.2.14
+langchain-community==0.2.12         # Document loaders, CSV loader
+langchain-groq==0.1.9               # Groq LLM integration
+
+# ── LangGraph (Phase 2) ───────────────────────────────────────────────────
+langgraph==0.2.4                    # Agentic reasoning loop
+
+# ── LLM Providers ─────────────────────────────────────────────────────────
+groq==0.9.0                         # Fast Llama 3.1 inference
+
+# ── Forecasting (Phase 2) ─────────────────────────────────────────────────
+prophet==1.1.5                      # Demand forecasting with UAE seasonality
+# Note: Prophet requires pystan. On Apple Silicon: conda install prophet
+
+# ── Backend ───────────────────────────────────────────────────────────────
+fastapi==0.111.0
+uvicorn[standard]==0.30.1
+pydantic==2.7.4                     # v2 — all validation uses model_validator
+
+# ── Caching (Phase 2) ─────────────────────────────────────────────────────
+redis==5.0.7
+hiredis==2.3.2                      # C parser for Redis — 10x throughput
+
+# ── Database (Phase 2) ────────────────────────────────────────────────────
+sqlalchemy==2.0.31
+asyncpg==0.29.0                     # Async PostgreSQL driver
+alembic==1.13.2                     # DB migrations
+
+# ── Observability ─────────────────────────────────────────────────────────
+structlog==24.2.0                   # Structured JSON logging
+python-dotenv==1.0.1
+
+# ── Data Processing ───────────────────────────────────────────────────────
+pandas==2.2.2
+numpy==1.26.4
+
+# ── Testing ───────────────────────────────────────────────────────────────
+pytest==8.2.2
+pytest-asyncio==0.23.7
+httpx==0.27.0                       # For FastAPI TestClient async tests

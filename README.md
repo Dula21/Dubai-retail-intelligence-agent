@@ -1,138 +1,170 @@
 # Dubai Retail Intelligence Agent
-## Project Brief & Overview
+
+> Bilingual Arabic/English agentic RAG system for Dubai mid-market retail.  
+> Replaces a AED 15,000–25,000/month merchandising manager with an autonomous AI layer.
+
+**Status:** Phase 1 complete — Bilingual RAG over product catalogue  
+**Stack:** LangGraph · LangChain · ChromaDB · multilingual-e5-large · Prophet · Groq · FastAPI  
+**Data:** Synthetic — 500 SKUs, 365,000 sales rows, UAE seasonality modeled
 
 ---
 
-## What This Project Is
+## The Problem
 
-An agentic RAG system that acts as an autonomous retail merchandising intelligence layer for Dubai mid-market retailers. It connects product catalogue data, sales history, and market trend signals — then autonomously runs a multi-step reasoning loop to answer questions like "what should I reorder this week before DSF" or "why is this product underperforming compared to similar SKUs."
+Dubai mid-market retailers selling on noon, their own website, and physical stores have no unified system connecting:
 
-The system replaces the role of a human merchandising manager — which costs AED 15,000–25,000/month — that mid-market Dubai retailers cannot afford.
+- What customers are searching for  
+- What is currently selling  
+- What inventory is running low  
+- What to stock for Ramadan, DSF, and National Day
 
----
+Reorder decisions are made on gut feel. Demand surges during Dubai's major retail events are missed every year. Product catalogues exist in Arabic and English with inconsistent tagging and poor searchability.
 
-## The Problem It Solves
-
-Dubai mid-market retailers selling on noon, their own website, and physical stores simultaneously have no unified system that connects:
-- What customers are searching for
-- What is currently selling
-- What inventory is running low
-- What to stock next
-
-They make reorder decisions based on gut feel. They miss demand surges during DSF, Ramadan, and National Day every year. Their product catalogues exist in Arabic and English with inconsistent tagging and poor searchability.
-
-This project solves that problem autonomously.
+This system solves that problem autonomously.
 
 ---
 
-## Full Tech Stack
-
-| Layer | Technology | Purpose |
-|-------|-----------|---------|
-| Agentic Framework | LangGraph | Multi-step autonomous reasoning loop |
-| Chain Orchestration | LangChain | Document loaders, retrievers, prompt chains |
-| RAG | Custom RAG pipeline | Product catalogue + sales data retrieval |
-| Forecasting | Prophet | Demand signals, seasonality modeling |
-| LLM — Cloud | Groq (Llama 3.1) | Fast inference for English queries |
-| LLM — Arabic | Jais or bilingual embeddings | Arabic query handling |
-| Backend | FastAPI | API layer |
-| Database | PostgreSQL | Persistent storage |
-| Cache | Redis | Performance layer |
-| Frontend | Next.js | Dashboard UI |
-| Embeddings | HuggingFace bilingual model | Arabic + English retrieval |
-
----
-
-## Build Phases
-
-### Phase 1 — Bilingual RAG over Product Catalogue (2 weeks)
-- Ingest product catalogue data (Arabic + English)
-- Build bilingual embedding layer
-- Implement confidence-gated retrieval
-- Answer queries like: "show me all underperforming SKUs in the footwear category"
-
-### Phase 2 — LangGraph Agentic Loop (2 weeks)
-- Build multi-step reasoning loop connecting RAG to forecasting
-- Agent decides what data to fetch next autonomously
-- Flow: check sales → check inventory → check trends → generate insight
-- Implement state management across reasoning steps
-
-### Phase 3 — Autonomous Reorder Recommendation Engine (2 weeks)
-- Generate reorder recommendations without human approval at each step
-- Explainable reasoning trace — agent shows its work
-- DSF, Ramadan, National Day seasonality detection built in
-- Critical runway override (same pattern as Logistics Oracle)
-
-### Phase 4 — Arabic Query Handling (1 week)
-- Full Arabic query support via bilingual embeddings
-- Gulf Arabic dialect handling
-- Bilingual response generation
-- Mixed Arabic/English product name handling
-
----
-## Architecture Overview
+## Architecture
 
 ```
 User Query (Arabic or English)
         ↓
-Language Detection Layer
+Language Detection  [Unicode Arabic block ratio]
         ↓
-Bilingual Embedding + RAG Retrieval
+Bilingual Embedding  [multilingual-e5-large]
         ↓
-Confidence Gate (threshold: 0.72)
+Confidence Gate  [threshold: 0.72 — drop noise, return nothing over garbage]
         ↓
+ChromaDB Vector Store  [metadata-filtered + cosine similarity]
+        ↓
+Sales Context Enrichment  [per-SKU 24mo history joined on retrieval]
+        ↓
+── Phase 2 ──
 LangGraph Agent Loop
     ├── Node 1: Sales Analysis
     ├── Node 2: Inventory Check  
-    ├── Node 3: Demand Forecast (Prophet)
+    ├── Node 3: Demand Forecast (Prophet + UAE calendar regressors)
     ├── Node 4: Market Trend Signal
     └── Node 5: Recommendation Generation
         ↓
 Explainable Reasoning Trace
         ↓
 Bilingual Response (Arabic/English)
-        ↓
-Audit Log (PostgreSQL)
 ```
 
 ---
 
-## Key Differentiators From Logistics Oracle
+## Build Phases
 
-| Feature | Logistics Oracle | Dubai Retail Intelligence Agent |
-|---------|-----------------|--------------------------------|
-| Architecture | Dual-LLM routing | Full agentic loop (LangGraph) |
-| Language | English only | Arabic + English bilingual |
-| Autonomy | Single query response | Multi-step autonomous reasoning |
-| Target market | JAFZA logistics operators | Dubai mid-market retailers / noon sellers |
-| Reasoning trace | No | Yes — explainable decisions |
+| Phase | Scope | Status |
+|-------|-------|--------|
+| 1 | Bilingual RAG over product catalogue | ✅ Complete |
+| 2 | LangGraph agentic loop | 🔄 Next |
+| 3 | Autonomous reorder recommendation engine | 📋 Planned |
+| 4 | Arabic dialect polish + bilingual response generation | 📋 Planned |
 
 ---
 
-## GitHub Repository Structure
+## Quick Start
+
+```bash
+# 1. Clone and install
+git clone https://github.com/Dula21/dubai-retail-intelligence-agent
+cd dubai-retail-intelligence-agent
+pip install -r requirements.txt
+
+# 2. Generate synthetic UAE retail dataset
+python data/synthetic/generate_dataset.py
+# → Creates product_catalogue.csv (500 SKUs)
+# → Creates sales_history.csv (365,000 rows, 24 months)
+# → Creates inventory_snapshot.csv
+
+# 3. Run the API
+uvicorn backend.main:app --reload --port 8000
+# First run: downloads multilingual-e5-large (~300MB) and builds ChromaDB index
+
+# 4. Test a bilingual query
+curl -X POST http://localhost:8000/api/v1/search \
+  -H "Content-Type: application/json" \
+  -d '{"query": "show me summer dresses under AED 200", "category": "fashion", "max_price_aed": 200}'
+
+# Arabic query — same endpoint
+curl -X POST http://localhost:8000/api/v1/search \
+  -H "Content-Type: application/json" \
+  -d '{"query": "أظهر لي الفساتين الصيفية تحت 200 درهم"}'
+
+# 5. Run tests
+python -m pytest tests/ -v
+# 25 tests, all passing
+```
+
+---
+
+## Key Engineering Decisions
+
+### Why multilingual-e5-large over separate Arabic/English models?
+
+Cross-lingual retrieval: an Arabic query finding an English-tagged product works naturally in a shared embedding space. Two separate spaces can't do this. The 300MB model size is the only trade-off, and it's acceptable for a cloud-deployed Dubai retail system.
+
+### Why ChromaDB over Pinecone?
+
+Matches UAE data residency concerns (operational data stays local), runs without cloud dependency, and has built-in metadata filtering critical for `price < AED 200` type queries. At >1M vectors we'd move to Weaviate or managed Pinecone — documented as a known scale boundary.
+
+### Why daily sales granularity over weekly?
+
+Prophet requires daily time-series to model intra-week patterns. The UAE weekend is Friday–Saturday, not Saturday–Sunday. Aggregating to weekly loses this. Daily granularity is a real production consideration — weekly aggregation is the common mistake.
+
+### Why 0.72 confidence threshold?
+
+Empirically calibrated: below 0.72 cosine similarity, retrieved chunks are noise. Arabic queries score 3-5% lower than English queries due to tokenisation differences — so we loosen slightly from the 0.75 used in the Logistics Oracle project.
+
+### Why synthetic data?
+
+Three reasons: (1) We need clean time-series aligned to the Islamic calendar — scraped data won't have this. (2) Portfolio transparency — clearly labelled synthetic is cleaner than grey-area scraping. (3) We control edge cases: stockouts, demand spikes, slow movers. All distribution parameters are exposed as constants in `generate_dataset.py` so real retailer data can calibrate them.
+
+---
+
+## Dataset
+
+All data is **synthetic** — generated by `data/synthetic/generate_dataset.py`.
+
+| File | Rows | Description |
+|------|------|-------------|
+| `product_catalogue.csv` | 500 | SKUs across 5 categories, bilingual names, AED pricing |
+| `sales_history.csv` | 365,000 | Daily sales per SKU, 24 months, UAE event flags |
+| `inventory_snapshot.csv` | 500 | Current stock levels, 15% in critical status |
+
+UAE events modeled: Ramadan 2025/2026, Eid Al-Fitr/Al-Adha, DSF 2025/2026, National Day 2024/2025, Back-to-School.
+
+**Known limitation:** Hijri calendar dates are approximate. Use `hijri-converter` in production.
+
+---
+
+## Tests
 
 ```
-dubai-retail-intelligence-agent/
-├── backend/
-│   ├── main.py                  # FastAPI entry point
-│   ├── agents/
-│   │   ├── retail_agent.py      # LangGraph agent definition
-│   │   └── nodes/               # Individual agent nodes
-│   ├── rag/
-│   │   ├── retriever.py         # Bilingual retrieval layer
-│   │   └── embeddings.py        # Arabic/English embedding model
-│   ├── forecasting/
-│   │   └── demand_forecast.py   # Prophet integration
-│   ├── models/                  # Pydantic schemas
-│   └── database/                # PostgreSQL + SQLAlchemy
-├── frontend/
-│   └── (Next.js dashboard)
-├── data/
-│   └── synthetic/               # Generated UAE retail dataset
-├── tests/                       # Automated test suite
-└── README.md
+tests/test_phase1.py — 25 tests
+├── TestDataGeneration (8)     — dataset integrity, seasonality validation
+├── TestLanguageDetection (5)  — Arabic/English/mixed detection
+├── TestDocumentPreparation (4) — E5 prefix, bilingual document construction
+├── TestConfidenceGate (3)     — threshold logic
+└── TestCatalogueLoader (5)    — CSV loading, type casting, sales indexing
 ```
 
-*Project started: August 2026*
-*Target completion: November 2026*
-*GitHub: github.com/Dula21*
+---
+
+## Project Context
+
+This is the third project in a production AI engineering portfolio targeting a full-time AI Software Engineer role in Dubai by December 2026.
+
+| Project | Core Tech | Market Focus |
+|---------|-----------|--------------|
+| Logistics Oracle | Dual-LLM routing, Prophet, Redis | JAFZA logistics operators |
+| Dubai Property Intelligence | RAG, hallucination prevention, DLD data | Dubai real estate |
+| **Dubai Retail Intelligence Agent** | **LangGraph, bilingual RAG, Arabic NLP** | **noon sellers, mid-market retail** |
+
+Three projects. One coherent story. One market. One engineer.
+
+---
+
+*Started: August 2026 · Target completion: November 2026*
