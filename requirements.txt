@@ -21,7 +21,7 @@ langchain-groq==0.1.9               # Groq LLM integration
 langgraph==0.2.4                    # Agentic reasoning loop
 
 # ── LLM Providers ─────────────────────────────────────────────────────────
-groq==0.9.0                         # Fast Llama 3.1 inference
+groq==0.11.0                       # Fast Llama 3.1 inference
 
 # ── Forecasting (Phase 2) ─────────────────────────────────────────────────
 prophet==1.1.5                      # Demand forecasting with UAE seasonality
@@ -53,3 +53,26 @@ numpy==1.26.4
 pytest==8.2.2
 pytest-asyncio==0.23.7
 httpx==0.27.0                       # For FastAPI TestClient async tests
+
+
+# ── Phase 2 additions to requirements.txt ─────────────────────────────────────
+# Add these to your existing requirements.txt from Phase 1.
+# All packages are free tier compatible.
+
+# LangGraph — agentic reasoning loop
+# Engineering decision: LangGraph over plain LangChain chains.
+# StateGraph with conditional edges allows dynamic routing based on
+# intermediate results. A chain always runs the same steps in the same order.
+langgraph>=0.2.0
+
+# Groq — fast LLM inference on free tier
+# llama-3.1-8b-instant: sufficient for recommendation synthesis, very fast
+groq>=0.11.0
+
+# Numpy — trend calculation in sales_node (linear regression slope)
+# Already likely present from Phase 1 if using numpy — confirm it's pinned
+numpy>=1.26.0
+
+# pytest-asyncio — required for async test cases (test_phase2_agent.py)
+# Add asyncio_mode = "auto" to pytest.ini or pyproject.toml
+pytest-asyncio>=0.23.0
