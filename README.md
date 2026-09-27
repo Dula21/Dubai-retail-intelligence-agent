@@ -3,7 +3,7 @@
 > Bilingual Arabic/English agentic RAG system for Dubai mid-market retail.  
 > Replaces a AED 15,000–25,000/month merchandising manager with an autonomous AI layer.
 
-**Status:** Phase 1 complete — Bilingual RAG over product catalogue  
+**Status:** Phase 2 complete — LangGraph agentic loop, 55 tests passing  
 **Stack:** LangGraph · LangChain · ChromaDB · multilingual-e5-large · Prophet · Groq · FastAPI  
 **Data:** Synthetic — 500 SKUs, 365,000 sales rows, UAE seasonality modeled
 
@@ -13,9 +13,9 @@
 
 Dubai mid-market retailers selling on noon, their own website, and physical stores have no unified system connecting:
 
-- What customers are searching for  
-- What is currently selling  
-- What inventory is running low  
+- What customers are searching for
+- What is currently selling
+- What inventory is running low
 - What to stock for Ramadan, DSF, and National Day
 
 Reorder decisions are made on gut feel. Demand surges during Dubai's major retail events are missed every year. Product catalogues exist in Arabic and English with inconsistent tagging and poor searchability.
@@ -31,37 +31,46 @@ User Query (Arabic or English)
         ↓
 Language Detection  [Unicode Arabic block ratio]
         ↓
+Intent Classification  [rule-based: reorder / analysis / trend / search]
+        ↓
 Bilingual Embedding  [multilingual-e5-large]
         ↓
-Confidence Gate  [threshold: 0.72 — drop noise, return nothing over garbage]
+Confidence Gate  [floor: 0.72 cosine + margin-based routing]
         ↓
 ChromaDB Vector Store  [metadata-filtered + cosine similarity]
         ↓
-Sales Context Enrichment  [per-SKU 24mo history joined on retrieval]
+LangGraph Agent Loop  [conditional routing based on intent]
+    ├── Node 1: RAG Retrieval      [bilingual, margin-gated, deduplicated]
+    ├── Node 2: Sales Analysis     [30-day trend, UAE peak period detection]
+    ├── Node 3: Inventory Check    [runway days, critical flag, hard fallback]
+    ├── Node 4: Seasonality Check  [DSF / Ramadan / National Day / Eid]
+    └── Node 5: Recommendation     [Groq LLM, grounded prompt, bilingual output]
         ↓
-── Phase 2 ──
-LangGraph Agent Loop
-    ├── Node 1: Sales Analysis
-    ├── Node 2: Inventory Check  
-    ├── Node 3: Demand Forecast (Prophet + UAE calendar regressors)
-    ├── Node 4: Market Trend Signal
-    └── Node 5: Recommendation Generation
+Explainable Reasoning Trace  [every node appends — returned to caller]
         ↓
-Explainable Reasoning Trace
+Bilingual Response (Arabic / English)
         ↓
-Bilingual Response (Arabic/English)
+Audit Log  [PostgreSQL]
 ```
+
+### Routing logic
+
+Search and trend queries route directly to the recommendation node (2 nodes total).  
+Reorder and analysis queries run the full 5-node path.  
+Fallback triggers exit immediately at the RAG node — no LLM call made.
 
 ---
 
 ## Build Phases
 
-| Phase | Scope | Status |
-|-------|-------|--------|
-| 1 | Bilingual RAG over product catalogue | ✅ Complete |
-| 2 | LangGraph agentic loop | 🔄 Next |
-| 3 | Autonomous reorder recommendation engine | 📋 Planned |
-| 4 | Arabic dialect polish + bilingual response generation | 📋 Planned |
+| Phase | Scope | Status | Tests |
+|-------|-------|--------|-------|
+| 1 | Bilingual RAG over product catalogue | ✅ Complete | 25 |
+| 2 | LangGraph agentic loop | ✅ Complete | 30 |
+| 3 | Autonomous reorder recommendation engine | 📋 Planned | — |
+| 4 | Arabic dialect polish + bilingual response generation | 📋 Planned | — |
+
+**Total tests passing: 55**
 
 ---
 
@@ -79,48 +88,81 @@ python data/synthetic/generate_dataset.py
 # → Creates sales_history.csv (365,000 rows, 24 months)
 # → Creates inventory_snapshot.csv
 
-# 3. Run the API
-uvicorn backend.main:app --reload --port 8000
-# First run: downloads multilingual-e5-large (~300MB) and builds ChromaDB index
+# 3. Run via Docker (recommended)
+docker compose up --build
+# API available at http://localhost:8000
 
 # 4. Test a bilingual query
-curl -X POST http://localhost:8000/api/v1/search \
+curl -X POST http://localhost:8000/agent/query \
   -H "Content-Type: application/json" \
-  -d '{"query": "show me summer dresses under AED 200", "category": "fashion", "max_price_aed": 200}'
+  -d '{"query": "what should I reorder before Ramadan?", "language": "en"}'
 
 # Arabic query — same endpoint
-curl -X POST http://localhost:8000/api/v1/search \
+curl -X POST http://localhost:8000/agent/query \
   -H "Content-Type: application/json" \
-  -d '{"query": "أظهر لي الفساتين الصيفية تحت 200 درهم"}'
+  -d '{"query": "ما هي المنتجات التي يجب إعادة طلبها قبل رمضان؟", "language": "ar"}'
 
 # 5. Run tests
-python -m pytest tests/ -v
-# 25 tests, all passing
+docker compose exec api pytest tests/ -v
+# 55 tests, all passing
 ```
 
 ---
 
 ## Key Engineering Decisions
 
+### Why LangGraph over a LangChain chain?
+
+A chain runs the same steps in the same order for every query. A reorder query and a search query have fundamentally different data requirements — running sales analysis and inventory checks on a simple search query wastes latency and compute. LangGraph's conditional edges let the agent take different paths based on live state. Search queries run 2 nodes. Reorder queries run 5. That routing decision is the difference between a pipeline and an agent.
+
+### Margin-based confidence routing over absolute threshold
+
+Absolute cosine thresholds drift with query length and phrasing. A 3-word Arabic query and a 15-word English query produce different score ranges for identical retrieval quality. The margin between top-1 and top-3 retrieved chunks is query-length invariant — a small margin means the retriever is uncertain regardless of absolute score level. Fallback requires both conditions: margin below threshold AND the queried entity absent from top-3 chunks. Either condition alone is insufficient.
+
+Known limitation: chunks are deduplicated by content hash before margin calculation. Without deduplication, identical content in multiple source documents makes top-3 scores look artificially flat, triggering false fallbacks on correct retrievals.
+
+### Field-type fallback split
+
+Factual fields (SKU counts, stock levels, prices) use hard fallback — if retrieval is uncertain, return "insufficient data" and nothing else. A wrong inventory number is unrecoverable; a retailer acts on it immediately.
+
+Narrative fields (trend summaries, reorder reasoning) allow partial synthesis with explicit provenance: *"Based on [source], [partial answer]. Note: this is partial — verify before acting."* A partial explanation is still useful. A wrong stock count is not.
+
+### TypedDict over Pydantic for graph-internal state
+
+LangGraph manages state transitions natively with TypedDict. Using Pydantic inside the graph adds serialization overhead on every node transition (5 transitions per query). Pydantic is used at the API boundary where validation matters. Inside the graph, TypedDict is the right tool. This distinction signals understanding of where validation cost is justified versus where it adds latency without benefit.
+
 ### Why multilingual-e5-large over separate Arabic/English models?
 
-Cross-lingual retrieval: an Arabic query finding an English-tagged product works naturally in a shared embedding space. Two separate spaces can't do this. The 300MB model size is the only trade-off, and it's acceptable for a cloud-deployed Dubai retail system.
+Cross-lingual retrieval: an Arabic query finding an English-tagged product works naturally in a shared embedding space. Two separate spaces cannot do this. The 300MB model size is the only trade-off, acceptable for a cloud-deployed Dubai retail system.
 
 ### Why ChromaDB over Pinecone?
 
-Matches UAE data residency concerns (operational data stays local), runs without cloud dependency, and has built-in metadata filtering critical for `price < AED 200` type queries. At >1M vectors we'd move to Weaviate or managed Pinecone — documented as a known scale boundary.
+Matches UAE data residency concerns (operational data stays local), runs without cloud dependency, and has built-in metadata filtering critical for `price < AED 200` type queries. At >1M vectors: Weaviate or managed Pinecone. Documented as a known scale boundary.
 
 ### Why daily sales granularity over weekly?
 
-Prophet requires daily time-series to model intra-week patterns. The UAE weekend is Friday–Saturday, not Saturday–Sunday. Aggregating to weekly loses this. Daily granularity is a real production consideration — weekly aggregation is the common mistake.
+The UAE weekend is Friday–Saturday, not Saturday–Sunday. Weekly aggregation loses this signal and distorts DSF and Ramadan day-level spike detection. Daily granularity is a real production consideration — weekly aggregation is the common mistake.
 
-### Why 0.72 confidence threshold?
+### Caching scale ceiling
 
-Empirically calibrated: below 0.72 cosine similarity, retrieved chunks are noise. Arabic queries score 3-5% lower than English queries due to tokenisation differences — so we loosen slightly from the 0.75 used in the Logistics Oracle project.
+Current approach: TTL-based Redis invalidation tied to data upload events. Works at SME scale (hundreds to low thousands of SKUs).
 
-### Why synthetic data?
+Scale ceiling: breaks at millions of keys (noon-scale). Next architectural step: event-driven cache invalidation tied to inventory update events, LRU eviction policy, and partitioned Redis keys by product category.
 
-Three reasons: (1) We need clean time-series aligned to the Islamic calendar — scraped data won't have this. (2) Portfolio transparency — clearly labelled synthetic is cleaner than grey-area scraping. (3) We control edge cases: stockouts, demand spikes, slow movers. All distribution parameters are exposed as constants in `generate_dataset.py` so real retailer data can calibrate them.
+---
+
+## Production Bugs Fixed
+
+Issues found during development that are not documented in tutorials or library docs:
+
+**LangGraph node name clash (Phase 2)**  
+LangGraph 0.2.x raises `ValueError` at startup if a node name matches a field name in the `AgentState` TypedDict. Fix: suffix all node names with `_node`. The state field `recommendation` and the node name `recommendation` cannot coexist.
+
+**structlog reserved keyword (Phase 2)**  
+`structlog` reserves `event` as its own parameter — it is the log message itself. Passing `event=` as a keyword argument to any `logger.*()` call raises `TypeError: got multiple values for argument 'event'`. Fix: rename to `upcoming_event=`.
+
+**Relative import depth in pytest (Phase 2)**  
+When pytest adds `backend/` to `sys.path` via `conftest.py`, modules resolve as `agents.*` not `backend.agents.*`. Three-dot relative imports (`from ...services import`) climb above the package root and fail with `ImportError: attempted relative import beyond top-level package`. Fix: use absolute imports from the `sys.path` root.
 
 ---
 
@@ -136,7 +178,7 @@ All data is **synthetic** — generated by `data/synthetic/generate_dataset.py`.
 
 UAE events modeled: Ramadan 2025/2026, Eid Al-Fitr/Al-Adha, DSF 2025/2026, National Day 2024/2025, Back-to-School.
 
-**Known limitation:** Hijri calendar dates are approximate. Use `hijri-converter` in production.
+**Known limitation:** Hijri calendar dates are approximate. Production fix: `hijri-converter` library. Documented as a known limitation — signals engineering maturity.
 
 ---
 
@@ -144,11 +186,21 @@ UAE events modeled: Ramadan 2025/2026, Eid Al-Fitr/Al-Adha, DSF 2025/2026, Natio
 
 ```
 tests/test_phase1.py — 25 tests
-├── TestDataGeneration (8)     — dataset integrity, seasonality validation
-├── TestLanguageDetection (5)  — Arabic/English/mixed detection
+├── TestDataGeneration (8)      — dataset integrity, seasonality validation
+├── TestLanguageDetection (5)   — Arabic/English/mixed detection
 ├── TestDocumentPreparation (4) — E5 prefix, bilingual document construction
-├── TestConfidenceGate (3)     — threshold logic
-└── TestCatalogueLoader (5)    — CSV loading, type casting, sales indexing
+├── TestConfidenceGate (3)      — threshold logic
+└── TestCatalogueLoader (5)     — CSV loading, type casting, sales indexing
+
+tests/test_phase2_agent.py — 30 tests
+├── TestIntentClassifierEnglish (4)  — reorder / analysis / search / trend
+├── TestIntentClassifierArabic (2)   — Arabic reorder and analysis
+├── TestLanguageDetection (6)        — EN / AR / mixed / empty / SKU extraction
+├── TestFactualIntentFlag (4)        — hard vs partial fallback routing
+├── TestSeasonalityNode (4)          — DSF / Ramadan / National Day alert levels
+├── TestInventoryNode (3)            — runway, critical flag, missing SKU sentinel
+├── TestAgentRouting (5)             — conditional edge routing by intent
+└── TestAgentEndToEnd (2)            — full trace, Groq rate limit degradation
 ```
 
 ---
@@ -167,4 +219,5 @@ Three projects. One coherent story. One market. One engineer.
 
 ---
 
-*Started: August 2026 · Target completion: November 2026*
+*Started: August 2026 · Target completion: November 2026*  
+*GitHub: github.com/Dula21*
