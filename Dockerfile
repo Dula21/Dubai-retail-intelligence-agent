@@ -13,7 +13,7 @@ FROM python:3.12-slim
 
 # Set working directory inside the container
 WORKDIR /app
-
+ENV PYTHONPATH=/app/backend
 # ── System dependencies ──────────────────────────────────────────────────
 # libgomp1: required by sentence-transformers (OpenMP for parallel embedding)
 # build-essential: needed for some pip packages that compile C extensions
