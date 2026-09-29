@@ -165,7 +165,8 @@ LangGraph 0.2.x raises `ValueError` at startup if a node name matches a field na
 When pytest adds `backend/` to `sys.path` via `conftest.py`, modules resolve as `agents.*` not `backend.agents.*`. Three-dot relative imports (`from ...services import`) climb above the package root and fail with `ImportError: attempted relative import beyond top-level package`. Fix: use absolute imports from the `sys.path` root.
 
 **PYTHONPATH mismatch between pytest and uvicorn (Phase 3 prep)**
-pytest used `conftest.py` to add `/app/backend` to `sys.path`, allowing bare `services.*`imports. uvicorn starts without that manipulation, so the same imports failed at runtime. Fix: `ENV PYTHONPATH=/app/backend` in the Dockerfile.
+
+Pytest used `conftest.py` to add `/app/backend` to `sys.path`, allowing bare `services.*`imports. uvicorn starts without that manipulation, so the same imports failed at runtime. Fix: `ENV PYTHONPATH=/app/backend` in the Dockerfile.
 
 ---
 
