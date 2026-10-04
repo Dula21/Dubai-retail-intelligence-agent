@@ -133,7 +133,7 @@ async def rag_retrieval_node(state: AgentState) -> dict:
 
     try:
         retriever    = get_retriever()
-        raw_results: list[dict] = await retriever.retrieve(query, top_k=TOP_K_RETRIEVAL)
+        raw_results: list[dict] = retriever.search(query, n_results=TOP_K_RETRIEVAL)
 
         if not raw_results:
             logger.warning("rag_no_results", query=query[:60])
