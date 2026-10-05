@@ -17,7 +17,7 @@ from eval.run_baseline_v2 import ABSENT, CATALOGUE_CSV, PERSIST_DIR, build_group
 sys.stdout.reconfigure(encoding="utf-8")
 
 OUT_FILE = "eval/gulf_results.json"
-LABEL = "gulf_baseline_6fdc697"   # change per experiment
+LABEL = "gulf_exp1_passage_prefix"   # change per experiment
 N = 20                            # SKU candidates fetched, collapsed to distinct base products
 
 ABAYAS = ["Abaya Classic", "Embroidered Abaya"]
