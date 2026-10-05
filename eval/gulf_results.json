@@ -1,0 +1,1791 @@
+{
+ "label": "gulf_baseline_6fdc697",
+ "results": [
+  {
+   "kind": "gulf",
+   "query": "كندورة",
+   "targets": [
+    "Kandura White"
+   ],
+   "ranked": [
+    [
+     "Kandura White",
+     0.8074
+    ],
+    [
+     "Table Runner",
+     0.7516
+    ],
+    [
+     "Maxi Skirt",
+     0.749
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8074,
+   "margin": 0.0558
+  },
+  {
+   "kind": "gulf",
+   "query": "ثوب رجالي أبيض",
+   "targets": [
+    "Kandura White"
+   ],
+   "ranked": [
+    [
+     "Kandura White",
+     0.8316
+    ],
+    [
+     "Winter Coat",
+     0.8289
+    ],
+    [
+     "Formal Blazer",
+     0.8191
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8316,
+   "margin": 0.0027
+  },
+  {
+   "kind": "gulf",
+   "query": "فستان",
+   "targets": [
+    "Summer Dress"
+   ],
+   "ranked": [
+    [
+     "Summer Dress",
+     0.8054
+    ],
+    [
+     "Linen Shirt",
+     0.7806
+    ],
+    [
+     "Beach Kaftan",
+     0.7793
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8054,
+   "margin": 0.0248
+  },
+  {
+   "kind": "gulf",
+   "query": "فستان للصيف",
+   "targets": [
+    "Summer Dress"
+   ],
+   "ranked": [
+    [
+     "Summer Dress",
+     0.8703
+    ],
+    [
+     "Beach Kaftan",
+     0.8184
+    ],
+    [
+     "Modest Swimwear",
+     0.818
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8703,
+   "margin": 0.0519
+  },
+  {
+   "kind": "gulf",
+   "query": "بنطلون جينز",
+   "targets": [
+    "Casual Jeans"
+   ],
+   "ranked": [
+    [
+     "Casual Jeans",
+     0.82
+    ],
+    [
+     "Palazzo Pants",
+     0.8148
+    ],
+    [
+     "Denim Jacket",
+     0.8117
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.82,
+   "margin": 0.0052
+  },
+  {
+   "kind": "gulf",
+   "query": "جاكيت دنيم",
+   "targets": [
+    "Denim Jacket"
+   ],
+   "ranked": [
+    [
+     "Denim Jacket",
+     0.8399
+    ],
+    [
+     "Casual Jeans",
+     0.8031
+    ],
+    [
+     "Linen Shirt",
+     0.7853
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8399,
+   "margin": 0.0368
+  },
+  {
+   "kind": "gulf",
+   "query": "ملابس سباحة للمحجبات",
+   "targets": [
+    "Modest Swimwear"
+   ],
+   "ranked": [
+    [
+     "Modest Swimwear",
+     0.8481
+    ],
+    [
+     "Summer Dress",
+     0.8228
+    ],
+    [
+     "Beach Kaftan",
+     0.8212
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8481,
+   "margin": 0.0253
+  },
+  {
+   "kind": "gulf",
+   "query": "جاكيت ثقيل للبرد",
+   "targets": [
+    "Winter Coat"
+   ],
+   "ranked": [
+    [
+     "Denim Jacket",
+     0.8285
+    ],
+    [
+     "Winter Coat",
+     0.8262
+    ],
+    [
+     "Casual Jeans",
+     0.8043
+    ]
+   ],
+   "ok1": false,
+   "ok3": true,
+   "score": 0.8285,
+   "margin": 0.0023
+  },
+  {
+   "kind": "gulf",
+   "query": "تنورة طويلة",
+   "targets": [
+    "Maxi Skirt"
+   ],
+   "ranked": [
+    [
+     "Maxi Skirt",
+     0.8283
+    ],
+    [
+     "Table Runner",
+     0.816
+    ],
+    [
+     "Throw Blanket",
+     0.8092
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8283,
+   "margin": 0.0123
+  },
+  {
+   "kind": "gulf",
+   "query": "سماعات بلوتوث",
+   "targets": [
+    "Wireless Earbuds",
+    "Gaming Headset"
+   ],
+   "ranked": [
+    [
+     "Bluetooth Speaker",
+     0.846
+    ],
+    [
+     "Wireless Earbuds",
+     0.8407
+    ],
+    [
+     "Gaming Headset",
+     0.8323
+    ]
+   ],
+   "ok1": false,
+   "ok3": true,
+   "score": 0.846,
+   "margin": 0.0053
+  },
+  {
+   "kind": "gulf",
+   "query": "باور بانك",
+   "targets": [
+    "Power Bank 20000mAh"
+   ],
+   "ranked": [
+    [
+     "Power Bank 20000mAh",
+     0.7931
+    ],
+    [
+     "Storage Baskets",
+     0.7731
+    ],
+    [
+     "USB-C Hub",
+     0.771
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.7931,
+   "margin": 0.02
+  },
+  {
+   "kind": "gulf",
+   "query": "ساعة سمارت",
+   "targets": [
+    "Smart Watch"
+   ],
+   "ranked": [
+    [
+     "Smart Watch",
+     0.8522
+    ],
+    [
+     "Smart Plug",
+     0.8223
+    ],
+    [
+     "Wireless Earbuds",
+     0.8038
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8522,
+   "margin": 0.0299
+  },
+  {
+   "kind": "gulf",
+   "query": "سبيكر",
+   "targets": [
+    "Bluetooth Speaker"
+   ],
+   "ranked": [
+    [
+     "Sumac Spice 150g",
+     0.7698
+    ],
+    [
+     "Bluetooth Speaker",
+     0.7652
+    ],
+    [
+     "Formal Blazer",
+     0.7622
+    ]
+   ],
+   "ok1": false,
+   "ok3": true,
+   "score": 0.7698,
+   "margin": 0.0046
+  },
+  {
+   "kind": "gulf",
+   "query": "كفر ايفون",
+   "targets": [
+    "Phone Case Premium"
+   ],
+   "ranked": [
+    [
+     "Phone Case Premium",
+     0.7691
+    ],
+    [
+     "Saffron Premium 5g",
+     0.7565
+    ],
+    [
+     "Beach Kaftan",
+     0.7542
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.7691,
+   "margin": 0.0126
+  },
+  {
+   "kind": "gulf",
+   "query": "شاحن",
+   "targets": [
+    "Wireless Charger"
+   ],
+   "ranked": [
+    [
+     "Wireless Charger",
+     0.7998
+    ],
+    [
+     "Table Runner",
+     0.775
+    ],
+    [
+     "Portable Monitor",
+     0.7736
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.7998,
+   "margin": 0.0248
+  },
+  {
+   "kind": "gulf",
+   "query": "كاميرا للاجتماعات",
+   "targets": [
+    "Webcam HD"
+   ],
+   "ranked": [
+    [
+     "Webcam HD",
+     0.8298
+    ],
+    [
+     "Action Camera",
+     0.8179
+    ],
+    [
+     "Kohl Eyeliner",
+     0.7828
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8298,
+   "margin": 0.0119
+  },
+  {
+   "kind": "gulf",
+   "query": "ستاند لابتوب",
+   "targets": [
+    "Laptop Stand"
+   ],
+   "ranked": [
+    [
+     "Laptop Stand",
+     0.8368
+    ],
+    [
+     "Tablet Stand",
+     0.8208
+    ],
+    [
+     "Portable Monitor",
+     0.7924
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8368,
+   "margin": 0.016
+  },
+  {
+   "kind": "gulf",
+   "query": "هيدسيت للألعاب",
+   "targets": [
+    "Gaming Headset"
+   ],
+   "ranked": [
+    [
+     "Gaming Headset",
+     0.7959
+    ],
+    [
+     "Sports Leggings",
+     0.7811
+    ],
+    [
+     "Table Runner",
+     0.7808
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.7959,
+   "margin": 0.0148
+  },
+  {
+   "kind": "gulf",
+   "query": "فانوس",
+   "targets": [
+    "Ramadan Lantern"
+   ],
+   "ranked": [
+    [
+     "Ramadan Lantern",
+     0.8097
+    ],
+    [
+     "Fairy Lights",
+     0.7681
+    ],
+    [
+     "Throw Blanket",
+     0.7621
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8097,
+   "margin": 0.0416
+  },
+  {
+   "kind": "gulf",
+   "query": "بخور وعود",
+   "targets": [
+    "Oud Incense Set"
+   ],
+   "ranked": [
+    [
+     "Oud Incense Set",
+     0.8203
+    ],
+    [
+     "Air Freshener Oud",
+     0.8027
+    ],
+    [
+     "Oud Perfume 50ml",
+     0.7975
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8203,
+   "margin": 0.0176
+  },
+  {
+   "kind": "gulf",
+   "query": "طقم فناجين قهوة",
+   "targets": [
+    "Arabic Coffee Set"
+   ],
+   "ranked": [
+    [
+     "Arabic Coffee Set",
+     0.8535
+    ],
+    [
+     "Arabic Coffee Blend",
+     0.8274
+    ],
+    [
+     "Herb Planter Set",
+     0.8141
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8535,
+   "margin": 0.0261
+  },
+  {
+   "kind": "gulf",
+   "query": "دلة",
+   "targets": [
+    "Copper Dallah"
+   ],
+   "ranked": [
+    [
+     "Copper Dallah",
+     0.8156
+    ],
+    [
+     "Winter Coat",
+     0.7718
+    ],
+    [
+     "Throw Blanket",
+     0.7707
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8156,
+   "margin": 0.0438
+  },
+  {
+   "kind": "gulf",
+   "query": "مصلى",
+   "targets": [
+    "Prayer Mat Premium"
+   ],
+   "ranked": [
+    [
+     "Storage Baskets",
+     0.7702
+    ],
+    [
+     "Prayer Mat Premium",
+     0.77
+    ],
+    [
+     "Bluetooth Speaker",
+     0.7619
+    ]
+   ],
+   "ok1": false,
+   "ok3": true,
+   "score": 0.7702,
+   "margin": 0.0002
+  },
+  {
+   "kind": "gulf",
+   "query": "مخدات للمجلس",
+   "targets": [
+    "Decorative Cushions"
+   ],
+   "ranked": [
+    [
+     "Decorative Cushions",
+     0.7945
+    ],
+    [
+     "Table Runner",
+     0.7913
+    ],
+    [
+     "Storage Baskets",
+     0.7912
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.7945,
+   "margin": 0.0032
+  },
+  {
+   "kind": "gulf",
+   "query": "شموع",
+   "targets": [
+    "Scented Candles Set"
+   ],
+   "ranked": [
+    [
+     "Scented Candles Set",
+     0.8087
+    ],
+    [
+     "Sumac Spice 150g",
+     0.7703
+    ],
+    [
+     "Oud Incense Set",
+     0.761
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8087,
+   "margin": 0.0384
+  },
+  {
+   "kind": "gulf",
+   "query": "معطر جو",
+   "targets": [
+    "Air Freshener Oud"
+   ],
+   "ranked": [
+    [
+     "Air Freshener Oud",
+     0.8297
+    ],
+    [
+     "Perfume Gift Set",
+     0.8078
+    ],
+    [
+     "Oud Incense Set",
+     0.8049
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8297,
+   "margin": 0.0219
+  },
+  {
+   "kind": "gulf",
+   "query": "تمر",
+   "targets": [
+    "Medjool Dates 1kg"
+   ],
+   "ranked": [
+    [
+     "Medjool Dates 1kg",
+     0.8044
+    ],
+    [
+     "Whitening Cream",
+     0.7698
+    ],
+    [
+     "Vitamin C Serum",
+     0.7691
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8044,
+   "margin": 0.0346
+  },
+  {
+   "kind": "gulf",
+   "query": "زعفران",
+   "targets": [
+    "Saffron Premium 5g"
+   ],
+   "ranked": [
+    [
+     "Saffron Premium 5g",
+     0.8241
+    ],
+    [
+     "Za'atar Blend 200g",
+     0.7819
+    ],
+    [
+     "Herb Planter Set",
+     0.781
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8241,
+   "margin": 0.0422
+  },
+  {
+   "kind": "gulf",
+   "query": "هيل",
+   "targets": [
+    "Cardamom Pods 100g"
+   ],
+   "ranked": [
+    [
+     "Cardamom Pods 100g",
+     0.7823
+    ],
+    [
+     "Kohl Eyeliner",
+     0.7751
+    ],
+    [
+     "Micellar Water",
+     0.7627
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.7823,
+   "margin": 0.0072
+  },
+  {
+   "kind": "gulf",
+   "query": "سمن",
+   "targets": [
+    "Ghee Premium 500g"
+   ],
+   "ranked": [
+    [
+     "Ghee Premium 500g",
+     0.7815
+    ],
+    [
+     "Sumac Spice 150g",
+     0.7787
+    ],
+    [
+     "Linen Shirt",
+     0.7626
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.7815,
+   "margin": 0.0028
+  },
+  {
+   "kind": "gulf",
+   "query": "دبس الرمان",
+   "targets": [
+    "Pomegranate Molasses"
+   ],
+   "ranked": [
+    [
+     "Pomegranate Molasses",
+     0.8412
+    ],
+    [
+     "Ramadan Lantern",
+     0.7867
+    ],
+    [
+     "Rose Face Cream",
+     0.785
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8412,
+   "margin": 0.0545
+  },
+  {
+   "kind": "gulf",
+   "query": "حليب ناقة",
+   "targets": [
+    "Camel Milk Powder"
+   ],
+   "ranked": [
+    [
+     "Camel Milk Powder",
+     0.8082
+    ],
+    [
+     "Halawa Pistachio",
+     0.799
+    ],
+    [
+     "Throw Blanket",
+     0.7879
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8082,
+   "margin": 0.0092
+  },
+  {
+   "kind": "gulf",
+   "query": "شاهي كرك",
+   "targets": [
+    "Karak Tea Blend"
+   ],
+   "ranked": [
+    [
+     "Karak Tea Blend",
+     0.7935
+    ],
+    [
+     "Ghee Premium 500g",
+     0.775
+    ],
+    [
+     "Sumac Spice 150g",
+     0.7727
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.7935,
+   "margin": 0.0185
+  },
+  {
+   "kind": "gulf",
+   "query": "عطر عود",
+   "targets": [
+    "Oud Perfume 50ml"
+   ],
+   "ranked": [
+    [
+     "Oud Perfume 50ml",
+     0.86
+    ],
+    [
+     "Air Freshener Oud",
+     0.8528
+    ],
+    [
+     "Oud Incense Set",
+     0.8324
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.86,
+   "margin": 0.0072
+  },
+  {
+   "kind": "gulf",
+   "query": "كريم ورد للوجه",
+   "targets": [
+    "Rose Face Cream"
+   ],
+   "ranked": [
+    [
+     "Rose Face Cream",
+     0.886
+    ],
+    [
+     "Whitening Cream",
+     0.8333
+    ],
+    [
+     "Facial Mask Pack",
+     0.8295
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.886,
+   "margin": 0.0527
+  },
+  {
+   "kind": "gulf",
+   "query": "كحل",
+   "targets": [
+    "Kohl Eyeliner"
+   ],
+   "ranked": [
+    [
+     "Kohl Eyeliner",
+     0.81
+    ],
+    [
+     "Copper Dallah",
+     0.7813
+    ],
+    [
+     "Camel Milk Powder",
+     0.7766
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.81,
+   "margin": 0.0287
+  },
+  {
+   "kind": "gulf",
+   "query": "حبة البركة",
+   "targets": [
+    "Blackseed Oil"
+   ],
+   "ranked": [
+    [
+     "Blackseed Oil",
+     0.8352
+    ],
+    [
+     "Throw Blanket",
+     0.7856
+    ],
+    [
+     "Arabic Coffee Blend",
+     0.7803
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8352,
+   "margin": 0.0496
+  },
+  {
+   "kind": "gulf",
+   "query": "سيروم فيتامين سي",
+   "targets": [
+    "Vitamin C Serum"
+   ],
+   "ranked": [
+    [
+     "Vitamin C Serum",
+     0.8794
+    ],
+    [
+     "Argan Oil Serum",
+     0.8042
+    ],
+    [
+     "Cardamom Pods 100g",
+     0.7992
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8794,
+   "margin": 0.0752
+  },
+  {
+   "kind": "gulf",
+   "query": "هدية عطور",
+   "targets": [
+    "Perfume Gift Set"
+   ],
+   "ranked": [
+    [
+     "Perfume Gift Set",
+     0.8634
+    ],
+    [
+     "Scented Candles Set",
+     0.8284
+    ],
+    [
+     "Oud Perfume 50ml",
+     0.8254
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8634,
+   "margin": 0.035
+  },
+  {
+   "kind": "cs",
+   "query": "abaya للعيد",
+   "targets": [
+    "Abaya Classic",
+    "Embroidered Abaya"
+   ],
+   "ranked": [
+    [
+     "Embroidered Abaya",
+     0.8517
+    ],
+    [
+     "Abaya Classic",
+     0.8419
+    ],
+    [
+     "Summer Dress",
+     0.8212
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8517,
+   "margin": 0.0098
+  },
+  {
+   "kind": "cs",
+   "query": "kandura أبيض",
+   "targets": [
+    "Kandura White"
+   ],
+   "ranked": [
+    [
+     "Kandura White",
+     0.8676
+    ],
+    [
+     "Whitening Cream",
+     0.797
+    ],
+    [
+     "Scented Candles Set",
+     0.789
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8676,
+   "margin": 0.0706
+  },
+  {
+   "kind": "cs",
+   "query": "dress صيفي",
+   "targets": [
+    "Summer Dress"
+   ],
+   "ranked": [
+    [
+     "Summer Dress",
+     0.8818
+    ],
+    [
+     "Modest Swimwear",
+     0.8326
+    ],
+    [
+     "Winter Coat",
+     0.8248
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8818,
+   "margin": 0.0492
+  },
+  {
+   "kind": "cs",
+   "query": "earbuds بلوتوث",
+   "targets": [
+    "Wireless Earbuds"
+   ],
+   "ranked": [
+    [
+     "Wireless Earbuds",
+     0.8657
+    ],
+    [
+     "Bluetooth Speaker",
+     0.8414
+    ],
+    [
+     "Gaming Headset",
+     0.8195
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8657,
+   "margin": 0.0243
+  },
+  {
+   "kind": "cs",
+   "query": "power bank كبير",
+   "targets": [
+    "Power Bank 20000mAh"
+   ],
+   "ranked": [
+    [
+     "Power Bank 20000mAh",
+     0.8623
+    ],
+    [
+     "Bluetooth Speaker",
+     0.8105
+    ],
+    [
+     "Wireless Charger",
+     0.8084
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8623,
+   "margin": 0.0518
+  },
+  {
+   "kind": "cs",
+   "query": "smart watch رجالي",
+   "targets": [
+    "Smart Watch"
+   ],
+   "ranked": [
+    [
+     "Smart Watch",
+     0.8686
+    ],
+    [
+     "Smart Plug",
+     0.8425
+    ],
+    [
+     "Portable Monitor",
+     0.8234
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8686,
+   "margin": 0.0261
+  },
+  {
+   "kind": "cs",
+   "query": "oud perfume رجالي",
+   "targets": [
+    "Oud Perfume 50ml"
+   ],
+   "ranked": [
+    [
+     "Air Freshener Oud",
+     0.8699
+    ],
+    [
+     "Oud Perfume 50ml",
+     0.8682
+    ],
+    [
+     "Oud Incense Set",
+     0.8563
+    ]
+   ],
+   "ok1": false,
+   "ok3": true,
+   "score": 0.8699,
+   "margin": 0.0017
+  },
+  {
+   "kind": "cs",
+   "query": "dates فاخر",
+   "targets": [
+    "Medjool Dates 1kg"
+   ],
+   "ranked": [
+    [
+     "Saffron Premium 5g",
+     0.8211
+    ],
+    [
+     "Phone Case Premium",
+     0.8207
+    ],
+    [
+     "Medjool Dates 1kg",
+     0.8158
+    ]
+   ],
+   "ok1": false,
+   "ok3": true,
+   "score": 0.8211,
+   "margin": 0.0004
+  },
+  {
+   "kind": "cs",
+   "query": "karak شاي",
+   "targets": [
+    "Karak Tea Blend"
+   ],
+   "ranked": [
+    [
+     "Karak Tea Blend",
+     0.8718
+    ],
+    [
+     "Arabic Coffee Blend",
+     0.8073
+    ],
+    [
+     "Arabic Coffee Set",
+     0.804
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8718,
+   "margin": 0.0645
+  },
+  {
+   "kind": "cs",
+   "query": "saffron أصلي",
+   "targets": [
+    "Saffron Premium 5g"
+   ],
+   "ranked": [
+    [
+     "Saffron Premium 5g",
+     0.8353
+    ],
+    [
+     "Natural Soap Set",
+     0.7946
+    ],
+    [
+     "Air Freshener Oud",
+     0.7878
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8353,
+   "margin": 0.0407
+  },
+  {
+   "kind": "cs",
+   "query": "serum للوجه",
+   "targets": [
+    "Argan Oil Serum",
+    "Vitamin C Serum"
+   ],
+   "ranked": [
+    [
+     "Vitamin C Serum",
+     0.8572
+    ],
+    [
+     "Rose Face Cream",
+     0.8512
+    ],
+    [
+     "Facial Mask Pack",
+     0.8448
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8572,
+   "margin": 0.006
+  },
+  {
+   "kind": "cs",
+   "query": "hair mask أركان",
+   "targets": [
+    "Hair Mask Argan"
+   ],
+   "ranked": [
+    [
+     "Hair Mask Argan",
+     0.8822
+    ],
+    [
+     "Facial Mask Pack",
+     0.8491
+    ],
+    [
+     "Argan Oil Serum",
+     0.8287
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8822,
+   "margin": 0.0331
+  },
+  {
+   "kind": "cs",
+   "query": "laptop stand للمكتب",
+   "targets": [
+    "Laptop Stand"
+   ],
+   "ranked": [
+    [
+     "Laptop Stand",
+     0.8696
+    ],
+    [
+     "Tablet Stand",
+     0.8481
+    ],
+    [
+     "Portable Monitor",
+     0.8147
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8696,
+   "margin": 0.0215
+  },
+  {
+   "kind": "cs",
+   "query": "prayer mat فاخرة",
+   "targets": [
+    "Prayer Mat Premium"
+   ],
+   "ranked": [
+    [
+     "Prayer Mat Premium",
+     0.8781
+    ],
+    [
+     "Phone Case Premium",
+     0.8275
+    ],
+    [
+     "Oud Incense Set",
+     0.8247
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8781,
+   "margin": 0.0506
+  },
+  {
+   "kind": "cs",
+   "query": "gift set عطور",
+   "targets": [
+    "Perfume Gift Set"
+   ],
+   "ranked": [
+    [
+     "Perfume Gift Set",
+     0.8929
+    ],
+    [
+     "Scented Candles Set",
+     0.8572
+    ],
+    [
+     "Lip Gloss Set",
+     0.8484
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8929,
+   "margin": 0.0357
+  },
+  {
+   "kind": "spell",
+   "query": "عباية",
+   "targets": [
+    "Abaya Classic",
+    "Embroidered Abaya"
+   ],
+   "ranked": [
+    [
+     "Embroidered Abaya",
+     0.7923
+    ],
+    [
+     "Abaya Classic",
+     0.789
+    ],
+    [
+     "Storage Baskets",
+     0.7715
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.7923,
+   "margin": 0.0033
+  },
+  {
+   "kind": "spell",
+   "query": "عباية مطرزة",
+   "targets": [
+    "Embroidered Abaya"
+   ],
+   "ranked": [
+    [
+     "Embroidered Abaya",
+     0.8367
+    ],
+    [
+     "Storage Baskets",
+     0.8015
+    ],
+    [
+     "Tahini Paste",
+     0.7983
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8367,
+   "margin": 0.0352
+  },
+  {
+   "kind": "spell",
+   "query": "طحينه",
+   "targets": [
+    "Tahini Paste"
+   ],
+   "ranked": [
+    [
+     "Tahini Paste",
+     0.8187
+    ],
+    [
+     "Throw Blanket",
+     0.7871
+    ],
+    [
+     "Halawa Pistachio",
+     0.7869
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8187,
+   "margin": 0.0316
+  },
+  {
+   "kind": "spell",
+   "query": "قهوه عربيه",
+   "targets": [
+    "Arabic Coffee Blend",
+    "Arabic Coffee Set"
+   ],
+   "ranked": [
+    [
+     "Arabic Coffee Blend",
+     0.8392
+    ],
+    [
+     "Arabic Coffee Set",
+     0.8331
+    ],
+    [
+     "Karak Tea Blend",
+     0.8035
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.8392,
+   "margin": 0.0061
+  },
+  {
+   "kind": "spell",
+   "query": "حنا",
+   "targets": [
+    "Henna Powder"
+   ],
+   "ranked": [
+    [
+     "Henna Powder",
+     0.7852
+    ],
+    [
+     "Webcam HD",
+     0.7473
+    ],
+    [
+     "Tahini Paste",
+     0.7443
+    ]
+   ],
+   "ok1": true,
+   "ok3": true,
+   "score": 0.7852,
+   "margin": 0.0379
+  }
+ ],
+ "absent": [
+  {
+   "query": "sports shoes",
+   "ranked": [
+    [
+     "Sports Leggings",
+     0.8261
+    ],
+    [
+     "Gaming Headset",
+     0.7885
+    ],
+    [
+     "Formal Blazer",
+     0.7771
+    ]
+   ],
+   "score": 0.8261,
+   "margin": 0.0376
+  },
+  {
+   "query": "جزمة رياضية",
+   "ranked": [
+    [
+     "Sports Leggings",
+     0.7982
+    ],
+    [
+     "Gaming Headset",
+     0.7902
+    ],
+    [
+     "Ghee Premium 500g",
+     0.7673
+    ]
+   ],
+   "score": 0.7982,
+   "margin": 0.008
+  },
+  {
+   "query": "Nike shoes",
+   "ranked": [
+    [
+     "Casual Jeans",
+     0.7734
+    ],
+    [
+     "Sports Leggings",
+     0.7704
+    ],
+    [
+     "Table Runner",
+     0.7687
+    ]
+   ],
+   "score": 0.7734,
+   "margin": 0.003
+  },
+  {
+   "query": "حذاء نايكي",
+   "ranked": [
+    [
+     "Denim Jacket",
+     0.7882
+    ],
+    [
+     "Casual Jeans",
+     0.7796
+    ],
+    [
+     "Fairy Lights",
+     0.7768
+    ]
+   ],
+   "score": 0.7882,
+   "margin": 0.0086
+  },
+  {
+   "query": "iPhone 15",
+   "ranked": [
+    [
+     "Phone Case Premium",
+     0.7834
+    ],
+    [
+     "Smart Plug",
+     0.7791
+    ],
+    [
+     "Portable Monitor",
+     0.7759
+    ]
+   ],
+   "score": 0.7834,
+   "margin": 0.0043
+  },
+  {
+   "query": "ايفون 15",
+   "ranked": [
+    [
+     "Beach Kaftan",
+     0.785
+    ],
+    [
+     "Phone Case Premium",
+     0.7825
+    ],
+    [
+     "Saffron Premium 5g",
+     0.7818
+    ]
+   ],
+   "score": 0.785,
+   "margin": 0.0025
+  },
+  {
+   "query": "Samsung TV",
+   "ranked": [
+    [
+     "Webcam HD",
+     0.779
+    ],
+    [
+     "Portable Monitor",
+     0.7736
+    ],
+    [
+     "Smart Watch",
+     0.7694
+    ]
+   ],
+   "score": 0.779,
+   "margin": 0.0054
+  },
+  {
+   "query": "تلفزيون سامسونج",
+   "ranked": [
+    [
+     "Webcam HD",
+     0.7851
+    ],
+    [
+     "Portable Monitor",
+     0.7821
+    ],
+    [
+     "Smart Watch",
+     0.7786
+    ]
+   ],
+   "score": 0.7851,
+   "margin": 0.003
+  },
+  {
+   "query": "football boots",
+   "ranked": [
+    [
+     "Sports Leggings",
+     0.7894
+    ],
+    [
+     "Palazzo Pants",
+     0.7836
+    ],
+    [
+     "Beach Kaftan",
+     0.7788
+    ]
+   ],
+   "score": 0.7894,
+   "margin": 0.0058
+  },
+  {
+   "query": "حذاء كرة قدم",
+   "ranked": [
+    [
+     "Sports Leggings",
+     0.8151
+    ],
+    [
+     "Beach Kaftan",
+     0.8015
+    ],
+    [
+     "Palazzo Pants",
+     0.8013
+    ]
+   ],
+   "score": 0.8151,
+   "margin": 0.0136
+  },
+  {
+   "query": "electric guitar",
+   "ranked": [
+    [
+     "Smart Plug",
+     0.7761
+    ],
+    [
+     "Gaming Headset",
+     0.7723
+    ],
+    [
+     "Wireless Charger",
+     0.7678
+    ]
+   ],
+   "score": 0.7761,
+   "margin": 0.0038
+  },
+  {
+   "query": "جيتار كهربائي",
+   "ranked": [
+    [
+     "Gaming Headset",
+     0.798
+    ],
+    [
+     "Wireless Charger",
+     0.7938
+    ],
+    [
+     "Bluetooth Speaker",
+     0.7931
+    ]
+   ],
+   "score": 0.798,
+   "margin": 0.0042
+  },
+  {
+   "query": "car tyres",
+   "ranked": [
+    [
+     "Table Runner",
+     0.7779
+    ],
+    [
+     "Whitening Cream",
+     0.7677
+    ],
+    [
+     "Camel Milk Powder",
+     0.7662
+    ]
+   ],
+   "score": 0.7779,
+   "margin": 0.0102
+  },
+  {
+   "query": "إطارات سيارة",
+   "ranked": [
+    [
+     "Table Runner",
+     0.7822
+    ],
+    [
+     "Storage Baskets",
+     0.7778
+    ],
+    [
+     "Herb Planter Set",
+     0.7758
+    ]
+   ],
+   "score": 0.7822,
+   "margin": 0.0044
+  },
+  {
+   "query": "PlayStation 5",
+   "ranked": [
+    [
+     "Smart Plug",
+     0.795
+    ],
+    [
+     "Gaming Headset",
+     0.7928
+    ],
+    [
+     "Portable Monitor",
+     0.7898
+    ]
+   ],
+   "score": 0.795,
+   "margin": 0.0022
+  },
+  {
+   "query": "بلايستيشن 5",
+   "ranked": [
+    [
+     "Smart Plug",
+     0.808
+    ],
+    [
+     "Gaming Headset",
+     0.8022
+    ],
+    [
+     "Portable Monitor",
+     0.8013
+    ]
+   ],
+   "score": 0.808,
+   "margin": 0.0058
+  }
+ ]
+}
