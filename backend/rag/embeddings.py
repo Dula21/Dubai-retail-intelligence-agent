@@ -117,7 +117,8 @@ def prepare_document_text(product: dict) -> str:
     """
     parts = [
         # E5 document prefix (required)
-        E5_DOCUMENT_PREFIX,
+        #E5_DOCUMENT_PREFIX,
+        
         # Primary identifiers (most discriminative — go first)
         product.get("name_en", ""),
         product.get("name_ar", ""),
@@ -132,7 +133,7 @@ def prepare_document_text(product: dict) -> str:
         f"lead time: {product.get('supplier_lead_days', '')} days",
     ]
     # Filter empty and join
-    return " | ".join(p for p in parts if p.strip() and p != E5_DOCUMENT_PREFIX)
+    return E5_DOCUMENT_PREFIX + " | ".join(p for p in parts if p.strip())
 
 
 def prepare_query_text(query: str, language: Optional[str] = None) -> str:
