@@ -1,5 +1,5 @@
 {
- "label": "baseline_6fdc697_v2",
+ "label": "final_passage_prefix",
  "model": "intfloat/multilingual-e5-large",
  "rows": [
   {
@@ -20,55 +20,55 @@
     "en": [
      [
       "FSH-0001",
-      0.8625,
+      0.8618,
       "Summer Dress"
      ],
      [
       "FSH-0016",
-      0.8569,
+      0.8557,
       "Summer Dress Pro"
      ],
      [
-      "FSH-0046",
-      0.8531,
-      "Summer Dress Premium"
-     ],
-     [
       "FSH-0061",
-      0.8528,
+      0.8522,
       "Summer Dress Lite"
      ],
      [
-      "FSH-0031",
-      0.8527,
-      "Summer Dress Plus"
+      "FSH-0046",
+      0.8522,
+      "Summer Dress Premium"
+     ],
+     [
+      "FSH-0076",
+      0.8517,
+      "Summer Dress 6"
      ]
     ],
     "ar": [
      [
       "FSH-0001",
-      0.8726,
+      0.8742,
       "Summer Dress"
      ],
      [
       "FSH-0076",
-      0.8673,
+      0.8716,
       "Summer Dress 6"
      ],
      [
       "FSH-0106",
-      0.864,
+      0.8681,
       "Summer Dress 8"
      ],
      [
-      "FSH-0091",
-      0.8614,
-      "Summer Dress 7"
+      "FSH-0061",
+      0.8657,
+      "Summer Dress Lite"
      ],
      [
-      "FSH-0061",
-      0.8608,
-      "Summer Dress Lite"
+      "FSH-0016",
+      0.8645,
+      "Summer Dress Pro"
      ]
     ]
    }
@@ -91,55 +91,55 @@
     "en": [
      [
       "FSH-0002",
-      0.8839,
+      0.8842,
       "Abaya Classic"
      ],
      [
       "FSH-0077",
-      0.8796,
+      0.8795,
       "Abaya Classic 6"
      ],
      [
       "FSH-0047",
-      0.877,
+      0.8783,
       "Abaya Classic Premium"
      ],
      [
       "FSH-0107",
-      0.8758,
+      0.8756,
       "Abaya Classic 8"
      ],
      [
       "FSH-0092",
-      0.8734,
+      0.8743,
       "Abaya Classic 7"
      ]
     ],
     "ar": [
      [
       "FSH-0002",
-      0.8716,
+      0.8727,
       "Abaya Classic"
      ],
      [
       "FSH-0107",
-      0.8671,
+      0.8711,
       "Abaya Classic 8"
      ],
      [
-      "FSH-0077",
-      0.8646,
-      "Abaya Classic 6"
-     ],
-     [
       "FSH-0092",
-      0.8644,
+      0.8677,
       "Abaya Classic 7"
      ],
      [
-      "FSH-0047",
-      0.8618,
-      "Abaya Classic Premium"
+      "FSH-0077",
+      0.8671,
+      "Abaya Classic 6"
+     ],
+     [
+      "FSH-0062",
+      0.8653,
+      "Abaya Classic Lite"
      ]
     ]
    }
@@ -162,55 +162,55 @@
     "en": [
      [
       "FSH-0003",
-      0.8626,
+      0.8628,
       "Casual Jeans"
      ],
      [
       "FSH-0063",
-      0.8596,
+      0.8599,
       "Casual Jeans Lite"
      ],
      [
-      "FSH-0018",
-      0.8588,
-      "Casual Jeans Pro"
-     ],
-     [
       "FSH-0108",
-      0.8585,
+      0.8589,
       "Casual Jeans 8"
      ],
      [
+      "FSH-0018",
+      0.8586,
+      "Casual Jeans Pro"
+     ],
+     [
       "FSH-0078",
-      0.8562,
+      0.8568,
       "Casual Jeans 6"
      ]
     ],
     "ar": [
      [
       "FSH-0003",
-      0.812,
+      0.8069,
       "Casual Jeans"
      ],
      [
       "FSH-0018",
-      0.8092,
+      0.8063,
       "Casual Jeans Pro"
      ],
      [
       "FSH-0078",
-      0.8057,
+      0.804,
       "Casual Jeans 6"
      ],
      [
       "FSH-0093",
-      0.8053,
+      0.8033,
       "Casual Jeans 7"
      ],
      [
-      "FSH-0048",
-      0.8037,
-      "Casual Jeans Premium"
+      "FSH-0108",
+      0.8007,
+      "Casual Jeans 8"
      ]
     ]
    }
@@ -233,17 +233,17 @@
     "en": [
      [
       "FSH-0004",
-      0.8606,
+      0.8615,
       "Linen Shirt"
      ],
      [
       "FSH-0094",
-      0.8576,
+      0.8568,
       "Linen Shirt 7"
      ],
      [
       "FSH-0079",
-      0.8572,
+      0.8563,
       "Linen Shirt 6"
      ],
      [
@@ -252,36 +252,36 @@
       "Linen Shirt Premium"
      ],
      [
-      "FSH-0109",
-      0.8548,
-      "Linen Shirt 8"
+      "FSH-0064",
+      0.856,
+      "Linen Shirt Lite"
      ]
     ],
     "ar": [
      [
       "FSH-0004",
-      0.8663,
+      0.869,
       "Linen Shirt"
      ],
      [
       "FSH-0109",
-      0.8599,
+      0.8634,
       "Linen Shirt 8"
      ],
      [
       "FSH-0079",
-      0.8597,
+      0.8632,
       "Linen Shirt 6"
      ],
      [
       "FSH-0049",
-      0.8568,
+      0.8605,
       "Linen Shirt Premium"
      ],
      [
-      "FSH-0019",
-      0.8552,
-      "Linen Shirt Pro"
+      "FSH-0064",
+      0.8602,
+      "Linen Shirt Lite"
      ]
     ]
    }
@@ -304,55 +304,55 @@
     "en": [
      [
       "FSH-0005",
-      0.8637,
+      0.8649,
       "Maxi Skirt"
      ],
      [
       "FSH-0050",
-      0.8558,
+      0.8566,
       "Maxi Skirt Premium"
      ],
      [
       "FSH-0065",
-      0.8548,
+      0.8563,
       "Maxi Skirt Lite"
      ],
      [
       "FSH-0080",
-      0.8546,
+      0.8561,
       "Maxi Skirt 6"
      ],
      [
       "FSH-0020",
-      0.852,
+      0.8548,
       "Maxi Skirt Pro"
      ]
     ],
     "ar": [
      [
       "FSH-0005",
-      0.8593,
+      0.8618,
       "Maxi Skirt"
      ],
      [
       "FSH-0080",
-      0.8535,
+      0.857,
       "Maxi Skirt 6"
      ],
      [
-      "FSH-0110",
-      0.8522,
-      "Maxi Skirt 8"
-     ],
-     [
       "FSH-0020",
-      0.8521,
+      0.8553,
       "Maxi Skirt Pro"
      ],
      [
-      "FSH-0095",
-      0.8503,
-      "Maxi Skirt 7"
+      "FSH-0110",
+      0.8548,
+      "Maxi Skirt 8"
+     ],
+     [
+      "FSH-0050",
+      0.8535,
+      "Maxi Skirt Premium"
      ]
     ]
    }
@@ -374,55 +374,55 @@
    "hits": {
     "en": [
      [
-      "FSH-0081",
-      0.8528,
-      "Kandura White 6"
-     ],
-     [
       "FSH-0021",
-      0.8507,
+      0.8502,
       "Kandura White Pro"
      ],
      [
+      "FSH-0081",
+      0.85,
+      "Kandura White 6"
+     ],
+     [
       "FSH-0066",
-      0.8501,
+      0.8485,
       "Kandura White Lite"
      ],
      [
-      "FSH-0006",
-      0.8499,
-      "Kandura White"
+      "FSH-0096",
+      0.8456,
+      "Kandura White 7"
      ],
      [
-      "FSH-0096",
-      0.8473,
-      "Kandura White 7"
+      "FSH-0006",
+      0.8455,
+      "Kandura White"
      ]
     ],
     "ar": [
      [
-      "FSH-0006",
-      0.8473,
-      "Kandura White"
-     ],
-     [
       "FSH-0021",
-      0.8465,
+      0.8494,
       "Kandura White Pro"
      ],
      [
+      "FSH-0006",
+      0.8477,
+      "Kandura White"
+     ],
+     [
       "FSH-0111",
-      0.8438,
+      0.8453,
       "Kandura White 8"
      ],
      [
       "FSH-0096",
-      0.8428,
+      0.8453,
       "Kandura White 7"
      ],
      [
       "FSH-0081",
-      0.8419,
+      0.8448,
       "Kandura White 6"
      ]
     ]
@@ -446,55 +446,55 @@
     "en": [
      [
       "FSH-0007",
-      0.8752,
+      0.8746,
       "Sports Leggings"
      ],
      [
-      "FSH-0112",
-      0.8671,
-      "Sports Leggings 8"
-     ],
-     [
       "FSH-0067",
-      0.867,
+      0.8712,
       "Sports Leggings Lite"
      ],
      [
+      "FSH-0112",
+      0.8689,
+      "Sports Leggings 8"
+     ],
+     [
       "FSH-0082",
-      0.8668,
+      0.868,
       "Sports Leggings 6"
      ],
      [
       "FSH-0097",
-      0.8654,
+      0.8671,
       "Sports Leggings 7"
      ]
     ],
     "ar": [
      [
       "FSH-0007",
-      0.8568,
+      0.8569,
       "Sports Leggings"
      ],
      [
+      "FSH-0067",
+      0.851,
+      "Sports Leggings Lite"
+     ],
+     [
       "FSH-0082",
-      0.8481,
+      0.8497,
       "Sports Leggings 6"
      ],
      [
-      "FSH-0112",
-      0.8466,
-      "Sports Leggings 8"
-     ],
-     [
       "FSH-0022",
-      0.8459,
+      0.8496,
       "Sports Leggings Pro"
      ],
      [
-      "FSH-0097",
-      0.8459,
-      "Sports Leggings 7"
+      "FSH-0112",
+      0.8483,
+      "Sports Leggings 8"
      ]
     ]
    }
@@ -517,55 +517,55 @@
     "en": [
      [
       "FSH-0008",
-      0.8724,
+      0.8721,
       "Formal Blazer"
      ],
      [
       "FSH-0083",
-      0.8683,
+      0.8696,
       "Formal Blazer 6"
      ],
      [
-      "FSH-0053",
-      0.8659,
-      "Formal Blazer Premium"
-     ],
-     [
       "FSH-0098",
-      0.8648,
+      0.8651,
       "Formal Blazer 7"
      ],
      [
+      "FSH-0053",
+      0.8644,
+      "Formal Blazer Premium"
+     ],
+     [
       "FSH-0023",
-      0.8647,
+      0.8632,
       "Formal Blazer Pro"
      ]
     ],
     "ar": [
      [
       "FSH-0008",
-      0.8571,
+      0.8576,
       "Formal Blazer"
      ],
      [
       "FSH-0023",
-      0.8561,
+      0.8557,
       "Formal Blazer Pro"
      ],
      [
+      "FSH-0038",
+      0.8546,
+      "Formal Blazer Plus"
+     ],
+     [
       "FSH-0053",
-      0.8526,
+      0.8532,
       "Formal Blazer Premium"
      ],
      [
       "FSH-0083",
-      0.8497,
+      0.8524,
       "Formal Blazer 6"
-     ],
-     [
-      "FSH-0068",
-      0.8494,
-      "Formal Blazer Lite"
      ]
     ]
    }
@@ -588,55 +588,55 @@
     "en": [
      [
       "FSH-0009",
-      0.8888,
+      0.8856,
       "Beach Kaftan"
      ],
      [
       "FSH-0084",
-      0.881,
+      0.8791,
       "Beach Kaftan 6"
      ],
      [
       "FSH-0114",
-      0.8785,
+      0.8787,
       "Beach Kaftan 8"
      ],
      [
-      "FSH-0039",
-      0.8765,
-      "Beach Kaftan Plus"
+      "FSH-0069",
+      0.8781,
+      "Beach Kaftan Lite"
      ],
      [
-      "FSH-0069",
-      0.8764,
-      "Beach Kaftan Lite"
+      "FSH-0054",
+      0.8763,
+      "Beach Kaftan Premium"
      ]
     ],
     "ar": [
      [
       "FSH-0009",
-      0.8633,
+      0.8655,
       "Beach Kaftan"
      ],
      [
       "FSH-0084",
-      0.8484,
+      0.8538,
       "Beach Kaftan 6"
      ],
      [
       "FSH-0114",
-      0.8467,
+      0.8528,
       "Beach Kaftan 8"
      ],
      [
-      "FSH-0099",
-      0.843,
-      "Beach Kaftan 7"
+      "FSH-0024",
+      0.8502,
+      "Beach Kaftan Pro"
      ],
      [
-      "FSH-0054",
-      0.8429,
-      "Beach Kaftan Premium"
+      "FSH-0069",
+      0.8499,
+      "Beach Kaftan Lite"
      ]
     ]
    }
@@ -659,55 +659,55 @@
     "en": [
      [
       "FSH-0010",
-      0.8475,
+      0.8434,
       "Winter Coat"
      ],
      [
+      "FSH-0055",
+      0.8395,
+      "Winter Coat Premium"
+     ],
+     [
       "FSH-0100",
-      0.8431,
+      0.839,
       "Winter Coat 7"
      ],
      [
       "FSH-0070",
-      0.8428,
+      0.8389,
       "Winter Coat Lite"
      ],
      [
-      "FSH-0055",
-      0.8421,
-      "Winter Coat Premium"
-     ],
-     [
-      "FSH-0085",
-      0.8394,
-      "Winter Coat 6"
+      "FSH-0115",
+      0.8386,
+      "Winter Coat 8"
      ]
     ],
     "ar": [
      [
       "FSH-0010",
-      0.8668,
+      0.8704,
       "Winter Coat"
      ],
      [
       "FSH-0100",
-      0.8566,
+      0.8646,
       "Winter Coat 7"
      ],
      [
-      "FSH-0070",
-      0.8564,
-      "Winter Coat Lite"
+      "FSH-0115",
+      0.8639,
+      "Winter Coat 8"
      ],
      [
       "FSH-0085",
-      0.8554,
+      0.8637,
       "Winter Coat 6"
      ],
      [
-      "FSH-0115",
-      0.8549,
-      "Winter Coat 8"
+      "FSH-0070",
+      0.8626,
+      "Winter Coat Lite"
      ]
     ]
    }
@@ -730,54 +730,54 @@
     "en": [
      [
       "FSH-0011",
-      0.8661,
+      0.8632,
       "Palazzo Pants"
      ],
      [
       "FSH-0086",
-      0.8597,
+      0.861,
       "Palazzo Pants 6"
      ],
      [
       "FSH-0041",
-      0.8596,
+      0.8594,
       "Palazzo Pants Plus"
      ],
      [
-      "FSH-0056",
-      0.859,
-      "Palazzo Pants Premium"
+      "FSH-0116",
+      0.8589,
+      "Palazzo Pants 8"
      ],
      [
-      "FSH-0101",
+      "FSH-0071",
       0.8589,
-      "Palazzo Pants 7"
+      "Palazzo Pants Lite"
      ]
     ],
     "ar": [
      [
       "FSH-0011",
-      0.8637,
+      0.8616,
       "Palazzo Pants"
      ],
      [
       "FSH-0086",
-      0.8579,
+      0.8608,
       "Palazzo Pants 6"
      ],
      [
-      "FSH-0056",
-      0.8556,
-      "Palazzo Pants Premium"
-     ],
-     [
       "FSH-0116",
-      0.8555,
+      0.8574,
       "Palazzo Pants 8"
      ],
      [
+      "FSH-0026",
+      0.8562,
+      "Palazzo Pants Pro"
+     ],
+     [
       "FSH-0041",
-      0.8552,
+      0.8554,
       "Palazzo Pants Plus"
      ]
     ]
@@ -801,55 +801,55 @@
     "en": [
      [
       "FSH-0012",
-      0.8802,
+      0.8798,
       "Embroidered Abaya"
      ],
      [
+      "FSH-0087",
+      0.875,
+      "Embroidered Abaya 6"
+     ],
+     [
       "FSH-0072",
-      0.8756,
+      0.8746,
       "Embroidered Abaya Lite"
      ],
      [
       "FSH-0042",
-      0.8752,
+      0.8733,
       "Embroidered Abaya Plus"
      ],
      [
-      "FSH-0087",
-      0.8743,
-      "Embroidered Abaya 6"
-     ],
-     [
-      "FSH-0027",
-      0.873,
-      "Embroidered Abaya Pro"
+      "FSH-0117",
+      0.8727,
+      "Embroidered Abaya 8"
      ]
     ],
     "ar": [
      [
       "FSH-0087",
-      0.8641,
+      0.8676,
       "Embroidered Abaya 6"
      ],
      [
-      "FSH-0072",
-      0.8623,
-      "Embroidered Abaya Lite"
-     ],
-     [
       "FSH-0012",
-      0.8607,
+      0.8663,
       "Embroidered Abaya"
      ],
      [
-      "FSH-0102",
-      0.8604,
-      "Embroidered Abaya 7"
+      "FSH-0072",
+      0.8655,
+      "Embroidered Abaya Lite"
      ],
      [
       "FSH-0117",
-      0.8596,
+      0.8637,
       "Embroidered Abaya 8"
+     ],
+     [
+      "FSH-0102",
+      0.8636,
+      "Embroidered Abaya 7"
      ]
     ]
    }
@@ -872,55 +872,55 @@
     "en": [
      [
       "FSH-0013",
-      0.868,
+      0.8684,
       "Denim Jacket"
      ],
      [
       "FSH-0073",
-      0.8625,
+      0.8611,
       "Denim Jacket Lite"
      ],
      [
-      "FSH-0118",
-      0.8595,
-      "Denim Jacket 8"
-     ],
-     [
       "FSH-0058",
-      0.8585,
+      0.8596,
       "Denim Jacket Premium"
      ],
      [
+      "FSH-0118",
+      0.859,
+      "Denim Jacket 8"
+     ],
+     [
       "FSH-0103",
-      0.8565,
+      0.8567,
       "Denim Jacket 7"
      ]
     ],
     "ar": [
      [
       "FSH-0013",
-      0.8515,
+      0.8551,
       "Denim Jacket"
      ],
      [
       "FSH-0073",
-      0.8483,
+      0.8506,
       "Denim Jacket Lite"
      ],
      [
       "FSH-0118",
-      0.8464,
+      0.849,
       "Denim Jacket 8"
      ],
      [
       "FSH-0103",
-      0.8462,
+      0.8485,
       "Denim Jacket 7"
      ],
      [
-      "FSH-0028",
-      0.8429,
-      "Denim Jacket Pro"
+      "FSH-0088",
+      0.8474,
+      "Denim Jacket 6"
      ]
     ]
    }
@@ -943,55 +943,55 @@
     "en": [
      [
       "FSH-0029",
-      0.8527,
+      0.8589,
       "Printed T-Shirt Pro"
      ],
      [
       "FSH-0014",
-      0.8526,
+      0.8578,
       "Printed T-Shirt"
      ],
      [
       "FSH-0059",
-      0.8492,
+      0.8556,
       "Printed T-Shirt Premium"
      ],
      [
       "FSH-0074",
-      0.8488,
+      0.8546,
       "Printed T-Shirt Lite"
      ],
      [
       "FSH-0089",
-      0.8467,
+      0.8516,
       "Printed T-Shirt 6"
      ]
     ],
     "ar": [
      [
       "FSH-0014",
-      0.8724,
+      0.8755,
       "Printed T-Shirt"
      ],
      [
       "FSH-0089",
-      0.8613,
+      0.8661,
       "Printed T-Shirt 6"
      ],
      [
-      "FSH-0044",
-      0.8588,
-      "Printed T-Shirt Plus"
+      "FSH-0119",
+      0.8633,
+      "Printed T-Shirt 8"
      ],
      [
       "FSH-0029",
-      0.8587,
+      0.8617,
       "Printed T-Shirt Pro"
      ],
      [
-      "FSH-0119",
-      0.8587,
-      "Printed T-Shirt 8"
+      "FSH-0044",
+      0.8605,
+      "Printed T-Shirt Plus"
      ]
     ]
    }
@@ -1013,55 +1013,55 @@
    "hits": {
     "en": [
      [
-      "FSH-0015",
-      0.8748,
-      "Modest Swimwear"
-     ],
-     [
       "FSH-0075",
-      0.874,
+      0.8766,
       "Modest Swimwear Lite"
      ],
      [
+      "FSH-0015",
+      0.875,
+      "Modest Swimwear"
+     ],
+     [
       "FSH-0120",
-      0.8723,
+      0.8721,
       "Modest Swimwear 8"
      ],
      [
       "FSH-0105",
-      0.869,
+      0.8701,
       "Modest Swimwear 7"
      ],
      [
-      "FSH-0090",
-      0.8687,
-      "Modest Swimwear 6"
+      "FSH-0030",
+      0.8698,
+      "Modest Swimwear Pro"
      ]
     ],
     "ar": [
      [
       "FSH-0015",
-      0.843,
+      0.8494,
       "Modest Swimwear"
      ],
      [
-      "FSH-0030",
-      0.837,
-      "Modest Swimwear Pro"
-     ],
-     [
       "FSH-0045",
-      0.8365,
+      0.8463,
       "Modest Swimwear Plus"
      ],
      [
+      "FSH-0030",
+      0.8455,
+      "Modest Swimwear Pro"
+     ],
+     [
       "FSH-0090",
-      0.8363,
+      0.8434,
       "Modest Swimwear 6"
      ],
      [
       "FSH-0060",
-      0.835,
+      0.8416,
       "Modest Swimwear Premium"
      ]
     ]
@@ -1084,55 +1084,55 @@
     "en": [
      [
       "ELC-0121",
-      0.8734,
+      0.8778,
       "Wireless Earbuds"
      ],
      [
       "ELC-0196",
-      0.8727,
+      0.8748,
       "Wireless Earbuds 6"
      ],
      [
       "ELC-0211",
-      0.8688,
+      0.8715,
       "Wireless Earbuds 7"
      ],
      [
       "ELC-0181",
-      0.8676,
+      0.8701,
       "Wireless Earbuds Lite"
      ],
      [
-      "ELC-0151",
-      0.867,
-      "Wireless Earbuds Plus"
+      "ELC-0136",
+      0.8696,
+      "Wireless Earbuds Pro"
      ]
     ],
     "ar": [
      [
-      "ELC-0211",
-      0.8546,
-      "Wireless Earbuds 7"
-     ],
-     [
-      "ELC-0196",
-      0.8545,
-      "Wireless Earbuds 6"
-     ],
-     [
       "ELC-0121",
-      0.8545,
+      0.8609,
       "Wireless Earbuds"
      ],
      [
+      "ELC-0196",
+      0.859,
+      "Wireless Earbuds 6"
+     ],
+     [
+      "ELC-0211",
+      0.8579,
+      "Wireless Earbuds 7"
+     ],
+     [
       "ELC-0181",
-      0.851,
+      0.854,
       "Wireless Earbuds Lite"
      ],
      [
-      "ELC-0166",
-      0.8453,
-      "Wireless Earbuds Premium"
+      "ELC-0136",
+      0.8501,
+      "Wireless Earbuds Pro"
      ]
     ]
    }
@@ -1154,55 +1154,55 @@
     "en": [
      [
       "ELC-0122",
-      0.9059,
+      0.9036,
       "Power Bank 20000mAh"
      ],
      [
       "ELC-0167",
-      0.9005,
+      0.8993,
       "Power Bank 20000mAh Premium"
      ],
      [
       "ELC-0137",
-      0.8996,
+      0.8986,
       "Power Bank 20000mAh Pro"
      ],
      [
       "ELC-0197",
-      0.8995,
+      0.8982,
       "Power Bank 20000mAh 6"
      ],
      [
-      "ELC-0152",
-      0.8953,
-      "Power Bank 20000mAh Plus"
+      "ELC-0182",
+      0.8948,
+      "Power Bank 20000mAh Lite"
      ]
     ],
     "ar": [
      [
       "ELC-0122",
-      0.852,
+      0.8605,
       "Power Bank 20000mAh"
      ],
      [
       "ELC-0197",
-      0.8493,
+      0.8584,
       "Power Bank 20000mAh 6"
      ],
      [
       "ELC-0212",
-      0.8483,
+      0.8571,
       "Power Bank 20000mAh 7"
      ],
      [
-      "ELC-0152",
-      0.848,
-      "Power Bank 20000mAh Plus"
+      "ELC-0182",
+      0.8564,
+      "Power Bank 20000mAh Lite"
      ],
      [
-      "ELC-0182",
-      0.8472,
-      "Power Bank 20000mAh Lite"
+      "ELC-0152",
+      0.8548,
+      "Power Bank 20000mAh Plus"
      ]
     ]
    }
@@ -1224,18 +1224,13 @@
     "en": [
      [
       "ELC-0123",
-      0.8591,
+      0.8588,
       "Smart Watch"
      ],
      [
       "ELC-0213",
-      0.8529,
+      0.8518,
       "Smart Watch 7"
-     ],
-     [
-      "ELC-0183",
-      0.8509,
-      "Smart Watch Lite"
      ],
      [
       "ELC-0198",
@@ -1243,35 +1238,40 @@
       "Smart Watch 6"
      ],
      [
+      "ELC-0183",
+      0.8502,
+      "Smart Watch Lite"
+     ],
+     [
       "ELC-0153",
-      0.8479,
+      0.8486,
       "Smart Watch Plus"
      ]
     ],
     "ar": [
      [
       "ELC-0198",
-      0.8565,
+      0.8616,
       "Smart Watch 6"
      ],
      [
       "ELC-0123",
-      0.8548,
+      0.8582,
       "Smart Watch"
      ],
      [
       "ELC-0138",
-      0.8514,
+      0.8582,
       "Smart Watch Pro"
      ],
      [
       "ELC-0213",
-      0.8504,
+      0.8562,
       "Smart Watch 7"
      ],
      [
       "ELC-0183",
-      0.8484,
+      0.8507,
       "Smart Watch Lite"
      ]
     ]
@@ -1293,55 +1293,55 @@
    "hits": {
     "en": [
      [
-      "ELC-0124",
-      0.8705,
-      "Bluetooth Speaker"
-     ],
-     [
       "ELC-0184",
-      0.8699,
+      0.8711,
       "Bluetooth Speaker Lite"
      ],
      [
+      "ELC-0124",
+      0.8703,
+      "Bluetooth Speaker"
+     ],
+     [
       "ELC-0199",
-      0.8671,
+      0.8679,
       "Bluetooth Speaker 6"
      ],
      [
-      "ELC-0154",
-      0.8642,
-      "Bluetooth Speaker Plus"
+      "ELC-0139",
+      0.8672,
+      "Bluetooth Speaker Pro"
      ],
      [
-      "ELC-0139",
-      0.8639,
-      "Bluetooth Speaker Pro"
+      "ELC-0169",
+      0.8657,
+      "Bluetooth Speaker Premium"
      ]
     ],
     "ar": [
      [
       "ELC-0124",
-      0.8772,
+      0.8776,
       "Bluetooth Speaker"
      ],
      [
       "ELC-0154",
-      0.8752,
+      0.8746,
       "Bluetooth Speaker Plus"
      ],
      [
       "ELC-0139",
-      0.8698,
+      0.8732,
       "Bluetooth Speaker Pro"
      ],
      [
       "ELC-0184",
-      0.8686,
+      0.8704,
       "Bluetooth Speaker Lite"
      ],
      [
       "ELC-0199",
-      0.8662,
+      0.8704,
       "Bluetooth Speaker 6"
      ]
     ]
@@ -1364,55 +1364,55 @@
     "en": [
      [
       "ELC-0125",
-      0.8686,
+      0.8626,
       "USB-C Hub"
      ],
      [
       "ELC-0170",
-      0.8598,
+      0.8589,
       "USB-C Hub Premium"
      ],
      [
       "ELC-0215",
-      0.8597,
+      0.858,
       "USB-C Hub 7"
      ],
      [
-      "ELC-0200",
-      0.8567,
-      "USB-C Hub 6"
+      "ELC-0140",
+      0.8559,
+      "USB-C Hub Pro"
      ],
      [
-      "ELC-0140",
-      0.8561,
-      "USB-C Hub Pro"
+      "ELC-0200",
+      0.8556,
+      "USB-C Hub 6"
      ]
     ],
     "ar": [
      [
       "ELC-0125",
-      0.8672,
+      0.8687,
       "USB-C Hub"
      ],
      [
       "ELC-0155",
-      0.8647,
+      0.8679,
       "USB-C Hub Plus"
      ],
      [
       "ELC-0170",
-      0.8625,
+      0.8657,
       "USB-C Hub Premium"
      ],
      [
-      "ELC-0200",
-      0.8624,
-      "USB-C Hub 6"
+      "ELC-0140",
+      0.8655,
+      "USB-C Hub Pro"
      ],
      [
-      "ELC-0215",
-      0.8616,
-      "USB-C Hub 7"
+      "ELC-0200",
+      0.8646,
+      "USB-C Hub 6"
      ]
     ]
    }
@@ -1434,55 +1434,55 @@
     "en": [
      [
       "ELC-0171",
-      0.8905,
+      0.8926,
       "Phone Case Premium Premium"
      ],
      [
       "ELC-0141",
-      0.8883,
+      0.8916,
       "Phone Case Premium Pro"
      ],
      [
       "ELC-0126",
-      0.8864,
+      0.8879,
       "Phone Case Premium"
      ],
      [
       "ELC-0201",
-      0.8817,
+      0.8829,
       "Phone Case Premium 6"
      ],
      [
       "ELC-0186",
-      0.8805,
+      0.8812,
       "Phone Case Premium Lite"
      ]
     ],
     "ar": [
      [
       "ELC-0201",
-      0.8394,
+      0.8452,
       "Phone Case Premium 6"
      ],
      [
       "ELC-0126",
-      0.8391,
+      0.8436,
       "Phone Case Premium"
      ],
      [
       "ELC-0216",
-      0.838,
+      0.8434,
       "Phone Case Premium 7"
      ],
      [
       "ELC-0141",
-      0.8352,
+      0.8416,
       "Phone Case Premium Pro"
      ],
      [
-      "ELC-0171",
-      0.8319,
-      "Phone Case Premium Premium"
+      "ELC-0186",
+      0.8387,
+      "Phone Case Premium Lite"
      ]
     ]
    }
@@ -1504,54 +1504,54 @@
     "en": [
      [
       "ELC-0127",
-      0.866,
+      0.8631,
       "Ring Light"
      ],
      [
-      "ELC-0202",
-      0.8638,
-      "Ring Light 6"
-     ],
-     [
       "ELC-0187",
-      0.8594,
+      0.8627,
       "Ring Light Lite"
      ],
      [
+      "ELC-0202",
+      0.8623,
+      "Ring Light 6"
+     ],
+     [
       "ELC-0217",
-      0.8587,
+      0.858,
       "Ring Light 7"
      ],
      [
       "ELC-0142",
-      0.8568,
+      0.8562,
       "Ring Light Pro"
      ]
     ],
     "ar": [
      [
       "ELC-0127",
-      0.865,
+      0.8663,
       "Ring Light"
      ],
      [
       "ELC-0187",
-      0.8569,
+      0.8634,
       "Ring Light Lite"
      ],
      [
-      "ELC-0202",
-      0.8565,
-      "Ring Light 6"
-     ],
-     [
       "ELC-0142",
-      0.8561,
+      0.8604,
       "Ring Light Pro"
      ],
      [
+      "ELC-0202",
+      0.8602,
+      "Ring Light 6"
+     ],
+     [
       "ELC-0217",
-      0.8558,
+      0.8593,
       "Ring Light 7"
      ]
     ]
@@ -1574,18 +1574,13 @@
     "en": [
      [
       "ELC-0128",
-      0.8588,
+      0.857,
       "Laptop Stand"
      ],
      [
       "ELC-0188",
-      0.8553,
+      0.855,
       "Laptop Stand Lite"
-     ],
-     [
-      "ELC-0218",
-      0.8546,
-      "Laptop Stand 7"
      ],
      [
       "ELC-0143",
@@ -1593,36 +1588,41 @@
       "Laptop Stand Pro"
      ],
      [
-      "ELC-0158",
+      "ELC-0218",
+      0.8529,
+      "Laptop Stand 7"
+     ],
+     [
+      "ELC-0203",
       0.8517,
-      "Laptop Stand Plus"
+      "Laptop Stand 6"
      ]
     ],
     "ar": [
      [
       "ELC-0128",
-      0.8563,
+      0.8569,
       "Laptop Stand"
      ],
      [
-      "ELC-0143",
-      0.8463,
-      "Laptop Stand Pro"
-     ],
-     [
       "ELC-0203",
-      0.8462,
+      0.8488,
       "Laptop Stand 6"
      ],
      [
+      "ELC-0218",
+      0.8485,
+      "Laptop Stand 7"
+     ],
+     [
       "ELC-0188",
-      0.846,
+      0.8484,
       "Laptop Stand Lite"
      ],
      [
-      "ELC-0158",
-      0.846,
-      "Laptop Stand Plus"
+      "ELC-0143",
+      0.8479,
+      "Laptop Stand Pro"
      ]
     ]
    }
@@ -1644,54 +1644,54 @@
     "en": [
      [
       "ELC-0129",
-      0.857,
+      0.8588,
       "Webcam HD"
      ],
      [
       "ELC-0204",
-      0.8527,
+      0.8555,
       "Webcam HD 6"
      ],
      [
       "ELC-0219",
-      0.8523,
+      0.8539,
       "Webcam HD 7"
      ],
      [
-      "ELC-0189",
-      0.8494,
-      "Webcam HD Lite"
+      "ELC-0174",
+      0.8534,
+      "Webcam HD Premium"
      ],
      [
-      "ELC-0174",
-      0.8466,
-      "Webcam HD Premium"
+      "ELC-0144",
+      0.8513,
+      "Webcam HD Pro"
      ]
     ],
     "ar": [
      [
       "ELC-0204",
-      0.8468,
+      0.8525,
       "Webcam HD 6"
      ],
      [
-      "ELC-0129",
-      0.8416,
-      "Webcam HD"
-     ],
-     [
       "ELC-0144",
-      0.8409,
+      0.8457,
       "Webcam HD Pro"
      ],
      [
       "ELC-0219",
-      0.8398,
+      0.8434,
       "Webcam HD 7"
      ],
      [
+      "ELC-0129",
+      0.8427,
+      "Webcam HD"
+     ],
+     [
       "ELC-0174",
-      0.8365,
+      0.8385,
       "Webcam HD Premium"
      ]
     ]
@@ -1714,55 +1714,55 @@
     "en": [
      [
       "ELC-0130",
-      0.8778,
+      0.8759,
       "Wireless Charger"
      ],
      [
       "ELC-0190",
-      0.8712,
+      0.8732,
       "Wireless Charger Lite"
      ],
      [
       "ELC-0205",
-      0.8698,
+      0.8722,
       "Wireless Charger 6"
      ],
      [
       "ELC-0175",
-      0.8682,
+      0.8703,
       "Wireless Charger Premium"
      ],
      [
       "ELC-0145",
-      0.8681,
+      0.8694,
       "Wireless Charger Pro"
      ]
     ],
     "ar": [
      [
       "ELC-0130",
-      0.8696,
+      0.8702,
       "Wireless Charger"
      ],
      [
       "ELC-0205",
-      0.8604,
+      0.8666,
       "Wireless Charger 6"
      ],
      [
-      "ELC-0145",
-      0.859,
-      "Wireless Charger Pro"
-     ],
-     [
       "ELC-0220",
-      0.8577,
+      0.863,
       "Wireless Charger 7"
      ],
      [
-      "ELC-0160",
-      0.8561,
-      "Wireless Charger Plus"
+      "ELC-0145",
+      0.8629,
+      "Wireless Charger Pro"
+     ],
+     [
+      "ELC-0190",
+      0.8585,
+      "Wireless Charger Lite"
      ]
     ]
    }
@@ -1783,55 +1783,55 @@
     "en": [
      [
       "ELC-0131",
-      0.8686,
+      0.8701,
       "Portable Monitor"
      ],
      [
+      "ELC-0146",
+      0.8625,
+      "Portable Monitor Pro"
+     ],
+     [
       "ELC-0191",
-      0.8621,
+      0.8612,
       "Portable Monitor Lite"
      ],
      [
       "ELC-0206",
-      0.8599,
+      0.8607,
       "Portable Monitor 6"
      ],
      [
-      "ELC-0146",
-      0.8594,
-      "Portable Monitor Pro"
-     ],
-     [
       "ELC-0161",
-      0.859,
+      0.8587,
       "Portable Monitor Plus"
      ]
     ],
     "ar": [
      [
       "ELC-0131",
-      0.8487,
+      0.855,
       "Portable Monitor"
      ],
      [
       "ELC-0206",
-      0.8424,
+      0.8481,
       "Portable Monitor 6"
      ],
      [
       "ELC-0191",
-      0.837,
+      0.8414,
       "Portable Monitor Lite"
      ],
      [
-      "ELC-0176",
-      0.8339,
-      "Portable Monitor Premium"
+      "ELC-0161",
+      0.8389,
+      "Portable Monitor Plus"
      ],
      [
-      "ELC-0161",
-      0.8335,
-      "Portable Monitor Plus"
+      "ELC-0146",
+      0.838,
+      "Portable Monitor Pro"
      ]
     ]
    }
@@ -1852,54 +1852,54 @@
     "en": [
      [
       "ELC-0132",
-      0.8682,
+      0.8696,
       "Gaming Headset"
      ],
      [
+      "ELC-0192",
+      0.8684,
+      "Gaming Headset Lite"
+     ],
+     [
+      "ELC-0207",
+      0.8674,
+      "Gaming Headset 6"
+     ],
+     [
       "ELC-0177",
-      0.8643,
+      0.8669,
       "Gaming Headset Premium"
      ],
      [
       "ELC-0147",
-      0.864,
+      0.8665,
       "Gaming Headset Pro"
-     ],
-     [
-      "ELC-0207",
-      0.8637,
-      "Gaming Headset 6"
-     ],
-     [
-      "ELC-0192",
-      0.8634,
-      "Gaming Headset Lite"
      ]
     ],
     "ar": [
      [
       "ELC-0132",
-      0.8493,
+      0.8547,
       "Gaming Headset"
      ],
      [
-      "ELC-0147",
-      0.8443,
-      "Gaming Headset Pro"
-     ],
-     [
       "ELC-0207",
-      0.844,
+      0.8516,
       "Gaming Headset 6"
      ],
      [
       "ELC-0192",
-      0.8437,
+      0.8499,
       "Gaming Headset Lite"
      ],
      [
+      "ELC-0147",
+      0.8493,
+      "Gaming Headset Pro"
+     ],
+     [
       "ELC-0177",
-      0.8372,
+      0.845,
       "Gaming Headset Premium"
      ]
     ]
@@ -1921,17 +1921,17 @@
     "en": [
      [
       "ELC-0133",
-      0.8686,
+      0.8679,
       "Smart Plug"
      ],
      [
       "ELC-0178",
-      0.8655,
+      0.8666,
       "Smart Plug Premium"
      ],
      [
       "ELC-0208",
-      0.8652,
+      0.8651,
       "Smart Plug 6"
      ],
      [
@@ -1941,35 +1941,35 @@
      ],
      [
       "ELC-0148",
-      0.8597,
+      0.8607,
       "Smart Plug Pro"
      ]
     ],
     "ar": [
      [
       "ELC-0133",
-      0.8667,
+      0.8708,
       "Smart Plug"
      ],
      [
-      "ELC-0193",
-      0.8628,
-      "Smart Plug Lite"
-     ],
-     [
       "ELC-0208",
-      0.8623,
+      0.8675,
       "Smart Plug 6"
      ],
      [
-      "ELC-0178",
-      0.8618,
-      "Smart Plug Premium"
+      "ELC-0148",
+      0.8652,
+      "Smart Plug Pro"
      ],
      [
-      "ELC-0148",
-      0.8612,
-      "Smart Plug Pro"
+      "ELC-0193",
+      0.865,
+      "Smart Plug Lite"
+     ],
+     [
+      "ELC-0178",
+      0.8637,
+      "Smart Plug Premium"
      ]
     ]
    }
@@ -1990,55 +1990,55 @@
     "en": [
      [
       "ELC-0134",
-      0.8597,
+      0.8622,
       "Action Camera"
      ],
      [
       "ELC-0149",
-      0.8523,
+      0.8584,
       "Action Camera Pro"
      ],
      [
       "ELC-0179",
-      0.852,
+      0.8576,
       "Action Camera Premium"
      ],
      [
       "ELC-0194",
-      0.8505,
+      0.8529,
       "Action Camera Lite"
      ],
      [
       "ELC-0209",
-      0.8501,
+      0.8522,
       "Action Camera 6"
      ]
     ],
     "ar": [
      [
       "ELC-0134",
-      0.8612,
+      0.8629,
       "Action Camera"
      ],
      [
       "ELC-0209",
-      0.8572,
+      0.8612,
       "Action Camera 6"
      ],
      [
-      "ELC-0194",
-      0.8524,
-      "Action Camera Lite"
-     ],
-     [
       "ELC-0179",
-      0.8522,
+      0.8582,
       "Action Camera Premium"
      ],
      [
       "ELC-0149",
-      0.851,
+      0.8572,
       "Action Camera Pro"
+     ],
+     [
+      "ELC-0194",
+      0.8552,
+      "Action Camera Lite"
      ]
     ]
    }
@@ -2059,54 +2059,54 @@
     "en": [
      [
       "ELC-0135",
-      0.8582,
+      0.8605,
       "Tablet Stand"
      ],
      [
-      "ELC-0210",
-      0.8571,
-      "Tablet Stand 6"
-     ],
-     [
       "ELC-0195",
-      0.8567,
+      0.8576,
       "Tablet Stand Lite"
      ],
      [
-      "ELC-0165",
-      0.8557,
-      "Tablet Stand Plus"
+      "ELC-0210",
+      0.8574,
+      "Tablet Stand 6"
      ],
      [
       "ELC-0150",
-      0.8554,
+      0.8568,
       "Tablet Stand Pro"
+     ],
+     [
+      "ELC-0165",
+      0.8545,
+      "Tablet Stand Plus"
      ]
     ],
     "ar": [
      [
-      "ELC-0210",
-      0.848,
-      "Tablet Stand 6"
-     ],
-     [
       "ELC-0135",
-      0.8479,
+      0.8489,
       "Tablet Stand"
      ],
      [
+      "ELC-0210",
+      0.8485,
+      "Tablet Stand 6"
+     ],
+     [
       "ELC-0150",
-      0.8411,
+      0.8401,
       "Tablet Stand Pro"
      ],
      [
       "ELC-0165",
-      0.8387,
+      0.8397,
       "Tablet Stand Plus"
      ],
      [
       "ELC-0180",
-      0.8387,
+      0.8389,
       "Tablet Stand Premium"
      ]
     ]
@@ -2129,55 +2129,55 @@
     "en": [
      [
       "HOM-0221",
-      0.877,
+      0.8737,
       "Ramadan Lantern"
      ],
      [
       "HOM-0296",
-      0.8705,
+      0.8692,
       "Ramadan Lantern 6"
      ],
      [
-      "HOM-0311",
-      0.8696,
-      "Ramadan Lantern 7"
-     ],
-     [
       "HOM-0281",
-      0.8683,
+      0.8678,
       "Ramadan Lantern Lite"
      ],
      [
+      "HOM-0311",
+      0.867,
+      "Ramadan Lantern 7"
+     ],
+     [
       "HOM-0236",
-      0.8659,
+      0.8646,
       "Ramadan Lantern Pro"
      ]
     ],
     "ar": [
      [
       "HOM-0221",
-      0.8736,
+      0.872,
       "Ramadan Lantern"
      ],
      [
       "HOM-0236",
-      0.8702,
+      0.871,
       "Ramadan Lantern Pro"
      ],
      [
       "HOM-0296",
-      0.8669,
+      0.869,
       "Ramadan Lantern 6"
      ],
      [
-      "HOM-0266",
-      0.8663,
-      "Ramadan Lantern Premium"
+      "HOM-0311",
+      0.8667,
+      "Ramadan Lantern 7"
      ],
      [
-      "HOM-0251",
-      0.866,
-      "Ramadan Lantern Plus"
+      "HOM-0266",
+      0.8665,
+      "Ramadan Lantern Premium"
      ]
     ]
    }
@@ -2199,55 +2199,55 @@
     "en": [
      [
       "HOM-0282",
-      0.8816,
+      0.8806,
       "Oud Incense Set Lite"
      ],
      [
       "HOM-0222",
-      0.8813,
+      0.8798,
       "Oud Incense Set"
      ],
      [
       "HOM-0237",
-      0.88,
+      0.8796,
       "Oud Incense Set Pro"
      ],
      [
       "HOM-0312",
-      0.8798,
+      0.8787,
       "Oud Incense Set 7"
      ],
      [
       "HOM-0297",
-      0.8793,
+      0.8785,
       "Oud Incense Set 6"
      ]
     ],
     "ar": [
      [
       "HOM-0222",
-      0.8516,
+      0.8566,
       "Oud Incense Set"
      ],
      [
-      "HOM-0297",
-      0.8459,
-      "Oud Incense Set 6"
-     ],
-     [
       "HOM-0312",
-      0.8456,
+      0.8463,
       "Oud Incense Set 7"
      ],
      [
       "HOM-0237",
-      0.8447,
+      0.8463,
       "Oud Incense Set Pro"
      ],
      [
       "HOM-0267",
-      0.8416,
+      0.846,
       "Oud Incense Set Premium"
+     ],
+     [
+      "HOM-0297",
+      0.846,
+      "Oud Incense Set 6"
      ]
     ]
    }
@@ -2269,49 +2269,49 @@
     "en": [
      [
       "HOM-0223",
-      0.9049,
+      0.8996,
       "Arabic Coffee Set"
      ],
      [
       "HOM-0298",
-      0.9012,
+      0.8971,
       "Arabic Coffee Set 6"
      ],
      [
       "HOM-0313",
-      0.8967,
+      0.8948,
       "Arabic Coffee Set 7"
      ],
      [
       "HOM-0283",
-      0.895,
+      0.892,
       "Arabic Coffee Set Lite"
      ],
      [
-      "HOM-0253",
-      0.8926,
-      "Arabic Coffee Set Plus"
+      "HOM-0238",
+      0.891,
+      "Arabic Coffee Set Pro"
      ]
     ],
     "ar": [
      [
       "HOM-0223",
-      0.881,
+      0.8807,
       "Arabic Coffee Set"
      ],
      [
       "HOM-0313",
-      0.8784,
+      0.8807,
       "Arabic Coffee Set 7"
      ],
      [
       "HOM-0298",
-      0.8767,
+      0.8776,
       "Arabic Coffee Set 6"
      ],
      [
       "HOM-0283",
-      0.8749,
+      0.8761,
       "Arabic Coffee Set Lite"
      ],
      [
@@ -2339,55 +2339,55 @@
     "en": [
      [
       "HOM-0224",
-      0.874,
+      0.8731,
       "Decorative Cushions"
      ],
      [
-      "HOM-0314",
-      0.8674,
-      "Decorative Cushions 7"
-     ],
-     [
       "HOM-0299",
-      0.8669,
+      0.8653,
       "Decorative Cushions 6"
      ],
      [
-      "HOM-0284",
-      0.8623,
-      "Decorative Cushions Lite"
+      "HOM-0314",
+      0.8651,
+      "Decorative Cushions 7"
      ],
      [
       "HOM-0239",
-      0.861,
+      0.8635,
       "Decorative Cushions Pro"
+     ],
+     [
+      "HOM-0284",
+      0.8635,
+      "Decorative Cushions Lite"
      ]
     ],
     "ar": [
      [
       "HOM-0224",
-      0.8681,
+      0.8733,
       "Decorative Cushions"
      ],
      [
       "HOM-0299",
-      0.8661,
+      0.871,
       "Decorative Cushions 6"
      ],
      [
       "HOM-0314",
-      0.864,
+      0.8679,
       "Decorative Cushions 7"
      ],
      [
-      "HOM-0284",
-      0.8593,
-      "Decorative Cushions Lite"
+      "HOM-0239",
+      0.8656,
+      "Decorative Cushions Pro"
      ],
      [
-      "HOM-0239",
-      0.859,
-      "Decorative Cushions Pro"
+      "HOM-0284",
+      0.8647,
+      "Decorative Cushions Lite"
      ]
     ]
    }
@@ -2408,56 +2408,56 @@
    "hits": {
     "en": [
      [
-      "HOM-0240",
-      0.8987,
-      "Prayer Mat Premium Pro"
-     ],
-     [
       "HOM-0270",
-      0.898,
+      0.9011,
       "Prayer Mat Premium Premium"
      ],
      [
+      "HOM-0240",
+      0.9005,
+      "Prayer Mat Premium Pro"
+     ],
+     [
       "HOM-0225",
-      0.8958,
+      0.8949,
       "Prayer Mat Premium"
      ],
      [
-      "HOM-0255",
-      0.8903,
-      "Prayer Mat Premium Plus"
+      "HOM-0285",
+      0.891,
+      "Prayer Mat Premium Lite"
      ],
      [
-      "HOM-0285",
-      0.8903,
-      "Prayer Mat Premium Lite"
+      "HOM-0255",
+      0.8908,
+      "Prayer Mat Premium Plus"
      ]
     ],
     "ar": [
      [
       "HOM-0225",
-      0.863,
+      0.8653,
       "Prayer Mat Premium"
      ],
      [
-      "HOM-0300",
-      0.8606,
-      "Prayer Mat Premium 6"
-     ],
-     [
       "HOM-0315",
-      0.8601,
+      0.8645,
       "Prayer Mat Premium 7"
      ],
      [
+      "HOM-0300",
+      0.864,
+      "Prayer Mat Premium 6"
+     ],
+     [
       "HOM-0240",
-      0.8595,
+      0.8611,
       "Prayer Mat Premium Pro"
      ],
      [
-      "HOM-0255",
-      0.8557,
-      "Prayer Mat Premium Plus"
+      "HOM-0270",
+      0.8593,
+      "Prayer Mat Premium Premium"
      ]
     ]
    }
@@ -2479,54 +2479,54 @@
     "en": [
      [
       "HOM-0226",
-      0.8686,
+      0.8643,
       "Copper Dallah"
      ],
      [
       "HOM-0301",
-      0.8654,
+      0.8626,
       "Copper Dallah 6"
      ],
      [
+      "HOM-0316",
+      0.8613,
+      "Copper Dallah 7"
+     ],
+     [
       "HOM-0286",
-      0.8649,
+      0.8613,
       "Copper Dallah Lite"
      ],
      [
       "HOM-0271",
-      0.8642,
+      0.8608,
       "Copper Dallah Premium"
-     ],
-     [
-      "HOM-0316",
-      0.8633,
-      "Copper Dallah 7"
      ]
     ],
     "ar": [
      [
       "HOM-0226",
-      0.8559,
+      0.8613,
       "Copper Dallah"
      ],
      [
       "HOM-0316",
-      0.8558,
+      0.8612,
       "Copper Dallah 7"
      ],
      [
       "HOM-0301",
-      0.8542,
+      0.8602,
       "Copper Dallah 6"
      ],
      [
       "HOM-0241",
-      0.8518,
+      0.8551,
       "Copper Dallah Pro"
      ],
      [
       "HOM-0286",
-      0.8468,
+      0.852,
       "Copper Dallah Lite"
      ]
     ]
@@ -2549,55 +2549,55 @@
     "en": [
      [
       "HOM-0227",
-      0.8728,
+      0.871,
       "Scented Candles Set"
      ],
      [
       "HOM-0302",
-      0.8697,
+      0.8692,
       "Scented Candles Set 6"
      ],
      [
       "HOM-0272",
-      0.8639,
+      0.8664,
       "Scented Candles Set Premium"
      ],
      [
-      "HOM-0317",
-      0.8639,
-      "Scented Candles Set 7"
+      "HOM-0242",
+      0.8657,
+      "Scented Candles Set Pro"
      ],
      [
-      "HOM-0242",
-      0.8623,
-      "Scented Candles Set Pro"
+      "HOM-0317",
+      0.8654,
+      "Scented Candles Set 7"
      ]
     ],
     "ar": [
      [
       "HOM-0227",
-      0.8556,
+      0.8599,
       "Scented Candles Set"
      ],
      [
       "HOM-0302",
-      0.852,
+      0.8568,
       "Scented Candles Set 6"
      ],
      [
       "HOM-0317",
-      0.85,
+      0.856,
       "Scented Candles Set 7"
      ],
      [
-      "HOM-0242",
-      0.844,
-      "Scented Candles Set Pro"
+      "HOM-0287",
+      0.8506,
+      "Scented Candles Set Lite"
      ],
      [
-      "HOM-0287",
-      0.8434,
-      "Scented Candles Set Lite"
+      "HOM-0242",
+      0.8495,
+      "Scented Candles Set Pro"
      ]
     ]
    }
@@ -2619,55 +2619,55 @@
     "en": [
      [
       "HOM-0228",
-      0.8937,
+      0.8917,
       "Wall Art Islamic"
      ],
      [
-      "HOM-0318",
-      0.8871,
-      "Wall Art Islamic 7"
-     ],
-     [
       "HOM-0303",
-      0.8866,
+      0.8874,
       "Wall Art Islamic 6"
      ],
      [
+      "HOM-0318",
+      0.8868,
+      "Wall Art Islamic 7"
+     ],
+     [
       "HOM-0243",
-      0.8838,
+      0.8832,
       "Wall Art Islamic Pro"
      ],
      [
       "HOM-0288",
-      0.8824,
+      0.8823,
       "Wall Art Islamic Lite"
      ]
     ],
     "ar": [
      [
       "HOM-0228",
-      0.8686,
+      0.8693,
       "Wall Art Islamic"
      ],
      [
       "HOM-0318",
-      0.8596,
+      0.8633,
       "Wall Art Islamic 7"
      ],
      [
       "HOM-0303",
-      0.856,
+      0.861,
       "Wall Art Islamic 6"
      ],
      [
-      "HOM-0243",
-      0.8555,
-      "Wall Art Islamic Pro"
+      "HOM-0288",
+      0.8591,
+      "Wall Art Islamic Lite"
      ],
      [
-      "HOM-0288",
-      0.854,
-      "Wall Art Islamic Lite"
+      "HOM-0243",
+      0.8591,
+      "Wall Art Islamic Pro"
      ]
     ]
    }
@@ -2689,54 +2689,54 @@
     "en": [
      [
       "HOM-0229",
-      0.8632,
+      0.8681,
       "Storage Baskets"
      ],
      [
       "HOM-0319",
-      0.856,
+      0.8603,
       "Storage Baskets 7"
      ],
      [
       "HOM-0304",
-      0.8558,
+      0.8596,
       "Storage Baskets 6"
      ],
      [
-      "HOM-0259",
-      0.8515,
-      "Storage Baskets Plus"
+      "HOM-0289",
+      0.8555,
+      "Storage Baskets Lite"
      ],
      [
-      "HOM-0274",
-      0.8513,
-      "Storage Baskets Premium"
+      "HOM-0244",
+      0.8547,
+      "Storage Baskets Pro"
      ]
     ],
     "ar": [
      [
       "HOM-0304",
-      0.8518,
+      0.858,
       "Storage Baskets 6"
      ],
      [
-      "HOM-0319",
-      0.8451,
-      "Storage Baskets 7"
-     ],
-     [
-      "HOM-0229",
-      0.8445,
-      "Storage Baskets"
-     ],
-     [
       "HOM-0244",
-      0.8437,
+      0.8523,
       "Storage Baskets Pro"
      ],
      [
+      "HOM-0229",
+      0.8514,
+      "Storage Baskets"
+     ],
+     [
+      "HOM-0319",
+      0.8505,
+      "Storage Baskets 7"
+     ],
+     [
       "HOM-0259",
-      0.8434,
+      0.8488,
       "Storage Baskets Plus"
      ]
     ]
@@ -2759,54 +2759,54 @@
     "en": [
      [
       "HOM-0230",
-      0.8584,
+      0.8565,
       "Table Runner"
      ],
      [
       "HOM-0305",
-      0.8558,
+      0.8532,
       "Table Runner 6"
      ],
      [
       "HOM-0245",
-      0.8515,
+      0.8501,
       "Table Runner Pro"
      ],
      [
-      "HOM-0320",
-      0.8507,
-      "Table Runner 7"
+      "HOM-0275",
+      0.8485,
+      "Table Runner Premium"
      ],
      [
-      "HOM-0275",
-      0.8489,
-      "Table Runner Premium"
+      "HOM-0320",
+      0.8471,
+      "Table Runner 7"
      ]
     ],
     "ar": [
      [
       "HOM-0305",
-      0.8582,
+      0.8598,
       "Table Runner 6"
      ],
      [
       "HOM-0230",
-      0.8557,
+      0.8583,
       "Table Runner"
      ],
      [
       "HOM-0245",
-      0.8527,
+      0.8545,
       "Table Runner Pro"
      ],
      [
       "HOM-0260",
-      0.8498,
+      0.8501,
       "Table Runner Plus"
      ],
      [
       "HOM-0320",
-      0.8476,
+      0.85,
       "Table Runner 7"
      ]
     ]
@@ -2828,55 +2828,55 @@
     "en": [
      [
       "HOM-0231",
-      0.8961,
+      0.9004,
       "Air Freshener Oud"
      ],
      [
       "HOM-0306",
-      0.8936,
+      0.8948,
       "Air Freshener Oud 6"
      ],
      [
       "HOM-0276",
-      0.8913,
+      0.8935,
       "Air Freshener Oud Premium"
      ],
      [
-      "HOM-0246",
-      0.8897,
-      "Air Freshener Oud Pro"
+      "HOM-0291",
+      0.8928,
+      "Air Freshener Oud Lite"
      ],
      [
-      "HOM-0291",
-      0.8881,
-      "Air Freshener Oud Lite"
+      "HOM-0261",
+      0.8913,
+      "Air Freshener Oud Plus"
      ]
     ],
     "ar": [
      [
       "HOM-0231",
-      0.835,
+      0.8383,
       "Air Freshener Oud"
      ],
      [
-      "HOM-0246",
-      0.8309,
-      "Air Freshener Oud Pro"
-     ],
-     [
       "HOM-0306",
-      0.8301,
+      0.8345,
       "Air Freshener Oud 6"
      ],
      [
-      "HOM-0261",
-      0.824,
-      "Air Freshener Oud Plus"
+      "HOM-0246",
+      0.834,
+      "Air Freshener Oud Pro"
      ],
      [
       "HOM-0276",
-      0.8237,
+      0.8273,
       "Air Freshener Oud Premium"
+     ],
+     [
+      "HOM-0291",
+      0.8271,
+      "Air Freshener Oud Lite"
      ]
     ]
    }
@@ -2897,54 +2897,54 @@
     "en": [
      [
       "HOM-0247",
-      0.8893,
+      0.8866,
       "Serving Tray Gold Pro"
      ],
      [
       "HOM-0232",
-      0.889,
+      0.8856,
       "Serving Tray Gold"
      ],
      [
       "HOM-0277",
-      0.8859,
+      0.8842,
       "Serving Tray Gold Premium"
      ],
      [
       "HOM-0292",
-      0.8836,
+      0.8817,
       "Serving Tray Gold Lite"
      ],
      [
-      "HOM-0307",
-      0.8832,
-      "Serving Tray Gold 6"
+      "HOM-0262",
+      0.8809,
+      "Serving Tray Gold Plus"
      ]
     ],
     "ar": [
      [
       "HOM-0232",
-      0.8735,
+      0.8743,
       "Serving Tray Gold"
      ],
      [
       "HOM-0307",
-      0.8721,
+      0.8727,
       "Serving Tray Gold 6"
      ],
      [
-      "HOM-0277",
-      0.8717,
-      "Serving Tray Gold Premium"
-     ],
-     [
       "HOM-0247",
-      0.8712,
+      0.8721,
       "Serving Tray Gold Pro"
      ],
      [
+      "HOM-0277",
+      0.8707,
+      "Serving Tray Gold Premium"
+     ],
+     [
       "HOM-0292",
-      0.8666,
+      0.8697,
       "Serving Tray Gold Lite"
      ]
     ]
@@ -2966,54 +2966,54 @@
     "en": [
      [
       "HOM-0233",
-      0.8571,
+      0.8546,
       "Throw Blanket"
      ],
      [
       "HOM-0293",
-      0.8547,
+      0.8529,
       "Throw Blanket Lite"
      ],
      [
       "HOM-0248",
-      0.8516,
+      0.8513,
       "Throw Blanket Pro"
      ],
      [
       "HOM-0308",
-      0.8514,
+      0.8505,
       "Throw Blanket 6"
      ],
      [
       "HOM-0278",
-      0.8511,
+      0.8498,
       "Throw Blanket Premium"
      ]
     ],
     "ar": [
      [
       "HOM-0233",
-      0.8482,
+      0.8522,
       "Throw Blanket"
      ],
      [
       "HOM-0308",
-      0.8464,
+      0.8495,
       "Throw Blanket 6"
      ],
      [
       "HOM-0293",
-      0.8396,
+      0.8433,
       "Throw Blanket Lite"
      ],
      [
       "HOM-0248",
-      0.8345,
+      0.8386,
       "Throw Blanket Pro"
      ],
      [
       "HOM-0263",
-      0.8314,
+      0.8358,
       "Throw Blanket Plus"
      ]
     ]
@@ -3035,55 +3035,55 @@
     "en": [
      [
       "HOM-0234",
-      0.8516,
+      0.8493,
       "Fairy Lights"
      ],
      [
       "HOM-0294",
-      0.847,
+      0.8454,
       "Fairy Lights Lite"
      ],
      [
-      "HOM-0309",
-      0.8434,
-      "Fairy Lights 6"
-     ],
-     [
       "HOM-0279",
-      0.8432,
+      0.8422,
       "Fairy Lights Premium"
      ],
      [
       "HOM-0249",
-      0.842,
+      0.8404,
       "Fairy Lights Pro"
+     ],
+     [
+      "HOM-0309",
+      0.8397,
+      "Fairy Lights 6"
      ]
     ],
     "ar": [
      [
       "HOM-0234",
-      0.8514,
+      0.8575,
       "Fairy Lights"
      ],
      [
       "HOM-0309",
-      0.8481,
+      0.8515,
       "Fairy Lights 6"
      ],
      [
       "HOM-0294",
-      0.8442,
+      0.849,
       "Fairy Lights Lite"
      ],
      [
       "HOM-0249",
-      0.8372,
+      0.8428,
       "Fairy Lights Pro"
      ],
      [
-      "HOM-0264",
-      0.835,
-      "Fairy Lights Plus"
+      "HOM-0279",
+      0.8414,
+      "Fairy Lights Premium"
      ]
     ]
    }
@@ -3103,55 +3103,55 @@
    "hits": {
     "en": [
      [
-      "HOM-0235",
-      0.8857,
-      "Herb Planter Set"
-     ],
-     [
       "HOM-0295",
-      0.8854,
+      0.8826,
       "Herb Planter Set Lite"
      ],
      [
-      "HOM-0310",
-      0.8813,
-      "Herb Planter Set 6"
+      "HOM-0235",
+      0.8817,
+      "Herb Planter Set"
      ],
      [
       "HOM-0250",
-      0.8811,
+      0.8786,
       "Herb Planter Set Pro"
      ],
      [
       "HOM-0280",
-      0.8787,
+      0.8785,
       "Herb Planter Set Premium"
+     ],
+     [
+      "HOM-0310",
+      0.8784,
+      "Herb Planter Set 6"
      ]
     ],
     "ar": [
      [
       "HOM-0310",
-      0.8447,
+      0.8497,
       "Herb Planter Set 6"
      ],
      [
       "HOM-0235",
-      0.8425,
+      0.849,
       "Herb Planter Set"
      ],
      [
       "HOM-0250",
-      0.8403,
+      0.8447,
       "Herb Planter Set Pro"
      ],
      [
       "HOM-0280",
-      0.8339,
+      0.8414,
       "Herb Planter Set Premium"
      ],
      [
       "HOM-0295",
-      0.8311,
+      0.8394,
       "Herb Planter Set Lite"
      ]
     ]
@@ -3173,54 +3173,54 @@
     "en": [
      [
       "FD-0321",
-      0.9062,
+      0.9067,
       "Medjool Dates 1kg"
      ],
      [
       "FD-0396",
-      0.9055,
+      0.9066,
       "Medjool Dates 1kg 6"
      ],
      [
       "FD-0366",
-      0.9034,
+      0.9037,
       "Medjool Dates 1kg Premium"
      ],
      [
-      "FD-0336",
-      0.8998,
-      "Medjool Dates 1kg Pro"
+      "FD-0381",
+      0.9027,
+      "Medjool Dates 1kg Lite"
      ],
      [
-      "FD-0381",
-      0.8994,
-      "Medjool Dates 1kg Lite"
+      "FD-0336",
+      0.9016,
+      "Medjool Dates 1kg Pro"
      ]
     ],
     "ar": [
      [
       "FD-0396",
-      0.8701,
+      0.8786,
       "Medjool Dates 1kg 6"
      ],
      [
       "FD-0336",
-      0.8677,
+      0.8779,
       "Medjool Dates 1kg Pro"
      ],
      [
-      "FD-0351",
-      0.8672,
-      "Medjool Dates 1kg Plus"
-     ],
-     [
       "FD-0321",
-      0.8666,
+      0.8775,
       "Medjool Dates 1kg"
      ],
      [
+      "FD-0351",
+      0.8741,
+      "Medjool Dates 1kg Plus"
+     ],
+     [
       "FD-0381",
-      0.8653,
+      0.8727,
       "Medjool Dates 1kg Lite"
      ]
     ]
@@ -3242,55 +3242,55 @@
     "en": [
      [
       "FD-0322",
-      0.8993,
+      0.8969,
       "Arabic Coffee Blend"
      ],
      [
       "FD-0397",
-      0.8963,
+      0.8935,
       "Arabic Coffee Blend 6"
      ],
      [
       "FD-0352",
-      0.891,
+      0.8869,
       "Arabic Coffee Blend Plus"
      ],
      [
       "FD-0382",
-      0.8896,
+      0.8858,
       "Arabic Coffee Blend Lite"
      ],
      [
       "FD-0337",
-      0.8871,
+      0.8845,
       "Arabic Coffee Blend Pro"
      ]
     ],
     "ar": [
      [
       "FD-0322",
-      0.8512,
+      0.8517,
       "Arabic Coffee Blend"
      ],
      [
-      "HOM-0298",
-      0.8458,
-      "Arabic Coffee Set 6"
-     ],
-     [
       "FD-0397",
-      0.8449,
+      0.8474,
       "Arabic Coffee Blend 6"
      ],
      [
-      "FD-0382",
-      0.8447,
-      "Arabic Coffee Blend Lite"
+      "HOM-0298",
+      0.8467,
+      "Arabic Coffee Set 6"
      ],
      [
-      "HOM-0223",
-      0.8437,
-      "Arabic Coffee Set"
+      "HOM-0313",
+      0.8462,
+      "Arabic Coffee Set 7"
+     ],
+     [
+      "FD-0382",
+      0.8456,
+      "Arabic Coffee Blend Lite"
      ]
     ]
    }
@@ -3311,54 +3311,54 @@
     "en": [
      [
       "FD-0368",
-      0.8977,
+      0.895,
       "Saffron Premium 5g Premium"
      ],
      [
+      "FD-0338",
+      0.895,
+      "Saffron Premium 5g Pro"
+     ],
+     [
       "FD-0323",
-      0.8955,
+      0.8944,
       "Saffron Premium 5g"
      ],
      [
       "FD-0398",
-      0.8927,
+      0.8914,
       "Saffron Premium 5g 6"
      ],
      [
-      "FD-0338",
-      0.8926,
-      "Saffron Premium 5g Pro"
-     ],
-     [
-      "FD-0383",
-      0.8903,
-      "Saffron Premium 5g Lite"
+      "FD-0353",
+      0.8913,
+      "Saffron Premium 5g Plus"
      ]
     ],
     "ar": [
      [
       "FD-0323",
-      0.8467,
+      0.8502,
       "Saffron Premium 5g"
      ],
      [
       "FD-0398",
-      0.8456,
+      0.8497,
       "Saffron Premium 5g 6"
      ],
      [
-      "FD-0368",
-      0.8415,
-      "Saffron Premium 5g Premium"
-     ],
-     [
       "FD-0338",
-      0.8399,
+      0.8465,
       "Saffron Premium 5g Pro"
      ],
      [
+      "FD-0368",
+      0.8426,
+      "Saffron Premium 5g Premium"
+     ],
+     [
       "FD-0353",
-      0.8381,
+      0.8416,
       "Saffron Premium 5g Plus"
      ]
     ]
@@ -3379,56 +3379,56 @@
    "hits": {
     "en": [
      [
-      "FD-0324",
-      0.865,
-      "Tahini Paste"
-     ],
-     [
       "FD-0384",
-      0.8649,
+      0.8622,
       "Tahini Paste Lite"
      ],
      [
-      "FD-0399",
-      0.8637,
-      "Tahini Paste 6"
+      "FD-0324",
+      0.8609,
+      "Tahini Paste"
      ],
      [
       "FD-0339",
-      0.8625,
+      0.86,
       "Tahini Paste Pro"
      ],
      [
-      "FD-0369",
-      0.8589,
-      "Tahini Paste Premium"
+      "FD-0399",
+      0.8593,
+      "Tahini Paste 6"
+     ],
+     [
+      "FD-0354",
+      0.8562,
+      "Tahini Paste Plus"
      ]
     ],
     "ar": [
      [
       "FD-0324",
-      0.8238,
+      0.8204,
       "Tahini Paste"
      ],
      [
       "FD-0399",
-      0.8237,
+      0.8203,
       "Tahini Paste 6"
      ],
      [
       "FD-0354",
-      0.8138,
+      0.8133,
       "Tahini Paste Plus"
      ],
      [
-      "FD-0384",
-      0.8119,
-      "Tahini Paste Lite"
+      "FD-0339",
+      0.8118,
+      "Tahini Paste Pro"
      ],
      [
-      "FD-0339",
-      0.8116,
-      "Tahini Paste Pro"
+      "FD-0384",
+      0.811,
+      "Tahini Paste Lite"
      ]
     ]
    }
@@ -3449,18 +3449,13 @@
     "en": [
      [
       "FD-0325",
-      0.8925,
+      0.8917,
       "Rose Water 500ml"
      ],
      [
       "FD-0400",
-      0.8917,
+      0.8916,
       "Rose Water 500ml 6"
-     ],
-     [
-      "FD-0370",
-      0.8879,
-      "Rose Water 500ml Premium"
      ],
      [
       "FD-0385",
@@ -3468,36 +3463,41 @@
       "Rose Water 500ml Lite"
      ],
      [
+      "FD-0370",
+      0.887,
+      "Rose Water 500ml Premium"
+     ],
+     [
       "FD-0340",
-      0.883,
+      0.8829,
       "Rose Water 500ml Pro"
      ]
     ],
     "ar": [
      [
-      "FD-0325",
-      0.8579,
-      "Rose Water 500ml"
-     ],
-     [
       "FD-0400",
-      0.8561,
+      0.8616,
       "Rose Water 500ml 6"
      ],
      [
+      "FD-0325",
+      0.8602,
+      "Rose Water 500ml"
+     ],
+     [
       "FD-0340",
-      0.8498,
+      0.8538,
       "Rose Water 500ml Pro"
      ],
      [
-      "FD-0370",
-      0.8485,
-      "Rose Water 500ml Premium"
+      "FD-0385",
+      0.8527,
+      "Rose Water 500ml Lite"
      ],
      [
-      "FD-0385",
-      0.8469,
-      "Rose Water 500ml Lite"
+      "FD-0370",
+      0.851,
+      "Rose Water 500ml Premium"
      ]
     ]
    }
@@ -3517,54 +3517,54 @@
     "en": [
      [
       "FD-0326",
-      0.8965,
+      0.8941,
       "Mixed Nuts 500g"
      ],
      [
-      "FD-0386",
-      0.8908,
-      "Mixed Nuts 500g Lite"
-     ],
-     [
       "FD-0356",
-      0.8907,
+      0.8891,
       "Mixed Nuts 500g Plus"
      ],
      [
-      "FD-0341",
-      0.889,
-      "Mixed Nuts 500g Pro"
+      "FD-0386",
+      0.8887,
+      "Mixed Nuts 500g Lite"
      ],
      [
       "FD-0371",
-      0.8882,
+      0.8874,
       "Mixed Nuts 500g Premium"
+     ],
+     [
+      "FD-0341",
+      0.8863,
+      "Mixed Nuts 500g Pro"
      ]
     ],
     "ar": [
      [
       "FD-0326",
-      0.8461,
+      0.8515,
       "Mixed Nuts 500g"
      ],
      [
       "FD-0341",
-      0.8419,
+      0.8481,
       "Mixed Nuts 500g Pro"
      ],
      [
       "FD-0356",
-      0.84,
+      0.8451,
       "Mixed Nuts 500g Plus"
      ],
      [
       "FD-0386",
-      0.8395,
+      0.8442,
       "Mixed Nuts 500g Lite"
      ],
      [
       "FD-0371",
-      0.8357,
+      0.8403,
       "Mixed Nuts 500g Premium"
      ]
     ]
@@ -3584,55 +3584,55 @@
    "hits": {
     "en": [
      [
-      "FD-0327",
-      0.9034,
-      "Cardamom Pods 100g"
-     ],
-     [
       "FD-0342",
-      0.9023,
+      0.8996,
       "Cardamom Pods 100g Pro"
      ],
      [
       "FD-0372",
-      0.902,
+      0.8982,
       "Cardamom Pods 100g Premium"
      ],
      [
+      "FD-0327",
+      0.898,
+      "Cardamom Pods 100g"
+     ],
+     [
       "FD-0387",
-      0.9005,
+      0.8974,
       "Cardamom Pods 100g Lite"
      ],
      [
       "FD-0357",
-      0.8966,
+      0.893,
       "Cardamom Pods 100g Plus"
      ]
     ],
     "ar": [
      [
       "FD-0327",
-      0.8142,
+      0.813,
       "Cardamom Pods 100g"
      ],
      [
       "FD-0342",
-      0.8116,
+      0.8124,
       "Cardamom Pods 100g Pro"
      ],
      [
-      "FD-0372",
-      0.8066,
-      "Cardamom Pods 100g Premium"
-     ],
-     [
       "FD-0357",
-      0.8054,
+      0.8075,
       "Cardamom Pods 100g Plus"
      ],
      [
+      "FD-0372",
+      0.8067,
+      "Cardamom Pods 100g Premium"
+     ],
+     [
       "FD-0387",
-      0.8041,
+      0.8064,
       "Cardamom Pods 100g Lite"
      ]
     ]
@@ -3658,49 +3658,49 @@
      ],
      [
       "FD-0373",
-      0.9122,
+      0.9097,
       "Ghee Premium 500g Premium"
      ],
      [
       "FD-0343",
-      0.9093,
+      0.9095,
       "Ghee Premium 500g Pro"
      ],
      [
       "FD-0388",
-      0.9079,
+      0.9072,
       "Ghee Premium 500g Lite"
      ],
      [
       "FD-0358",
-      0.9074,
+      0.9061,
       "Ghee Premium 500g Plus"
      ]
     ],
     "ar": [
      [
       "FD-0388",
-      0.8508,
+      0.8546,
       "Ghee Premium 500g Lite"
      ],
      [
       "FD-0343",
-      0.8499,
+      0.8543,
       "Ghee Premium 500g Pro"
      ],
      [
       "FD-0328",
-      0.8486,
+      0.8542,
       "Ghee Premium 500g"
      ],
      [
       "FD-0373",
-      0.8472,
+      0.851,
       "Ghee Premium 500g Premium"
      ],
      [
       "FD-0358",
-      0.847,
+      0.8496,
       "Ghee Premium 500g Plus"
      ]
     ]
@@ -3720,55 +3720,55 @@
    "hits": {
     "en": [
      [
-      "FD-0329",
-      0.8768,
-      "Pomegranate Molasses"
-     ],
-     [
       "FD-0389",
-      0.8748,
+      0.8715,
       "Pomegranate Molasses Lite"
      ],
      [
+      "FD-0329",
+      0.8705,
+      "Pomegranate Molasses"
+     ],
+     [
       "FD-0344",
-      0.8697,
+      0.8681,
       "Pomegranate Molasses Pro"
      ],
      [
       "FD-0359",
-      0.8688,
+      0.8652,
       "Pomegranate Molasses Plus"
      ],
      [
       "FD-0374",
-      0.8678,
+      0.8635,
       "Pomegranate Molasses Premium"
      ]
     ],
     "ar": [
      [
-      "FD-0389",
-      0.82,
-      "Pomegranate Molasses Lite"
-     ],
-     [
       "FD-0344",
-      0.8181,
+      0.8228,
       "Pomegranate Molasses Pro"
      ],
      [
+      "FD-0389",
+      0.8194,
+      "Pomegranate Molasses Lite"
+     ],
+     [
       "FD-0374",
-      0.818,
+      0.8181,
       "Pomegranate Molasses Premium"
      ],
      [
       "FD-0329",
-      0.8139,
+      0.8169,
       "Pomegranate Molasses"
      ],
      [
       "FD-0359",
-      0.8117,
+      0.8141,
       "Pomegranate Molasses Plus"
      ]
     ]
@@ -3789,54 +3789,54 @@
     "en": [
      [
       "FD-0330",
-      0.9064,
+      0.9013,
       "Za'atar Blend 200g"
      ],
      [
       "FD-0375",
-      0.8982,
+      0.8948,
       "Za'atar Blend 200g Premium"
      ],
      [
-      "FD-0345",
-      0.898,
-      "Za'atar Blend 200g Pro"
-     ],
-     [
       "FD-0390",
-      0.8973,
+      0.8929,
       "Za'atar Blend 200g Lite"
      ],
      [
+      "FD-0345",
+      0.8923,
+      "Za'atar Blend 200g Pro"
+     ],
+     [
       "FD-0360",
-      0.8946,
+      0.8911,
       "Za'atar Blend 200g Plus"
      ]
     ],
     "ar": [
      [
       "FD-0330",
-      0.8751,
+      0.8759,
       "Za'atar Blend 200g"
      ],
      [
-      "FD-0345",
-      0.8658,
-      "Za'atar Blend 200g Pro"
-     ],
-     [
       "FD-0390",
-      0.8647,
+      0.8684,
       "Za'atar Blend 200g Lite"
      ],
      [
+      "FD-0345",
+      0.8675,
+      "Za'atar Blend 200g Pro"
+     ],
+     [
       "FD-0360",
-      0.8636,
+      0.8674,
       "Za'atar Blend 200g Plus"
      ],
      [
       "FD-0375",
-      0.8615,
+      0.8654,
       "Za'atar Blend 200g Premium"
      ]
     ]
@@ -3857,54 +3857,54 @@
     "en": [
      [
       "FD-0376",
-      0.8775,
+      0.8784,
       "Halawa Pistachio Premium"
      ],
      [
       "FD-0331",
-      0.8764,
+      0.877,
       "Halawa Pistachio"
      ],
      [
       "FD-0391",
-      0.8744,
+      0.8761,
       "Halawa Pistachio Lite"
      ],
      [
       "FD-0346",
-      0.8713,
+      0.8744,
       "Halawa Pistachio Pro"
      ],
      [
       "FD-0361",
-      0.8689,
+      0.8704,
       "Halawa Pistachio Plus"
      ]
     ],
     "ar": [
      [
       "FD-0331",
-      0.8655,
+      0.8685,
       "Halawa Pistachio"
      ],
      [
       "FD-0346",
-      0.8639,
+      0.8632,
       "Halawa Pistachio Pro"
      ],
      [
-      "FD-0361",
-      0.8607,
-      "Halawa Pistachio Plus"
-     ],
-     [
       "FD-0391",
-      0.859,
+      0.8614,
       "Halawa Pistachio Lite"
      ],
      [
+      "FD-0361",
+      0.8604,
+      "Halawa Pistachio Plus"
+     ],
+     [
       "FD-0376",
-      0.8571,
+      0.8589,
       "Halawa Pistachio Premium"
      ]
     ]
@@ -3925,54 +3925,54 @@
     "en": [
      [
       "FD-0332",
-      0.882,
+      0.8789,
       "Camel Milk Powder"
      ],
      [
       "FD-0377",
-      0.8802,
+      0.8772,
       "Camel Milk Powder Premium"
      ],
      [
       "FD-0347",
-      0.8784,
+      0.8765,
       "Camel Milk Powder Pro"
      ],
      [
       "FD-0392",
-      0.8782,
+      0.8765,
       "Camel Milk Powder Lite"
      ],
      [
       "FD-0362",
-      0.8731,
+      0.8718,
       "Camel Milk Powder Plus"
      ]
     ],
     "ar": [
      [
       "FD-0332",
-      0.8601,
+      0.8608,
       "Camel Milk Powder"
      ],
      [
-      "FD-0347",
-      0.8584,
-      "Camel Milk Powder Pro"
-     ],
-     [
       "FD-0362",
-      0.8568,
+      0.8593,
       "Camel Milk Powder Plus"
      ],
      [
+      "FD-0347",
+      0.8587,
+      "Camel Milk Powder Pro"
+     ],
+     [
       "FD-0392",
-      0.8552,
+      0.8585,
       "Camel Milk Powder Lite"
      ],
      [
       "FD-0377",
-      0.8492,
+      0.8513,
       "Camel Milk Powder Premium"
      ]
     ]
@@ -3992,55 +3992,55 @@
    "hits": {
     "en": [
      [
+      "FD-0393",
+      0.9016,
+      "Dried Figs 500g Lite"
+     ],
+     [
       "FD-0333",
-      0.9031,
+      0.9015,
       "Dried Figs 500g"
      ],
      [
       "FD-0348",
-      0.9028,
+      0.9003,
       "Dried Figs 500g Pro"
      ],
      [
       "FD-0378",
-      0.9014,
+      0.8995,
       "Dried Figs 500g Premium"
      ],
      [
-      "FD-0393",
-      0.9014,
-      "Dried Figs 500g Lite"
-     ],
-     [
       "FD-0363",
-      0.8974,
+      0.8977,
       "Dried Figs 500g Plus"
      ]
     ],
     "ar": [
      [
       "FD-0333",
-      0.8631,
+      0.8648,
       "Dried Figs 500g"
      ],
      [
       "FD-0393",
-      0.8569,
+      0.8603,
       "Dried Figs 500g Lite"
      ],
      [
       "FD-0348",
-      0.8568,
+      0.8598,
       "Dried Figs 500g Pro"
      ],
      [
       "FD-0378",
-      0.8566,
+      0.8586,
       "Dried Figs 500g Premium"
      ],
      [
       "FD-0363",
-      0.8554,
+      0.8582,
       "Dried Figs 500g Plus"
      ]
     ]
@@ -4061,54 +4061,54 @@
     "en": [
      [
       "FD-0334",
-      0.8944,
+      0.8857,
       "Karak Tea Blend"
      ],
      [
       "FD-0394",
-      0.8902,
+      0.8827,
       "Karak Tea Blend Lite"
      ],
      [
-      "FD-0349",
-      0.8852,
-      "Karak Tea Blend Pro"
+      "FD-0364",
+      0.8777,
+      "Karak Tea Blend Plus"
      ],
      [
       "FD-0379",
-      0.8845,
+      0.877,
       "Karak Tea Blend Premium"
      ],
      [
-      "FD-0364",
-      0.8836,
-      "Karak Tea Blend Plus"
+      "FD-0349",
+      0.876,
+      "Karak Tea Blend Pro"
      ]
     ],
     "ar": [
      [
       "FD-0334",
-      0.8569,
+      0.8595,
       "Karak Tea Blend"
      ],
      [
       "FD-0349",
-      0.848,
+      0.8481,
       "Karak Tea Blend Pro"
      ],
      [
       "FD-0394",
-      0.8468,
+      0.8472,
       "Karak Tea Blend Lite"
      ],
      [
       "FD-0379",
-      0.8468,
+      0.8471,
       "Karak Tea Blend Premium"
      ],
      [
       "FD-0364",
-      0.845,
+      0.846,
       "Karak Tea Blend Plus"
      ]
     ]
@@ -4129,54 +4129,54 @@
     "en": [
      [
       "FD-0335",
-      0.891,
+      0.8892,
       "Sumac Spice 150g"
      ],
      [
       "FD-0395",
-      0.8864,
+      0.8871,
       "Sumac Spice 150g Lite"
      ],
      [
       "FD-0380",
-      0.8858,
+      0.8867,
       "Sumac Spice 150g Premium"
      ],
      [
       "FD-0350",
-      0.885,
+      0.8862,
       "Sumac Spice 150g Pro"
      ],
      [
       "FD-0365",
-      0.8847,
+      0.8839,
       "Sumac Spice 150g Plus"
      ]
     ],
     "ar": [
      [
       "FD-0335",
-      0.8084,
+      0.8041,
       "Sumac Spice 150g"
      ],
      [
+      "FD-0380",
+      0.7943,
+      "Sumac Spice 150g Premium"
+     ],
+     [
       "FD-0350",
-      0.7993,
+      0.7932,
       "Sumac Spice 150g Pro"
      ],
      [
       "FD-0365",
-      0.7986,
+      0.7932,
       "Sumac Spice 150g Plus"
      ],
      [
-      "FD-0380",
-      0.7984,
-      "Sumac Spice 150g Premium"
-     ],
-     [
       "FD-0395",
-      0.7969,
+      0.7904,
       "Sumac Spice 150g Lite"
      ]
     ]
@@ -4199,54 +4199,54 @@
     "en": [
      [
       "BTY-0401",
-      0.8987,
+      0.899,
       "Oud Perfume 50ml"
      ],
      [
       "BTY-0446",
-      0.8981,
+      0.898,
       "Oud Perfume 50ml Premium"
      ],
      [
       "BTY-0476",
-      0.8954,
+      0.8963,
       "Oud Perfume 50ml 6"
      ],
      [
-      "BTY-0416",
-      0.8948,
-      "Oud Perfume 50ml Pro"
+      "BTY-0491",
+      0.895,
+      "Oud Perfume 50ml 7"
      ],
      [
-      "BTY-0491",
-      0.894,
-      "Oud Perfume 50ml 7"
+      "BTY-0416",
+      0.8938,
+      "Oud Perfume 50ml Pro"
      ]
     ],
     "ar": [
      [
       "BTY-0401",
-      0.8673,
+      0.8683,
       "Oud Perfume 50ml"
      ],
      [
       "BTY-0476",
-      0.8642,
+      0.8674,
       "Oud Perfume 50ml 6"
      ],
      [
       "BTY-0416",
-      0.8628,
+      0.8637,
       "Oud Perfume 50ml Pro"
      ],
      [
       "BTY-0461",
-      0.8596,
+      0.8632,
       "Oud Perfume 50ml Lite"
      ],
      [
       "BTY-0491",
-      0.8593,
+      0.863,
       "Oud Perfume 50ml 7"
      ]
     ]
@@ -4269,55 +4269,55 @@
     "en": [
      [
       "BTY-0402",
-      0.8891,
+      0.8863,
       "Rose Face Cream"
      ],
      [
       "BTY-0462",
-      0.8806,
+      0.8824,
       "Rose Face Cream Lite"
      ],
      [
-      "BTY-0447",
-      0.8803,
-      "Rose Face Cream Premium"
-     ],
-     [
       "BTY-0417",
-      0.8798,
+      0.8819,
       "Rose Face Cream Pro"
      ],
      [
+      "BTY-0447",
+      0.8818,
+      "Rose Face Cream Premium"
+     ],
+     [
       "BTY-0477",
-      0.8794,
+      0.88,
       "Rose Face Cream 6"
      ]
     ],
     "ar": [
      [
       "BTY-0402",
-      0.871,
+      0.873,
       "Rose Face Cream"
      ],
      [
       "BTY-0417",
-      0.8644,
+      0.8695,
       "Rose Face Cream Pro"
      ],
      [
+      "BTY-0477",
+      0.8684,
+      "Rose Face Cream 6"
+     ],
+     [
       "BTY-0447",
-      0.8623,
+      0.8682,
       "Rose Face Cream Premium"
      ],
      [
-      "BTY-0492",
-      0.8622,
-      "Rose Face Cream 7"
-     ],
-     [
-      "BTY-0477",
-      0.862,
-      "Rose Face Cream 6"
+      "BTY-0462",
+      0.8671,
+      "Rose Face Cream Lite"
      ]
     ]
    }
@@ -4339,55 +4339,55 @@
     "en": [
      [
       "BTY-0403",
-      0.8871,
+      0.8843,
       "Argan Oil Serum"
      ],
      [
       "BTY-0478",
-      0.8839,
+      0.8832,
       "Argan Oil Serum 6"
      ],
      [
       "BTY-0493",
-      0.8837,
+      0.8824,
       "Argan Oil Serum 7"
      ],
      [
       "BTY-0463",
-      0.8812,
+      0.8794,
       "Argan Oil Serum Lite"
      ],
      [
       "BTY-0448",
-      0.8804,
+      0.8776,
       "Argan Oil Serum Premium"
      ]
     ],
     "ar": [
      [
       "BTY-0403",
-      0.8695,
+      0.8693,
       "Argan Oil Serum"
      ],
      [
       "BTY-0478",
-      0.8613,
+      0.8636,
       "Argan Oil Serum 6"
      ],
      [
       "BTY-0493",
-      0.8589,
+      0.8617,
       "Argan Oil Serum 7"
      ],
      [
-      "BTY-0448",
-      0.8574,
-      "Argan Oil Serum Premium"
+      "BTY-0463",
+      0.8579,
+      "Argan Oil Serum Lite"
      ],
      [
-      "BTY-0463",
-      0.8561,
-      "Argan Oil Serum Lite"
+      "BTY-0448",
+      0.8577,
+      "Argan Oil Serum Premium"
      ]
     ]
    }
@@ -4409,34 +4409,34 @@
     "en": [
      [
       "BTY-0404",
-      0.8846,
+      0.8795,
       "Kohl Eyeliner"
      ],
      [
       "BTY-0479",
-      0.8832,
+      0.8795,
       "Kohl Eyeliner 6"
      ],
      [
       "BTY-0464",
-      0.8808,
+      0.8768,
       "Kohl Eyeliner Lite"
      ],
      [
       "BTY-0494",
-      0.8794,
+      0.8755,
       "Kohl Eyeliner 7"
      ],
      [
       "BTY-0449",
-      0.8773,
+      0.8741,
       "Kohl Eyeliner Premium"
      ]
     ],
     "ar": [
      [
       "BTY-0404",
-      0.8428,
+      0.8421,
       "Kohl Eyeliner"
      ],
      [
@@ -4446,18 +4446,18 @@
      ],
      [
       "BTY-0494",
-      0.8387,
+      0.84,
       "Kohl Eyeliner 7"
      ],
      [
-      "BTY-0464",
-      0.8358,
-      "Kohl Eyeliner Lite"
+      "BTY-0434",
+      0.8384,
+      "Kohl Eyeliner Plus"
      ],
      [
-      "BTY-0434",
-      0.8345,
-      "Kohl Eyeliner Plus"
+      "BTY-0464",
+      0.8379,
+      "Kohl Eyeliner Lite"
      ]
     ]
    }
@@ -4479,54 +4479,54 @@
     "en": [
      [
       "BTY-0405",
-      0.8739,
+      0.8723,
       "Micellar Water"
      ],
      [
       "BTY-0480",
-      0.8663,
+      0.8659,
       "Micellar Water 6"
      ],
      [
       "BTY-0495",
-      0.8661,
+      0.8654,
       "Micellar Water 7"
      ],
      [
       "BTY-0465",
-      0.8655,
+      0.8652,
       "Micellar Water Lite"
      ],
      [
       "BTY-0435",
-      0.8625,
+      0.8622,
       "Micellar Water Plus"
      ]
     ],
     "ar": [
      [
       "BTY-0405",
-      0.8393,
+      0.8391,
       "Micellar Water"
      ],
      [
       "BTY-0480",
-      0.8334,
+      0.8348,
       "Micellar Water 6"
      ],
      [
       "BTY-0495",
-      0.8314,
+      0.8325,
       "Micellar Water 7"
      ],
      [
       "BTY-0435",
-      0.8306,
+      0.8309,
       "Micellar Water Plus"
      ],
      [
       "BTY-0465",
-      0.8278,
+      0.8299,
       "Micellar Water Lite"
      ]
     ]
@@ -4548,55 +4548,55 @@
    "hits": {
     "en": [
      [
-      "BTY-0481",
-      0.8797,
-      "Henna Powder 6"
-     ],
-     [
       "BTY-0406",
-      0.8788,
+      0.8765,
       "Henna Powder"
      ],
      [
       "BTY-0451",
-      0.8783,
+      0.8762,
       "Henna Powder Premium"
      ],
      [
+      "BTY-0481",
+      0.8756,
+      "Henna Powder 6"
+     ],
+     [
       "BTY-0421",
-      0.8775,
+      0.8752,
       "Henna Powder Pro"
      ],
      [
       "BTY-0496",
-      0.8774,
+      0.8738,
       "Henna Powder 7"
      ]
     ],
     "ar": [
      [
       "BTY-0481",
-      0.8359,
+      0.8362,
       "Henna Powder 6"
      ],
      [
       "BTY-0406",
-      0.833,
+      0.8352,
       "Henna Powder"
      ],
      [
       "BTY-0496",
-      0.8309,
+      0.8312,
       "Henna Powder 7"
      ],
      [
       "BTY-0421",
-      0.8295,
+      0.8294,
       "Henna Powder Pro"
      ],
      [
       "BTY-0466",
-      0.8222,
+      0.8261,
       "Henna Powder Lite"
      ]
     ]
@@ -4619,54 +4619,54 @@
     "en": [
      [
       "BTY-0407",
-      0.8919,
+      0.8889,
       "Lip Gloss Set"
      ],
      [
       "BTY-0467",
-      0.8863,
+      0.8858,
       "Lip Gloss Set Lite"
      ],
      [
       "BTY-0482",
-      0.8856,
+      0.8847,
       "Lip Gloss Set 6"
      ],
      [
       "BTY-0497",
-      0.8848,
+      0.8837,
       "Lip Gloss Set 7"
      ],
      [
       "BTY-0422",
-      0.8826,
+      0.8833,
       "Lip Gloss Set Pro"
      ]
     ],
     "ar": [
      [
       "BTY-0407",
-      0.87,
+      0.8713,
       "Lip Gloss Set"
      ],
      [
       "BTY-0482",
-      0.8637,
+      0.8666,
       "Lip Gloss Set 6"
      ],
      [
       "BTY-0497",
-      0.8625,
+      0.8653,
       "Lip Gloss Set 7"
      ],
      [
       "BTY-0467",
-      0.8623,
+      0.8638,
       "Lip Gloss Set Lite"
      ],
      [
       "BTY-0422",
-      0.8567,
+      0.8608,
       "Lip Gloss Set Pro"
      ]
     ]
@@ -4689,55 +4689,55 @@
     "en": [
      [
       "BTY-0408",
-      0.8865,
+      0.8858,
       "Facial Mask Pack"
      ],
      [
       "BTY-0483",
-      0.8826,
+      0.8834,
       "Facial Mask Pack 6"
      ],
      [
-      "BTY-0498",
-      0.8796,
-      "Facial Mask Pack 7"
-     ],
-     [
       "BTY-0423",
-      0.8796,
+      0.881,
       "Facial Mask Pack Pro"
      ],
      [
+      "BTY-0498",
+      0.8795,
+      "Facial Mask Pack 7"
+     ],
+     [
       "BTY-0453",
-      0.8785,
+      0.8787,
       "Facial Mask Pack Premium"
      ]
     ],
     "ar": [
      [
-      "BTY-0408",
-      0.8628,
-      "Facial Mask Pack"
-     ],
-     [
       "BTY-0483",
-      0.8611,
+      0.8656,
       "Facial Mask Pack 6"
      ],
      [
       "BTY-0498",
-      0.8601,
+      0.864,
       "Facial Mask Pack 7"
      ],
      [
+      "BTY-0408",
+      0.863,
+      "Facial Mask Pack"
+     ],
+     [
       "BTY-0423",
-      0.8567,
+      0.8598,
       "Facial Mask Pack Pro"
      ],
      [
-      "BTY-0453",
-      0.8532,
-      "Facial Mask Pack Premium"
+      "BTY-0468",
+      0.8564,
+      "Facial Mask Pack Lite"
      ]
     ]
    }
@@ -4759,54 +4759,54 @@
     "en": [
      [
       "BTY-0409",
-      0.8941,
+      0.8922,
       "Hair Mask Argan"
      ],
      [
+      "BTY-0484",
+      0.8874,
+      "Hair Mask Argan 6"
+     ],
+     [
       "BTY-0499",
-      0.888,
+      0.8867,
       "Hair Mask Argan 7"
      ],
      [
-      "BTY-0454",
-      0.8877,
-      "Hair Mask Argan Premium"
-     ],
-     [
       "BTY-0469",
-      0.8872,
+      0.8852,
       "Hair Mask Argan Lite"
      ],
      [
-      "BTY-0484",
-      0.887,
-      "Hair Mask Argan 6"
+      "BTY-0454",
+      0.8851,
+      "Hair Mask Argan Premium"
      ]
     ],
     "ar": [
      [
       "BTY-0409",
-      0.876,
+      0.8802,
       "Hair Mask Argan"
      ],
      [
       "BTY-0484",
-      0.8726,
+      0.8794,
       "Hair Mask Argan 6"
      ],
      [
       "BTY-0499",
-      0.8695,
+      0.8764,
       "Hair Mask Argan 7"
      ],
      [
       "BTY-0424",
-      0.8637,
+      0.8686,
       "Hair Mask Argan Pro"
      ],
      [
       "BTY-0469",
-      0.8614,
+      0.8662,
       "Hair Mask Argan Lite"
      ]
     ]
@@ -4828,56 +4828,56 @@
    "hits": {
     "en": [
      [
-      "BTY-0410",
-      0.8639,
-      "Blackseed Oil"
-     ],
-     [
       "BTY-0470",
-      0.8615,
+      0.8618,
       "Blackseed Oil Lite"
      ],
      [
+      "BTY-0410",
+      0.8597,
+      "Blackseed Oil"
+     ],
+     [
       "BTY-0485",
-      0.8607,
+      0.8592,
       "Blackseed Oil 6"
      ],
      [
       "BTY-0500",
-      0.8607,
+      0.8585,
       "Blackseed Oil 7"
      ],
      [
       "BTY-0455",
-      0.8598,
+      0.8581,
       "Blackseed Oil Premium"
      ]
     ],
     "ar": [
      [
       "BTY-0410",
-      0.8809,
+      0.8831,
       "Blackseed Oil"
      ],
      [
       "BTY-0425",
-      0.8768,
+      0.8815,
       "Blackseed Oil Pro"
      ],
      [
       "BTY-0485",
-      0.8754,
+      0.8813,
       "Blackseed Oil 6"
      ],
      [
-      "BTY-0500",
-      0.8752,
-      "Blackseed Oil 7"
+      "BTY-0440",
+      0.8809,
+      "Blackseed Oil Plus"
      ],
      [
-      "BTY-0440",
-      0.8749,
-      "Blackseed Oil Plus"
+      "BTY-0500",
+      0.8806,
+      "Blackseed Oil 7"
      ]
     ]
    }
@@ -4898,54 +4898,54 @@
     "en": [
      [
       "BTY-0411",
-      0.8735,
+      0.8754,
       "Whitening Cream"
      ],
      [
       "BTY-0471",
-      0.8657,
+      0.8688,
       "Whitening Cream Lite"
      ],
      [
       "BTY-0486",
-      0.8646,
+      0.8672,
       "Whitening Cream 6"
      ],
      [
-      "BTY-0426",
-      0.8623,
-      "Whitening Cream Pro"
+      "BTY-0456",
+      0.8672,
+      "Whitening Cream Premium"
      ],
      [
-      "BTY-0456",
-      0.8622,
-      "Whitening Cream Premium"
+      "BTY-0426",
+      0.8639,
+      "Whitening Cream Pro"
      ]
     ],
     "ar": [
      [
       "BTY-0411",
-      0.8682,
+      0.8755,
       "Whitening Cream"
      ],
      [
       "BTY-0471",
-      0.8657,
+      0.8728,
       "Whitening Cream Lite"
      ],
      [
       "BTY-0456",
-      0.8628,
+      0.8724,
       "Whitening Cream Premium"
      ],
      [
       "BTY-0486",
-      0.8619,
+      0.8705,
       "Whitening Cream 6"
      ],
      [
       "BTY-0426",
-      0.8569,
+      0.864,
       "Whitening Cream Pro"
      ]
     ]
@@ -4967,54 +4967,54 @@
     "en": [
      [
       "BTY-0427",
-      0.8859,
+      0.8922,
       "Perfume Gift Set Pro"
      ],
      [
       "BTY-0412",
-      0.8842,
+      0.8878,
       "Perfume Gift Set"
      ],
      [
       "BTY-0487",
-      0.8809,
+      0.8844,
       "Perfume Gift Set 6"
      ],
      [
       "BTY-0472",
-      0.8804,
+      0.8844,
       "Perfume Gift Set Lite"
      ],
      [
       "BTY-0457",
-      0.8802,
+      0.8838,
       "Perfume Gift Set Premium"
      ]
     ],
     "ar": [
      [
       "BTY-0412",
-      0.8789,
+      0.8843,
       "Perfume Gift Set"
      ],
      [
-      "BTY-0427",
-      0.8753,
-      "Perfume Gift Set Pro"
-     ],
-     [
       "BTY-0487",
-      0.8749,
+      0.8808,
       "Perfume Gift Set 6"
      ],
      [
+      "BTY-0427",
+      0.879,
+      "Perfume Gift Set Pro"
+     ],
+     [
       "BTY-0472",
-      0.8718,
+      0.8757,
       "Perfume Gift Set Lite"
      ],
      [
       "BTY-0442",
-      0.8689,
+      0.8717,
       "Perfume Gift Set Plus"
      ]
     ]
@@ -5036,54 +5036,54 @@
     "en": [
      [
       "BTY-0413",
-      0.898,
+      0.8994,
       "Natural Soap Set"
      ],
      [
       "BTY-0428",
-      0.8963,
+      0.8984,
       "Natural Soap Set Pro"
      ],
      [
       "BTY-0488",
-      0.8952,
+      0.8962,
       "Natural Soap Set 6"
      ],
      [
       "BTY-0473",
-      0.8944,
+      0.8956,
       "Natural Soap Set Lite"
      ],
      [
       "BTY-0458",
-      0.8899,
+      0.891,
       "Natural Soap Set Premium"
      ]
     ],
     "ar": [
      [
       "BTY-0413",
-      0.8854,
+      0.8891,
       "Natural Soap Set"
      ],
      [
       "BTY-0488",
-      0.8793,
+      0.8832,
       "Natural Soap Set 6"
      ],
      [
+      "BTY-0473",
+      0.8805,
+      "Natural Soap Set Lite"
+     ],
+     [
       "BTY-0458",
-      0.8763,
+      0.8801,
       "Natural Soap Set Premium"
      ],
      [
-      "BTY-0443",
-      0.8747,
-      "Natural Soap Set Plus"
-     ],
-     [
       "BTY-0428",
-      0.8747,
+      0.8795,
       "Natural Soap Set Pro"
      ]
     ]
@@ -5104,13 +5104,35 @@
    "hits": {
     "en": [
      [
+      "BTY-0414",
+      0.8844,
+      "Vitamin C Serum"
+     ],
+     [
       "BTY-0459",
-      0.8846,
+      0.8842,
       "Vitamin C Serum Premium"
      ],
      [
+      "BTY-0489",
+      0.8814,
+      "Vitamin C Serum 6"
+     ],
+     [
+      "BTY-0474",
+      0.8811,
+      "Vitamin C Serum Lite"
+     ],
+     [
+      "BTY-0429",
+      0.8784,
+      "Vitamin C Serum Pro"
+     ]
+    ],
+    "ar": [
+     [
       "BTY-0414",
-      0.8841,
+      0.8813,
       "Vitamin C Serum"
      ],
      [
@@ -5119,40 +5141,18 @@
       "Vitamin C Serum 6"
      ],
      [
-      "BTY-0474",
-      0.879,
-      "Vitamin C Serum Lite"
-     ],
-     [
-      "BTY-0444",
-      0.8776,
-      "Vitamin C Serum Plus"
-     ]
-    ],
-    "ar": [
-     [
-      "BTY-0414",
-      0.8801,
-      "Vitamin C Serum"
-     ],
-     [
       "BTY-0459",
-      0.8759,
+      0.8772,
       "Vitamin C Serum Premium"
      ],
      [
-      "BTY-0489",
-      0.8752,
-      "Vitamin C Serum 6"
-     ],
-     [
       "BTY-0474",
-      0.8719,
+      0.8755,
       "Vitamin C Serum Lite"
      ],
      [
       "BTY-0429",
-      0.8708,
+      0.8734,
       "Vitamin C Serum Pro"
      ]
     ]
@@ -5174,54 +5174,54 @@
     "en": [
      [
       "BTY-0415",
-      0.8644,
+      0.8642,
       "Brow Pencil"
      ],
      [
       "BTY-0430",
-      0.8629,
+      0.8608,
       "Brow Pencil Pro"
      ],
      [
       "BTY-0460",
-      0.8608,
+      0.8588,
       "Brow Pencil Premium"
      ],
      [
       "BTY-0490",
-      0.8585,
+      0.8575,
       "Brow Pencil 6"
      ],
      [
       "BTY-0475",
-      0.8568,
+      0.8558,
       "Brow Pencil Lite"
      ]
     ],
     "ar": [
      [
       "BTY-0415",
-      0.8483,
+      0.8478,
       "Brow Pencil"
      ],
      [
-      "BTY-0430",
-      0.8422,
-      "Brow Pencil Pro"
-     ],
-     [
       "BTY-0490",
-      0.8421,
+      0.8459,
       "Brow Pencil 6"
      ],
      [
+      "BTY-0430",
+      0.8457,
+      "Brow Pencil Pro"
+     ],
+     [
       "BTY-0460",
-      0.8381,
+      0.8405,
       "Brow Pencil Premium"
      ],
      [
       "BTY-0475",
-      0.8353,
+      0.8399,
       "Brow Pencil Lite"
      ]
     ]
@@ -5236,55 +5236,55 @@
     "en": [
      [
       "FSH-0007",
-      0.8261,
+      0.8271,
       "Sports Leggings"
      ],
      [
       "FSH-0082",
-      0.8212,
+      0.8234,
       "Sports Leggings 6"
      ],
      [
       "FSH-0112",
-      0.8201,
+      0.823,
       "Sports Leggings 8"
      ],
      [
       "FSH-0097",
-      0.8199,
+      0.8226,
       "Sports Leggings 7"
      ],
      [
       "FSH-0022",
-      0.8179,
+      0.8225,
       "Sports Leggings Pro"
      ]
     ],
     "ar": [
      [
       "FSH-0007",
-      0.7982,
+      0.7985,
       "Sports Leggings"
      ],
      [
-      "FSH-0052",
-      0.7914,
-      "Sports Leggings Premium"
-     ],
-     [
       "FSH-0067",
-      0.7913,
+      0.7983,
       "Sports Leggings Lite"
      ],
      [
+      "FSH-0052",
+      0.7953,
+      "Sports Leggings Premium"
+     ],
+     [
       "FSH-0082",
-      0.7904,
+      0.7929,
       "Sports Leggings 6"
      ],
      [
-      "ELC-0132",
-      0.7902,
-      "Gaming Headset"
+      "FSH-0097",
+      0.792,
+      "Sports Leggings 7"
      ]
     ]
    }
@@ -5295,56 +5295,56 @@
    "hits": {
     "en": [
      [
-      "FSH-0063",
-      0.7734,
-      "Casual Jeans Lite"
-     ],
-     [
       "FSH-0007",
-      0.7704,
+      0.7601,
       "Sports Leggings"
      ],
      [
-      "HOM-0230",
-      0.7687,
-      "Table Runner"
-     ],
-     [
-      "FSH-0005",
-      0.768,
-      "Maxi Skirt"
-     ],
-     [
       "FD-0326",
-      0.7677,
+      0.7598,
       "Mixed Nuts 500g"
+     ],
+     [
+      "FD-0386",
+      0.7597,
+      "Mixed Nuts 500g Lite"
+     ],
+     [
+      "FSH-0067",
+      0.7594,
+      "Sports Leggings Lite"
+     ],
+     [
+      "FD-0371",
+      0.7592,
+      "Mixed Nuts 500g Premium"
      ]
     ],
     "ar": [
      [
       "FSH-0118",
-      0.7882,
+      0.7828,
       "Denim Jacket 8"
      ],
      [
       "FSH-0103",
-      0.7852,
+      0.7816,
       "Denim Jacket 7"
      ],
      [
       "FSH-0013",
-      0.784,
+      0.7781,
       "Denim Jacket"
      ],
      [
-      "FSH-0043",
-      0.7828,
-      "Denim Jacket Plus"
+      "FSH-0028",
+      0.778,
+      "Denim Jacket Pro"
      ],
      [
-      "FSH-0028",
-      0.7825,
-      "Denim Jacket Pro"
+      "FSH-0043",
+      0.7764,
+      "Denim Jacket Plus"
      ]
     ]
    }
@@ -5356,55 +5356,55 @@
     "en": [
      [
       "ELC-0126",
-      0.7834,
+      0.7847,
       "Phone Case Premium"
      ],
      [
       "ELC-0156",
-      0.7827,
-      "Phone Case Premium Plus"
-     ],
-     [
-      "ELC-0186",
-      0.7807,
-      "Phone Case Premium Lite"
-     ],
-     [
-      "ELC-0171",
-      0.78,
-      "Phone Case Premium Premium"
-     ],
-     [
-      "ELC-0178",
-      0.7791,
-      "Smart Plug Premium"
-     ]
-    ],
-    "ar": [
-     [
-      "FSH-0009",
-      0.785,
-      "Beach Kaftan"
-     ],
-     [
-      "ELC-0126",
-      0.7825,
-      "Phone Case Premium"
-     ],
-     [
-      "FD-0338",
-      0.7818,
-      "Saffron Premium 5g Pro"
-     ],
-     [
-      "ELC-0156",
-      0.7814,
+      0.7812,
       "Phone Case Premium Plus"
      ],
      [
       "ELC-0141",
-      0.778,
+      0.7798,
       "Phone Case Premium Pro"
+     ],
+     [
+      "ELC-0186",
+      0.7796,
+      "Phone Case Premium Lite"
+     ],
+     [
+      "ELC-0201",
+      0.7793,
+      "Phone Case Premium 6"
+     ]
+    ],
+    "ar": [
+     [
+      "FD-0338",
+      0.7847,
+      "Saffron Premium 5g Pro"
+     ],
+     [
+      "ELC-0126",
+      0.7836,
+      "Phone Case Premium"
+     ],
+     [
+      "ELC-0156",
+      0.7806,
+      "Phone Case Premium Plus"
+     ],
+     [
+      "ELC-0141",
+      0.7801,
+      "Phone Case Premium Pro"
+     ],
+     [
+      "ELC-0201",
+      0.7788,
+      "Phone Case Premium 6"
      ]
     ]
    }
@@ -5416,55 +5416,55 @@
     "en": [
      [
       "ELC-0129",
-      0.779,
+      0.7772,
       "Webcam HD"
      ],
      [
-      "ELC-0204",
-      0.7753,
-      "Webcam HD 6"
-     ],
-     [
       "ELC-0174",
-      0.7752,
+      0.7711,
       "Webcam HD Premium"
      ],
      [
-      "ELC-0144",
-      0.7739,
-      "Webcam HD Pro"
+      "ELC-0176",
+      0.771,
+      "Portable Monitor Premium"
      ],
      [
-      "ELC-0176",
-      0.7736,
-      "Portable Monitor Premium"
+      "ELC-0204",
+      0.7704,
+      "Webcam HD 6"
+     ],
+     [
+      "ELC-0144",
+      0.7696,
+      "Webcam HD Pro"
      ]
     ],
     "ar": [
      [
       "ELC-0129",
-      0.7851,
+      0.7819,
       "Webcam HD"
      ],
      [
       "ELC-0204",
-      0.7835,
+      0.7791,
       "Webcam HD 6"
      ],
      [
       "ELC-0131",
-      0.7821,
+      0.779,
       "Portable Monitor"
      ],
      [
-      "ELC-0174",
-      0.7818,
-      "Webcam HD Premium"
+      "ELC-0176",
+      0.7764,
+      "Portable Monitor Premium"
      ],
      [
-      "ELC-0144",
-      0.7817,
-      "Webcam HD Pro"
+      "ELC-0209",
+      0.7763,
+      "Action Camera 6"
      ]
     ]
    }
@@ -5476,55 +5476,55 @@
     "en": [
      [
       "FSH-0067",
-      0.7894,
+      0.7881,
       "Sports Leggings Lite"
      ],
      [
-      "FSH-0037",
-      0.787,
-      "Sports Leggings Plus"
-     ],
-     [
       "FSH-0022",
-      0.7866,
+      0.7858,
       "Sports Leggings Pro"
      ],
      [
+      "FSH-0037",
+      0.7849,
+      "Sports Leggings Plus"
+     ],
+     [
       "FSH-0007",
-      0.7846,
+      0.7816,
       "Sports Leggings"
      ],
      [
-      "FSH-0026",
-      0.7836,
-      "Palazzo Pants Pro"
+      "FSH-0112",
+      0.7795,
+      "Sports Leggings 8"
      ]
     ],
     "ar": [
      [
       "FSH-0007",
-      0.8151,
+      0.8146,
       "Sports Leggings"
      ],
      [
       "FSH-0022",
-      0.8097,
+      0.8117,
       "Sports Leggings Pro"
      ],
      [
       "FSH-0112",
-      0.8082,
+      0.8089,
       "Sports Leggings 8"
      ],
      [
-      "FSH-0037",
-      0.8076,
-      "Sports Leggings Plus"
+      "FSH-0097",
+      0.8086,
+      "Sports Leggings 7"
      ],
      [
-      "FSH-0097",
-      0.8075,
-      "Sports Leggings 7"
+      "FSH-0067",
+      0.8069,
+      "Sports Leggings Lite"
      ]
     ]
    }
@@ -5536,55 +5536,55 @@
     "en": [
      [
       "ELC-0193",
-      0.7761,
+      0.775,
       "Smart Plug Lite"
      ],
      [
       "ELC-0133",
-      0.776,
+      0.7742,
       "Smart Plug"
      ],
      [
       "ELC-0192",
-      0.7723,
+      0.7725,
       "Gaming Headset Lite"
      ],
      [
       "ELC-0178",
-      0.7713,
+      0.7701,
       "Smart Plug Premium"
      ],
      [
-      "ELC-0163",
-      0.7697,
-      "Smart Plug Plus"
+      "ELC-0132",
+      0.7681,
+      "Gaming Headset"
      ]
     ],
     "ar": [
      [
       "ELC-0192",
-      0.798,
+      0.7973,
       "Gaming Headset Lite"
      ],
      [
       "ELC-0132",
-      0.795,
+      0.7935,
       "Gaming Headset"
      ],
      [
-      "ELC-0130",
-      0.7938,
-      "Wireless Charger"
+      "ELC-0147",
+      0.79,
+      "Gaming Headset Pro"
      ],
      [
-      "ELC-0124",
-      0.7931,
-      "Bluetooth Speaker"
+      "ELC-0193",
+      0.7892,
+      "Smart Plug Lite"
      ],
      [
-      "ELC-0133",
-      0.792,
-      "Smart Plug"
+      "ELC-0190",
+      0.7889,
+      "Wireless Charger Lite"
      ]
     ]
    }
@@ -5596,55 +5596,55 @@
     "en": [
      [
       "HOM-0230",
-      0.7779,
+      0.7741,
       "Table Runner"
      ],
      [
       "HOM-0290",
-      0.7724,
+      0.7704,
       "Table Runner Lite"
      ],
      [
       "HOM-0275",
-      0.7719,
+      0.7692,
       "Table Runner Premium"
      ],
      [
-      "HOM-0320",
-      0.7684,
-      "Table Runner 7"
+      "BTY-0486",
+      0.7658,
+      "Whitening Cream 6"
      ],
      [
-      "BTY-0486",
-      0.7677,
-      "Whitening Cream 6"
+      "HOM-0320",
+      0.7652,
+      "Table Runner 7"
      ]
     ],
     "ar": [
      [
       "HOM-0230",
-      0.7822,
+      0.7821,
       "Table Runner"
      ],
      [
       "HOM-0305",
-      0.7801,
+      0.781,
       "Table Runner 6"
      ],
      [
       "HOM-0290",
-      0.78,
+      0.7807,
       "Table Runner Lite"
      ],
      [
-      "HOM-0320",
-      0.7787,
-      "Table Runner 7"
+      "HOM-0229",
+      0.7792,
+      "Storage Baskets"
      ],
      [
-      "HOM-0229",
-      0.7778,
-      "Storage Baskets"
+      "HOM-0320",
+      0.7791,
+      "Table Runner 7"
      ]
     ]
    }
@@ -5655,56 +5655,56 @@
    "hits": {
     "en": [
      [
-      "ELC-0178",
-      0.795,
-      "Smart Plug Premium"
-     ],
-     [
-      "ELC-0132",
-      0.7928,
-      "Gaming Headset"
-     ],
-     [
       "ELC-0177",
-      0.7914,
+      0.7877,
       "Gaming Headset Premium"
      ],
      [
-      "ELC-0147",
-      0.7904,
-      "Gaming Headset Pro"
+      "ELC-0132",
+      0.7875,
+      "Gaming Headset"
      ],
      [
       "ELC-0131",
-      0.7898,
+      0.7864,
       "Portable Monitor"
+     ],
+     [
+      "ELC-0178",
+      0.7863,
+      "Smart Plug Premium"
+     ],
+     [
+      "ELC-0161",
+      0.7846,
+      "Portable Monitor Plus"
      ]
     ],
     "ar": [
      [
       "ELC-0178",
-      0.808,
+      0.8005,
       "Smart Plug Premium"
      ],
      [
-      "ELC-0133",
-      0.8025,
-      "Smart Plug"
-     ],
-     [
       "ELC-0207",
-      0.8022,
+      0.8002,
       "Gaming Headset 6"
      ],
      [
-      "ELC-0206",
-      0.8013,
-      "Portable Monitor 6"
+      "ELC-0133",
+      0.7972,
+      "Smart Plug"
      ],
      [
-      "ELC-0193",
-      0.8011,
-      "Smart Plug Lite"
+      "ELC-0162",
+      0.797,
+      "Gaming Headset Plus"
+     ],
+     [
+      "ELC-0206",
+      0.7969,
+      "Portable Monitor 6"
      ]
     ]
    }
