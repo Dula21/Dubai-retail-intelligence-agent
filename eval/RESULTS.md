@@ -113,11 +113,10 @@ Run against real data, **all 8 smoke-test queries failed** with `'str' object ha
 | `FSH-0014` | exact lookup, 1.000 | no | yes (Printed T-Shirt) |
 | `how many units left of FSH-0014` | exact lookup, 1.000 | no | yes |
 
-**Tests:** 76 pass (59 before this check, plus 17 in `tests/test_rag_node_integration.py`, which use the real retriever
-output shape). Run against the old node, 8 of the first 15 of those tests fail with the exact error above.
+**Tests:** ests: 88 pass (59 before this check, plus 17 in tests/test_rag_node_integration.py and 12 in tests/test_agent_real_retriever.py, which use the real retriever). Run against the old node, 8 of the first 15 of the first set fail with the exact error above.
 
 **Caveats:**
-- 8 hand-picked smoke queries are an observation, not a benchmark, and the smoke script prints rather than asserts.
+- The smoke queries are covered by assertions in tests/test_agent_real_retriever.py, and keep the point that 8 queries is an observation, not a benchmark.
 - The node now returns the top 3 **distinct products**, not three variants of one. Weak neighbours appear (`summer dress` returns
   Modest Swimwear Lite and Beach Kaftan Lite; `عباية` returns Storage Baskets third). Decide in Phase 3 whether to filter by score distance or label them as alternatives.
 - The margin is top-1 vs the next different product (top-2 at product level). The project's principle text says top-1 vs top-3; the evidence
