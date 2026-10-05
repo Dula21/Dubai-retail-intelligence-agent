@@ -455,7 +455,7 @@ class TestAgentEndToEnd:
         with patch("agents.nodes.rag_node.get_retriever") as mock_retriever_factory, \
              patch("agents.nodes.recommendation_node.get_groq_client") as mock_groq_factory:
 
-            mock_retriever = AsyncMock()
+            mock_retriever = MagicMock()
             mock_retriever.search.return_value = mock_chunks
             mock_retriever_factory.return_value = mock_retriever
 
