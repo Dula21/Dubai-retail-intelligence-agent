@@ -1,0 +1,1062 @@
+﻿=== retriever.py ===
+"""
+Bilingual RAG Retriever â€” Confidence-Gated
+==========================================
+Loads product catalogue and sales data, builds a ChromaDB vector store,
+and exposes a confidence-gated retrieval interface.
+
+ENGINEERING DECISION: ChromaDB over FAISS or Pinecone
+------------------------------------------------------
+Alternatives considered:
+  A) FAISS (Meta) â€” fast, in-memory, no persistence
+  B) Pinecone   â€” managed, excellent scale, costs $$$
+  C) ChromaDB   â€” embedded, persistent, open source, SQLite-backed
+Chosen: ChromaDB
+
+Why for this stage:
+  1. Runs locally without cloud dependency â€” matches data residency concerns
+     relevant for UAE enterprise (G42, Presight).
+  2. Persistent across restarts â€” no re-embedding on every launch.
+  3. Metadata filtering built in â€” critical for "show me home products under
+     AED 100" queries (price + category filter before vector search).
+  4. Upgrades to distributed Chroma in production without API change.
+
+Trade-off: At >1M vectors, FAISS or Weaviate would outperform. 
+500 SKUs â†’ ChromaDB is the right call.
+
+HIRING NOTE: Being able to explain WHY you didn't use Pinecone is
+often more impressive than saying you used it.
+"""
+
+from __future__ import annotations
+
+import csv
+import json
+import os
+import time
+from typing import Any, Optional
+
+try:
+    import structlog
+    logger = structlog.get_logger(__name__)
+except ImportError:
+    import logging
+    logger = logging.getLogger(__name__)
+
+from .embeddings import (
+    CONFIDENCE_THRESHOLD,
+    EmbeddingConfig,
+    EmbeddingManager,
+    chunk_catalogue_for_embedding,
+    detect_language,
+)
+
+
+# ---------------------------------------------------------------------------
+# LangChain Document Loader (wraps CSV â†’ LangChain Document objects)
+# ---------------------------------------------------------------------------
+
+
+def load_csv(path: str) -> list[dict]:
+    """Load a CSV file and return a list of dicts. Pure stdlib."""
+    with open(path, newline="", encoding="utf-8") as f:
+        return list(csv.DictReader(f))
+
+
+class RetailCatalogueLoader:
+    """
+    LangChain-compatible document loader for the product catalogue CSV.
+    
+    ENGINEERING DECISION: Custom loader over CSVLoader
+    LangChain's built-in CSVLoader treats each row as raw text.
+    We need structured metadata extraction (price, category, bilingual names)
+    for ChromaDB metadata filtering. A custom loader gives us that.
+    
+    This also mirrors the pattern used in DPI (Dubai Property Intelligence)
+    for DLD transaction data â€” consistent loader pattern across all three
+    portfolio projects.
+    """
+
+    def __init__(self, catalogue_path: str, sales_path: Optional[str] = None):
+        self.catalogue_path = catalogue_path
+        self.sales_path = sales_path
+        self._catalogue_cache: Optional[list[dict]] = None
+        self._sales_index:     Optional[dict[str, dict]] = None
+
+    def load_catalogue(self) -> list[dict]:
+        """Load and cache the product catalogue."""
+        if self._catalogue_cache is None:
+            rows = load_csv(self.catalogue_path)
+            # Cast numeric fields
+            for row in rows:
+                row["price_aed"]            = float(row["price_aed"])
+                row["supplier_lead_days"]   = int(row["supplier_lead_days"])
+                row["supplier_reliability"] = float(row["supplier_reliability"])
+                row["reorder_point_units"]  = int(row["reorder_point_units"])
+                row["reorder_qty_units"]    = int(row["reorder_qty_units"])
+                row["is_ramadan_hero"]      = int(row["is_ramadan_hero"])
+                row["is_dsf_hero"]          = int(row["is_dsf_hero"])
+            self._catalogue_cache = rows
+            logger.info("catalogue_loaded", sku_count=len(rows))
+        return self._catalogue_cache
+
+    def load_sales_summary(self) -> dict[str, dict]:
+        """
+        Build a per-SKU sales summary indexed by sku_id.
+        Used to enrich retrieval results with performance context.
+        
+        Returns dict: sku_id â†’ {total_units, total_revenue, avg_daily_units,
+                                  stockout_days, last_30d_units}
+        """
+        if self._sales_index is not None:
+            return self._sales_index
+
+        if not self.sales_path or not os.path.exists(self.sales_path):
+            logger.warning("sales_file_not_found", path=self.sales_path)
+            return {}
+
+        rows = load_csv(self.sales_path)
+        index: dict[str, dict] = {}
+
+        for row in rows:
+            sku_id = row["sku_id"]
+            units  = int(row["units_sold"])
+            rev    = float(row["revenue_aed"])
+            date_s = row["date"]
+
+            if sku_id not in index:
+                index[sku_id] = {
+                    "total_units":    0,
+                    "total_revenue":  0.0,
+                    "stockout_days":  0,
+                    "all_dates":      [],
+                    "last_30d_units": 0,
+                }
+
+            idx = index[sku_id]
+            idx["total_units"]   += units
+            idx["total_revenue"] += rev
+            idx["stockout_days"] += int(row.get("stockout_occurred", 0))
+            idx["all_dates"].append(date_s)
+
+            # Approximate last-30-day: dates after 2026-07-15
+            if date_s >= "2026-07-15":
+                idx["last_30d_units"] += units
+
+        # Compute averages, clean up helper fields
+        for sku_id, idx in index.items():
+            day_count = max(1, len(idx["all_dates"]))
+            idx["avg_daily_units"] = round(idx["total_units"] / day_count, 2)
+            idx["total_revenue"]   = round(idx["total_revenue"], 2)
+            del idx["all_dates"]
+
+        self._sales_index = index
+        logger.info("sales_summary_built", sku_count=len(index))
+        return index
+
+
+# ---------------------------------------------------------------------------
+# Vector Store Manager
+# ---------------------------------------------------------------------------
+
+
+class RetailVectorStore:
+    """
+    Manages the ChromaDB vector store for product catalogue retrieval.
+    Handles: ingestion, persistence, and confidence-gated query.
+    """
+
+    COLLECTION_NAME = "dubai_retail_catalogue_v1"
+
+    def __init__(
+        self,
+        persist_directory: str = ".chroma_db",
+        embedding_manager: Optional[EmbeddingManager] = None,
+        config: Optional[EmbeddingConfig] = None,
+    ):
+        self.persist_directory = persist_directory
+        self.embedding_manager = embedding_manager or EmbeddingManager(config)
+        self._collection = None
+
+    def _get_chroma_client(self):
+        """Lazy-init ChromaDB client."""
+        try:
+            import chromadb
+        except ImportError:
+            raise ImportError("chromadb not installed. Run: pip install chromadb")
+        
+        return chromadb.PersistentClient(path=self.persist_directory)
+
+    @property
+    def collection(self):
+        if self._collection is None:
+            client = self._get_chroma_client()
+            self._collection = client.get_or_create_collection(
+                name=self.COLLECTION_NAME,
+                # ENGINEERING NOTE: cosine distance for normalised embeddings.
+                # ChromaDB stores distance (1 - cosine), so we convert back
+                # in the retrieval step. Alternatively use "ip" (inner product)
+                # which equals cosine for normalised vectors â€” but cosine is
+                # more explicit and readable.
+                metadata={"hnsw:space": "cosine"},
+            )
+        return self._collection
+
+    def ingest_catalogue(
+        self,
+        catalogue_rows: list[dict],
+        force_reingest: bool = False,
+    ) -> int:
+        """
+        Embed and store the product catalogue in ChromaDB.
+        
+        Args:
+            catalogue_rows:  List of product dicts from RetailCatalogueLoader
+            force_reingest:  If True, drop existing collection and re-embed.
+                             Use when catalogue data changes significantly.
+        
+        Returns: Number of documents ingested.
+        
+        ENGINEERING NOTE: force_reingest=False is the default so that a
+        server restart doesn't trigger a ~2 minute re-embedding of 500 SKUs.
+        Redis will cache embeddings in Phase 2 for sub-second warm starts.
+        """
+        if force_reingest:
+            client = self._get_chroma_client()
+            try:
+                client.delete_collection(self.COLLECTION_NAME)
+            except Exception:
+                pass
+            self._collection = None  # Reset so it gets recreated
+
+        # Check if already ingested
+        existing_count = self.collection.count()
+        if existing_count > 0 and not force_reingest:
+            logger.info(
+                "vector_store_already_populated",
+                existing_docs=existing_count,
+                message="Skipping re-ingestion. Use force_reingest=True to rebuild.",
+            )
+            return existing_count
+
+        chunks = chunk_catalogue_for_embedding(catalogue_rows)
+        
+        # Batch embed
+        logger.info("embedding_catalogue", chunk_count=len(chunks))
+        start = time.perf_counter()
+        
+        texts    = [c["text"] for c in chunks]
+        doc_ids  = [c["doc_id"] for c in chunks]
+        metadata = [c["metadata"] for c in chunks]
+        
+        # ChromaDB batches internally but we control batch size for memory
+        BATCH = 50
+        for i in range(0, len(chunks), BATCH):
+            batch_texts = texts[i : i + BATCH]
+            batch_ids   = doc_ids[i : i + BATCH]
+            batch_meta  = metadata[i : i + BATCH]
+            
+            embeddings = self.embedding_manager.embed_documents(batch_texts)
+            
+            self.collection.add(
+                ids=batch_ids,
+                embeddings=embeddings,
+                documents=batch_texts,
+                metadatas=batch_meta,
+            )
+            logger.debug("batch_ingested", batch_start=i, batch_end=i + BATCH)
+
+        elapsed = time.perf_counter() - start
+        ingested = self.collection.count()
+        logger.info(
+            "catalogue_ingested",
+            total_docs=ingested,
+            elapsed_seconds=round(elapsed, 2),
+            docs_per_second=round(ingested / elapsed, 1),
+        )
+        return ingested
+
+    def query(
+        self,
+        query_text: str,
+        n_results: int = 10,
+        metadata_filter: Optional[dict] = None,
+        min_confidence: Optional[float] = None,
+    ) -> list[dict[str, Any]]:
+        """
+        Retrieve relevant products with confidence gating.
+        
+        CONFIDENCE GATE: Results below min_confidence are excluded entirely.
+        This is the core hallucination-prevention mechanism from DPI, applied
+        to retrieval. The agent in Phase 2 can request a broader search if
+        no results pass the gate, rather than returning low-confidence noise.
+        
+        Args:
+            query_text:      User query in Arabic or English
+            n_results:       Number of candidates to retrieve before filtering
+            metadata_filter: ChromaDB where-clause for pre-filtering
+                             e.g. {"category": "fashion", "price_aed": {"$lt": 200}}
+            min_confidence:  Override default threshold (0.72)
+        
+        Returns:
+            List of results above confidence threshold, each with:
+            - sku_id, name_en, name_ar, category, price_aed
+            - similarity_score (0.0â€“1.0)
+            - detected_query_language
+        
+        ENGINEERING NOTE: We retrieve n_results=10 candidates then filter.
+        If all 10 fail the confidence gate, the agent gets an empty list and
+        can widen the search or acknowledge uncertainty. This is intentional â€”
+        returning garbage at 0.4 similarity is worse than returning nothing.
+        """
+        threshold = min_confidence if min_confidence is not None else CONFIDENCE_THRESHOLD
+        lang      = detect_language(query_text)
+
+        logger.info(
+            "retrieval_query",
+            query_preview=query_text[:60],
+            detected_language=lang,
+            confidence_threshold=threshold,
+        )
+
+        query_embedding = self.embedding_manager.embed_query(query_text)
+
+        # Build ChromaDB query kwargs
+        query_kwargs: dict[str, Any] = {
+            "query_embeddings": [query_embedding],
+            "n_results": min(n_results, self.collection.count()),
+            "include": ["documents", "metadatas", "distances"],
+        }
+        if metadata_filter:
+            query_kwargs["where"] = metadata_filter
+
+        raw = self.collection.query(**query_kwargs)
+
+        # Parse and gate results
+        results = []
+        for doc, meta, dist in zip(
+            raw["documents"][0],
+            raw["metadatas"][0],
+            raw["distances"][0],
+        ):
+            # ChromaDB cosine returns distance (0=identical, 2=opposite)
+            # Convert to similarity: similarity = 1 - (distance / 2)
+            # For cosine in ChromaDB: distance = 1 - cosine_similarity
+            similarity = 1.0 - dist  # ChromaDB cosine distance is already 1 - cosine
+
+            if similarity < threshold:
+                logger.debug(
+                    "result_below_threshold",
+                    sku_id=meta.get("sku_id"),
+                    similarity=round(similarity, 4),
+                    threshold=threshold,
+                )
+                continue  # GATE: drop this result
+
+            results.append({
+                **meta,
+                "similarity_score":     round(similarity, 4),
+                "query_language":       lang,
+                "document_text_preview": doc[:120],
+            })
+
+        logger.info(
+            "retrieval_complete",
+            candidates_retrieved=len(raw["documents"][0]),
+            results_above_threshold=len(results),
+            threshold=threshold,
+        )
+
+        # Sort by similarity descending
+        results.sort(key=lambda r: r["similarity_score"], reverse=True)
+        return results
+
+
+# ---------------------------------------------------------------------------
+# High-level Retrieval Interface (used by LangGraph agent in Phase 2)
+# ---------------------------------------------------------------------------
+
+
+class RetailRetriever:
+    """
+    Unified retrieval interface combining vector search + sales context.
+    This is the object the LangGraph agent nodes will call.
+    
+    Design principle: The retriever returns rich context â€” not just a
+    product list. Each result includes sales performance data so the agent
+    can reason about "underperforming" vs "trending" without an extra lookup.
+    """
+
+    def __init__(
+        self,
+        catalogue_path: str,
+        sales_path: Optional[str] = None,
+        persist_directory: str    = ".chroma_db",
+        embedding_config: Optional[EmbeddingConfig] = None,
+    ):
+        self.loader        = RetailCatalogueLoader(catalogue_path, sales_path)
+        self.embedding_mgr = EmbeddingManager(embedding_config)
+        self.vector_store  = RetailVectorStore(persist_directory, self.embedding_mgr)
+        self._ingested     = False
+
+    def initialize(self, force_reingest: bool = False) -> dict:
+        """
+        Load catalogue and build (or load) vector store.
+        Call once at startup. Idempotent unless force_reingest=True.
+        """
+        catalogue = self.loader.load_catalogue()
+        n = self.vector_store.ingest_catalogue(catalogue, force_reingest=force_reingest)
+        self._ingested = True
+        
+        return {
+            "status":      "ready",
+            "sku_count":   len(catalogue),
+            "vector_docs": n,
+        }
+
+    def search(
+        self,
+        query: str,
+        n_results: int = 5,
+        category: Optional[str]  = None,
+        max_price_aed: Optional[float] = None,
+        min_price_aed: Optional[float] = None,
+        ramadan_hero_only: bool = False,
+        dsf_hero_only:     bool = False,
+    ) -> dict[str, Any]:
+        """
+        Main search endpoint called by the LangGraph agent.
+        
+        Combines:
+          1. Metadata pre-filtering (category, price range, seasonal flags)
+          2. Vector similarity search with confidence gating
+          3. Sales context enrichment
+        
+        Returns structured response ready for the agent to reason over.
+        """
+        if not self._ingested:
+            raise RuntimeError("Retriever not initialized. Call initialize() first.")
+
+        # Build metadata filter
+        meta_filter: dict[str, Any] = {}
+        conditions: list[dict] = []
+
+        if category:
+            conditions.append({"category": {"$eq": category}})
+        if max_price_aed is not None:
+            conditions.append({"price_aed": {"$lte": max_price_aed}})
+        if min_price_aed is not None:
+            conditions.append({"price_aed": {"$gte": min_price_aed}})
+        if ramadan_hero_only:
+            conditions.append({"is_ramadan_hero": {"$eq": 1}})
+        if dsf_hero_only:
+            conditions.append({"is_dsf_hero": {"$eq": 1}})
+
+        if len(conditions) == 1:
+            meta_filter = conditions[0]
+        elif len(conditions) > 1:
+            meta_filter = {"$and": conditions}
+
+        # Vector search
+        results = self.vector_store.query(
+            query_text=query,
+            n_results=n_results * 2,  # Over-fetch then filter
+            metadata_filter=meta_filter if meta_filter else None,
+        )[:n_results]
+
+        # Enrich with sales context
+        sales_summary = self.loader.load_sales_summary()
+        for r in results:
+            sku_id = r.get("sku_id")
+            if sku_id and sku_id in sales_summary:
+                r["sales"] = sales_summary[sku_id]
+            else:
+                r["sales"] = None
+
+        return {
+            "query":          query,
+            "query_language": results[0]["query_language"] if results else detect_language(query),
+            "results":        results,
+            "result_count":   len(results),
+            "confidence_gate": CONFIDENCE_THRESHOLD,
+            "filters_applied": {
+                "category":         category,
+                "max_price_aed":    max_price_aed,
+                "min_price_aed":    min_price_aed,
+                "ramadan_hero_only":ramadan_hero_only,
+                "dsf_hero_only":    dsf_hero_only,
+            },
+        }
+=== embeddings.py ===
+"""
+Bilingual Embedding Pipeline â€” Arabic + English
+================================================
+Handles embedding generation for the Dubai Retail Intelligence Agent.
+
+ENGINEERING DECISION: Multilingual-E5 over separate Arabic/English models
+--------------------------------------------------------------------------
+Alternative A: Separate models â€” AraBERT for Arabic, text-embedding-3 for English
+Alternative B: Single multilingual model (multilingual-e5-large)
+Chosen:        Alternative B â€” multilingual-e5-large
+
+Why:
+  1. Cross-lingual retrieval: an Arabic query finding an English-tagged product
+     works naturally. Two separate embedding spaces can't do this.
+  2. Arabic-English mixed product names ("Kandura White / ÙƒÙ†Ø¯ÙˆØ±Ø© Ø¨ÙŠØ¶Ø§Ø¡") 
+     embed coherently in one space.
+  3. Production simplicity: one model, one vector store, one retrieval path.
+  4. multilingual-e5-large outperforms AraBERT on Arabic STS benchmarks
+     while matching English performance.
+
+Trade-off:
+  Multilingual models are ~300MB vs ~110MB for a single-language model.
+  For Dubai deployment on a cloud instance, this is acceptable. If we
+  were targeting edge/mobile, we'd revisit.
+
+HIRING NOTE (G42/Presight): Bilingual embedding is one of the least-solved
+problems in UAE enterprise AI. Being able to explain this decision tree
+clearly is a strong signal.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import logging
+import os
+import time
+from dataclasses import dataclass, field
+from typing import Optional
+
+try:
+    import structlog
+    logger = structlog.get_logger(__name__)
+except ImportError:
+    import logging
+    logger = logging.getLogger(__name__)  # stdlib fallback
+
+
+# ---------------------------------------------------------------------------
+# Constants
+# ---------------------------------------------------------------------------
+
+# ENGINEERING DECISION: Model selection
+# multilingual-e5-large: best multilingual model as of mid-2025 for
+# Arabic-English retail search use case. 560-dim embeddings.
+# Alternative: intfloat/multilingual-e5-base (faster, slightly lower quality)
+EMBEDDING_MODEL_NAME = "intfloat/multilingual-e5-large"
+
+# Confidence gate threshold â€” never return a result below this similarity score
+# ENGINEERING DECISION: Why 0.72?
+# Below 0.72 in cosine similarity, retrieved chunks are empirically noise.
+# Threshold calibrated against a 50-query eval set (see tests/test_retrieval.py).
+# Logistics Oracle used 0.75 â€” we loosen slightly for Arabic queries which
+# tend to score 3-5% lower due to tokenisation differences.
+CONFIDENCE_THRESHOLD = 0.72
+
+# E5 models require this instruction prefix for queries (not documents)
+# See: https://huggingface.co/intfloat/multilingual-e5-large
+E5_QUERY_PREFIX    = "query: "
+E5_DOCUMENT_PREFIX = "passage: "
+
+
+# ---------------------------------------------------------------------------
+# Language Detection
+# ---------------------------------------------------------------------------
+
+def detect_language(text: str) -> str:
+    """
+    Lightweight Arabic detection without external dependencies.
+    
+    ENGINEERING DECISION: No langdetect library dependency
+    We check for Arabic Unicode block presence (U+0600â€“U+06FF).
+    For production, consider fastText's lid.176.bin â€” 900KB, 176 languages,
+    0.3ms per query. Sufficient for Phase 1 to avoid a dependency.
+    
+    Returns: "ar" | "en" | "mixed"
+    """
+    arabic_chars = sum(1 for c in text if "\u0600" <= c <= "\u06FF")
+    total_alpha  = sum(1 for c in text if c.isalpha())
+    
+    if total_alpha == 0:
+        return "en"
+    
+    arabic_ratio = arabic_chars / total_alpha
+    if arabic_ratio > 0.6:
+        return "ar"
+    elif arabic_ratio > 0.15:
+        return "mixed"
+    return "en"
+
+
+# ---------------------------------------------------------------------------
+# Document preparation
+# ---------------------------------------------------------------------------
+
+def prepare_document_text(product: dict) -> str:
+    """
+    Construct the text that will be embedded for a product SKU.
+    
+    ENGINEERING DECISION: Combined Arabic+English document text
+    Both languages are concatenated in the document. This means:
+    1. An Arabic query CAN retrieve a product whose Arabic name matches.
+    2. An English query CAN retrieve the same product via English name.
+    3. The embedding space is shared â€” no routing needed.
+    
+    Field ordering matters: put the most discriminative fields first.
+    Multilingual-E5 attends more to early tokens.
+    """
+    parts = [
+        # E5 document prefix (required)
+        E5_DOCUMENT_PREFIX,
+        # Primary identifiers (most discriminative â€” go first)
+        product.get("name_en", ""),
+        product.get("name_ar", ""),
+        # Category and tags
+        f"category: {product.get('category', '')}",
+        f"tags: {product.get('tags_en', '')}",
+        f"tags_ar: {product.get('tags_ar', '')}",
+        # Price (useful for "under AED 200" type queries)
+        f"price: AED {product.get('price_aed', '')}",
+        # Supply context
+        f"supplier: {product.get('supplier_name', '')}",
+        f"lead time: {product.get('supplier_lead_days', '')} days",
+    ]
+    # Filter empty and join
+    return " | ".join(p for p in parts if p.strip() and p != E5_DOCUMENT_PREFIX)
+
+
+def prepare_query_text(query: str, language: Optional[str] = None) -> str:
+    """
+    Prepare a user query for embedding with E5 query prefix.
+    
+    For Arabic queries, we preserve the original text.
+    The multilingual model handles Arabic tokenisation natively.
+    Gulf dialect handling is addressed in Phase 4 with a normalisation layer.
+    """
+    lang = language or detect_language(query)
+    logger.debug("query_prepared", query_preview=query[:50], detected_language=lang)
+    return f"{E5_QUERY_PREFIX}{query}"
+
+
+# ---------------------------------------------------------------------------
+# Embedding Manager
+# ---------------------------------------------------------------------------
+
+@dataclass
+class EmbeddingConfig:
+    """
+    Configuration for the embedding pipeline.
+    All values exposed here so they can be overridden from environment
+    variables without touching code â€” important for production deployment.
+    """
+    model_name:           str   = EMBEDDING_MODEL_NAME
+    confidence_threshold: float = CONFIDENCE_THRESHOLD
+    batch_size:           int   = 32     # Chunks per embedding batch
+    normalize_embeddings: bool  = True   # Required for cosine similarity
+    device:               str   = "cpu"  # "cuda" if GPU available
+    cache_dir:            str   = ".model_cache"
+
+
+class EmbeddingManager:
+    """
+    Manages embedding model lifecycle and document preparation.
+    
+    ENGINEERING DECISION: Lazy model loading
+    The sentence-transformers model (~300MB) is not loaded at import time.
+    It loads on first use. This keeps FastAPI startup fast and lets us
+    unit-test the pipeline without the model downloaded.
+    
+    In production (Phase 2), we'll add a startup warmup call so the first
+    real query doesn't pay the cold start penalty.
+    """
+
+    def __init__(self, config: Optional[EmbeddingConfig] = None):
+        self.config = config or EmbeddingConfig()
+        self._model = None  # Lazy load
+        self._load_time: Optional[float] = None
+
+    @property
+    def model(self):
+        """Lazy-load the sentence transformer model."""
+        if self._model is None:
+            self._load_model()
+        return self._model
+
+    def _load_model(self) -> None:
+        """
+        Load multilingual-e5-large from HuggingFace.
+        Requires: pip install sentence-transformers
+        """
+        try:
+            from sentence_transformers import SentenceTransformer
+        except ImportError:
+            raise ImportError(
+                "sentence-transformers not installed. "
+                "Run: pip install sentence-transformers"
+            )
+        
+        start = time.perf_counter()
+        logger.info("embedding_model_loading", model=self.config.model_name)
+        
+        self._model = SentenceTransformer(
+            self.config.model_name,
+            cache_folder=self.config.cache_dir,
+            device=self.config.device,
+        )
+        
+        self._load_time = time.perf_counter() - start
+        logger.info(
+            "embedding_model_loaded",
+            model=self.config.model_name,
+            load_seconds=round(self._load_time, 2),
+        )
+
+    def embed_documents(self, texts: list[str]) -> list[list[float]]:
+        """
+        Embed a batch of document texts.
+        Texts should already include the E5_DOCUMENT_PREFIX.
+        """
+        if not texts:
+            return []
+        
+        embeddings = self.model.encode(
+            texts,
+            batch_size=self.config.batch_size,
+            normalize_embeddings=self.config.normalize_embeddings,
+            show_progress_bar=len(texts) > 100,
+        )
+        return embeddings.tolist()
+
+    def embed_query(self, query: str) -> list[float]:
+        """
+        Embed a single user query.
+        Automatically prepends E5 query prefix.
+        """
+        prepared = prepare_query_text(query)
+        embedding = self.model.encode(
+            [prepared],
+            normalize_embeddings=self.config.normalize_embeddings,
+        )
+        return embedding[0].tolist()
+
+    def compute_similarity(
+        self, query_embedding: list[float], doc_embedding: list[float]
+    ) -> float:
+        """
+        Cosine similarity between two normalised embeddings.
+        Since both are L2-normalised, cosine = dot product.
+        """
+        return sum(a * b for a, b in zip(query_embedding, doc_embedding))
+
+    def is_above_confidence_threshold(self, similarity: float) -> bool:
+        return similarity >= self.config.confidence_threshold
+
+
+# ---------------------------------------------------------------------------
+# Chunking Strategy
+# ---------------------------------------------------------------------------
+
+def chunk_catalogue_for_embedding(
+    catalogue_rows: list[dict],
+    chunk_size: int = 1,
+) -> list[dict]:
+    """
+    Prepare product catalogue rows as embeddable chunks.
+    
+    ENGINEERING DECISION: One chunk per SKU (chunk_size=1)
+    Alternative: Chunk by category (one doc per category)
+    Chosen:      One document per SKU
+    
+    Why: Retrieval granularity must match query granularity.
+    "Show me underperforming SKUs in footwear" needs SKU-level retrieval,
+    not category-level. A category-level chunk would merge all footwear
+    into one vector â€” losing individual SKU signals.
+    
+    The trade-off is vector store size: 500 chunks Ã— 560 dims = manageable.
+    At 100,000 SKUs (noon-scale), we'd move to HNSW approximate nearest
+    neighbour search (already supported by ChromaDB).
+    
+    Returns list of dicts with 'text', 'metadata', 'doc_id'.
+    """
+    chunks = []
+    for row in catalogue_rows:
+        text = prepare_document_text(row)
+        doc_id = f"sku_{row['sku_id']}"
+        
+        chunks.append({
+            "doc_id":   doc_id,
+            "text":     text,
+            "metadata": {
+                "sku_id":       row["sku_id"],
+                "name_en":      row["name_en"],
+                "name_ar":      row["name_ar"],
+                "category":     row["category"],
+                "price_aed":    row["price_aed"],
+                "supplier_lead_days": row["supplier_lead_days"],
+                "is_ramadan_hero":    row["is_ramadan_hero"],
+                "is_dsf_hero":        row["is_dsf_hero"],
+            },
+        })
+    
+    logger.info("catalogue_chunked", total_chunks=len(chunks))
+    return chunks
+=== rag_node.py ===
+"""
+agents/nodes/rag_node.py
+-------------------------
+Node 1: RAG retrieval over the bilingual product catalogue.
+
+Wraps the Phase 1 RetailRetriever with margin-based confidence routing
+and the field-type fallback split (architecture principle 10).
+
+FIX vs earlier version:
+  set_retriever() and get_retriever() were MISSING from the pasted version.
+  main.py calls set_retriever(retriever) in its lifespan â€” without these
+  functions, the entire application crashes on startup with ImportError.
+  These are restored here as the module-level singleton pattern.
+
+Margin-based routing rationale (from Rajat Shrivastav feedback):
+  Absolute cosine thresholds drift with query length and phrasing.
+  A 3-word Arabic query and a 15-word English query produce different
+  score ranges for identical retrieval quality. The margin (top-1 minus
+  top-3 gap) is query-length invariant â€” a small gap means the retriever
+  is uncertain regardless of the absolute score level.
+
+Fallback requires BOTH conditions:
+  1. Margin below threshold (uncertain retrieval), AND
+  2. None of top-3 chunks contain the specific queried entity
+  Either condition alone is not enough â€” prevents over-triggering fallback.
+
+Deduplication before margin calculation:
+  If the same content appears in multiple source documents, top-3 scores
+  look artificially flat. Deduplicate by content hash before computing
+  margin â€” otherwise good retrievals get flagged as uncertain.
+"""
+
+from __future__ import annotations
+
+import hashlib
+
+import structlog
+
+from ..state import AgentState, RetrievedChunk
+from services.intent_classifier import extract_sku_references, is_factual_intent
+
+logger = structlog.get_logger(__name__)
+
+# â”€â”€ Configuration constants â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+CONFIDENCE_FLOOR = 0.72
+MARGIN_THRESHOLD = 0.05
+TOP_K_RETRIEVAL  = 5
+CHUNKS_TO_RETURN = 3
+
+# â”€â”€ Module-level retriever singleton â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# Set once at startup via set_retriever() called from main.py lifespan.
+# All requests share this single instance â€” embedding model loaded once.
+
+_retriever = None
+
+
+def set_retriever(retriever) -> None:
+    """
+    Store the Phase 1 RetailRetriever instance for use by this node.
+    Called once from main.py lifespan after retriever.initialize() completes.
+
+    Engineering decision: module-level singleton over dependency injection.
+    FastAPI's Depends() system works well for stateless dependencies but
+    adds boilerplate for a heavy stateful object like an embedding model.
+    At SME scale, one global instance is correct and simple.
+    """
+    global _retriever
+    _retriever = retriever
+    logger.info("rag_node_retriever_registered", retriever_type=type(retriever).__name__)
+
+
+def get_retriever():
+    """
+    Return the stored retriever instance.
+    Raises RuntimeError if set_retriever() was never called (startup bug).
+    """
+    if _retriever is None:
+        raise RuntimeError(
+            "RetailRetriever not initialised. "
+            "Ensure set_retriever() is called in main.py lifespan."
+        )
+    return _retriever
+
+
+# â”€â”€ Helper functions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+def _content_hash(content: str) -> str:
+    """Stable hash of first 200 chars â€” sufficient for deduplication."""
+    return hashlib.md5(content[:200].encode()).hexdigest()
+
+
+def _entity_present_in_chunks(
+    query: str,
+    sku_refs: list[str],
+    chunks: list[dict],
+) -> bool:
+    """
+    Check whether the queried entity (SKU or product term) appears in
+    any of the top-3 retrieved chunks. Used as second fallback condition.
+    """
+    query_lower = query.lower()
+    for chunk in chunks:
+        content_lower = chunk.get("content", "").lower()
+        if any(sku.lower() in content_lower for sku in sku_refs):
+            return True
+        significant_terms = [w for w in query_lower.split() if len(w) > 3]
+        if significant_terms and any(t in content_lower for t in significant_terms):
+            return True
+    return False
+
+
+# â”€â”€ Node implementation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+async def rag_retrieval_node(state: AgentState) -> dict:
+    """
+    Node 1: Retrieve relevant product catalogue chunks.
+
+    Returns a partial AgentState update â€” LangGraph merges this with
+    existing state. Only return keys you are updating.
+
+    Args:
+        state: Current AgentState
+
+    Returns:
+        Partial state dict with retrieval results and trace entry
+    """
+    query   = state["query"]
+    intent  = state["intent"]
+    sku_refs = extract_sku_references(query)
+
+    logger.info("rag_node_start", query=query[:60], intent=intent, sku_refs=sku_refs)
+
+    try:
+        retriever    = get_retriever()
+        raw_results: list[dict] = retriever.search(query, n_results=TOP_K_RETRIEVAL)
+
+        if not raw_results:
+            logger.warning("rag_no_results", query=query[:60])
+            return {
+                "retrieved_chunks":    [],
+                "retrieval_confidence": 0.0,
+                "retrieval_margin":     0.0,
+                "fallback_triggered":   True,
+                "reasoning_trace": state["reasoning_trace"] + [
+                    "RAG retrieval: no results returned â€” fallback triggered"
+                ],
+            }
+
+        # â”€â”€ Deduplicate before margin calculation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        seen_hashes:    set[str]  = set()
+        unique_results: list[dict] = []
+        for r in raw_results:
+            h = _content_hash(r.get("content", ""))
+            if h not in seen_hashes:
+                seen_hashes.add(h)
+                unique_results.append(r)
+
+        # â”€â”€ Margin-based routing â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        scores     = [r.get("similarity_score", 0.0) for r in unique_results]
+        top1_score = scores[0] if scores else 0.0
+        top3_score = scores[min(2, len(scores) - 1)]
+        margin     = top1_score - top3_score
+
+        below_floor      = top1_score < CONFIDENCE_FLOOR
+        uncertain_margin = margin < MARGIN_THRESHOLD
+        entity_present   = _entity_present_in_chunks(
+            query, sku_refs, unique_results[:CHUNKS_TO_RETURN]
+        )
+
+        # Both conditions required to trigger fallback (architecture principle 2)
+        fallback = below_floor or (uncertain_margin and not entity_present)
+
+        # â”€â”€ Build chunk objects â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        chunks: list[RetrievedChunk] = [
+            RetrievedChunk(
+                sku_id=r.get("sku_id", ""),
+                product_name_en=r.get("product_name_en", ""),
+                product_name_ar=r.get("product_name_ar", ""),
+                category=r.get("category", ""),
+                similarity_score=round(r.get("similarity_score", 0.0), 4),
+                content=r.get("content", ""),
+            )
+            for r in unique_results[:CHUNKS_TO_RETURN]
+        ]
+
+        trace = (
+            f"RAG retrieval: top1={top1_score:.3f}, top3={top3_score:.3f}, "
+            f"margin={margin:.3f}, entity_present={entity_present}, "
+            f"fallback={'yes' if fallback else 'no'}, "
+            f"chunks_returned={len(chunks)}, "
+            f"duplicates_removed={len(raw_results) - len(unique_results)}"
+        )
+
+        logger.info(
+            "rag_node_complete",
+            top1=top1_score,
+            margin=margin,
+            fallback=fallback,
+            chunks=len(chunks),
+        )
+
+        return {
+            "retrieved_chunks":    chunks,
+            "retrieval_confidence": top1_score,
+            "retrieval_margin":     margin,
+            "fallback_triggered":   fallback,
+            "reasoning_trace": state["reasoning_trace"] + [trace],
+        }
+
+    except Exception as exc:
+        logger.error("rag_node_error", error=str(exc), query=query[:60])
+        return {
+            "retrieved_chunks":    [],
+            "retrieval_confidence": 0.0,
+            "retrieval_margin":     0.0,
+            "fallback_triggered":   True,
+            "error": f"RAG retrieval failed: {exc}",
+            "reasoning_trace": state["reasoning_trace"] + [
+                f"RAG retrieval error: {exc}"
+            ],
+        }
+=== CSV header + 3 rows ===
+sku_id,name_en,name_ar,category,price_aed,supplier_name,supplier_lead_days,supplier_reliability,reorder_point_units,reorder_qty_units,is_ramadan_hero,is_dsf_hero,tags_en,tags_ar
+FSH-0001,Summer Dress,ÙØ³ØªØ§Ù† ØµÙŠÙÙŠ,fashion,128.0,Al Futtaim Trading,7,0.95,67,120,0,1,"fashion, summer dress, uae retail, dubai","fashion, ÙØ³ØªØ§Ù† ØµÙŠÙÙŠ, ØªØ¬Ø²Ø¦Ø© Ø§Ù„Ø¥Ù…Ø§Ø±Ø§Øª, Ø¯Ø¨ÙŠ"
+FSH-0002,Abaya Classic,Ø¹Ø¨Ø§Ø¡Ø© ÙƒÙ„Ø§Ø³ÙŠÙƒÙŠØ©,fashion,274.0,Noon Fulfillment,3,0.98,67,76,0,1,"fashion, abaya classic, uae retail, dubai","fashion, Ø¹Ø¨Ø§Ø¡Ø© ÙƒÙ„Ø§Ø³ÙŠÙƒÙŠØ©, ØªØ¬Ø²Ø¦Ø© Ø§Ù„Ø¥Ù…Ø§Ø±Ø§Øª, Ø¯Ø¨ÙŠ"
+FSH-0003,Casual Jeans,Ø¬ÙŠÙ†Ø² ÙƒØ§Ø¬ÙˆØ§Ù„,fashion,192.0,India Import Partner,14,0.85,25,201,0,1,"fashion, casual jeans, uae retail, dubai","fashion, Ø¬ÙŠÙ†Ø² ÙƒØ§Ø¬ÙˆØ§Ù„, ØªØ¬Ø²Ø¦Ø© Ø§Ù„Ø¥Ù…Ø§Ø±Ø§Øª, Ø¯Ø¨ÙŠ"
+=== chroma locations ===
+
+backend\main.py:87:        persist_directory=CHROMA_DIR,
+backend\rag\embeddings.py:287:    neighbour search (already supported by ChromaDB).
+backend\rag\retriever.py:4:Loads product catalogue and sales data, builds a ChromaDB vector store,
+backend\rag\retriever.py:7:ENGINEERING DECISION: ChromaDB over FAISS or Pinecone
+backend\rag\retriever.py:12:  C) ChromaDB   — embedded, persistent, open source, SQLite-backed
+backend\rag\retriever.py:13:Chosen: ChromaDB
+backend\rag\retriever.py:24:500 SKUs → ChromaDB is the right call.
+backend\rag\retriever.py:72:    for ChromaDB metadata filtering. A custom loader gives us that.
+backend\rag\retriever.py:164:    Manages the ChromaDB vector store for product catalogue retrieval.
+backend\rag\retriever.py:172:        persist_directory: str = ".chroma_db",
+backend\rag\retriever.py:176:        self.persist_directory = persist_directory
+backend\rag\retriever.py:181:        """Lazy-init ChromaDB client."""
+backend\rag\retriever.py:183:            import chromadb
+backend\rag\retriever.py:185:            raise ImportError("chromadb not installed. Run: pip install chromadb")
+backend\rag\retriever.py:187:        return chromadb.PersistentClient(path=self.persist_directory)
+backend\rag\retriever.py:193:            self._collection = client.get_or_create_collection(
+backend\rag\retriever.py:196:                # ChromaDB stores distance (1 - cosine), so we convert back
+backend\rag\retriever.py:200:                metadata={"hnsw:space": "cosine"},
+backend\rag\retriever.py:210:        Embed and store the product catalogue in ChromaDB.
+backend\rag\retriever.py:251:        # ChromaDB batches internally but we control batch size for memory
+backend\rag\retriever.py:296:            metadata_filter: ChromaDB where-clause for pre-filtering
+backend\rag\retriever.py:323:        # Build ChromaDB query kwargs
+backend\rag\retriever.py:341:            # ChromaDB cosine returns distance (0=identical, 2=opposite)
+backend\rag\retriever.py:343:            # For cosine in ChromaDB: distance = 1 - cosine_similarity
+backend\rag\retriever.py:344:            similarity = 1.0 - dist  # ChromaDB cosine distance is already 1 - cosine
+backend\rag\retriever.py:393:        persist_directory: str    = ".chroma_db",
+backend\rag\retriever.py:398:        self.vector_store  = RetailVectorStore(persist_directory, self.embedding_mgr)
+tests\test_phase1.py:8:NOTE: Vector store tests (requiring ChromaDB + sentence-transformers) are
+
+
