@@ -16,9 +16,9 @@ from backend.rag.retriever import RetailRetriever
 
 # ---------- CONFIG: copy CATALOGUE_CSV from your run_baseline.py ----------
 CATALOGUE_CSV = "data/synthetic/product_catalogue.csv"
-PERSIST_DIR = ".chroma_db"
+PERSIST_DIR = ".chroma_db_exp1"
 OUT_FILE = "eval/baseline_v2_results.json"
-LABEL = "baseline_6fdc697_v2"      # change per experiment, e.g. "after_passage_prefix_fix"
+LABEL = "exp1_passage_prefix"      # change per experiment, e.g. "after_passage_prefix_fix"
 K = 5
 GATE = 0.72
 CYCLE = 15                          # base products per category (seen in the SKU numbering)

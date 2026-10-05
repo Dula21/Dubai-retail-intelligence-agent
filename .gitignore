@@ -22,7 +22,7 @@ venv/
 
 # ── Vector store (regenerate with FORCE_REINGEST=true) ───────────────────
 .chroma_db/
-
+.chroma_db_exp1
 # ── Data files (large CSVs — use Git LFS or document generation steps) ───
 # Commit the generator script, not the generated data
 data/synthetic/*.csv
@@ -47,3 +47,4 @@ docker-compose.override.yml
 # ── Logs ──────────────────────────────────────────────────────────────────
 *.log
 logs/
+.chroma_db*/
