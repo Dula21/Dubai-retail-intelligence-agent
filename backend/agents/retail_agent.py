@@ -10,27 +10,30 @@ Graph topology:
                                 │
                     ┌───────────▼───────────┐
                     │  route_after_retrieval │  Conditional edge
-                    └──┬──────────┬─────────┘
-                       │          │
-              fallback/search   reorder/analysis
-                       │          │
-                      END    ┌────▼──────────────────┐
-                             │  sales_analysis_node   │  Node 2
-                             └────────┬───────────────┘
-                                      │
-                             ┌────────▼───────────────┐
-                             │  inventory_check_node   │  Node 3
-                             └────────┬───────────────┘
-                                      │
-                             ┌────────▼────────────────┐
-                             │  seasonality_check_node  │  Node 4
-                             └────────┬────────────────┘
-                                      │
-                             ┌────────▼───────────────┐
-                             │  recommendation_node    │  Node 5
-                             └────────┬───────────────┘
-                                      │
-                                     END
+                    └──┬────────┬─────────┬─┘
+                       │        │         │
+                  fallback   search/    reorder/analysis
+                       │      trend         │
+              ┌────────▼───┐    │    ┌──────▼────────────────┐
+              │fallback_node│    │    │  sales_analysis_node   │  Node 2
+              └────────┬───┘    │    └────────┬───────────────┘
+                       │        │             │
+                      END       │    ┌────────▼───────────────┐
+                                │    │  inventory_check_node   │  Node 3
+                                │    └────────┬───────────────┘
+                                │             │
+                                │    ┌────────▼────────────────┐
+                                │    │  seasonality_check_node  │  Node 4
+                                │    └────────┬────────────────┘
+                                │             │
+                             ┌──▼─────────────▼──┐
+                             │ recommendation_node │  Node 5
+                             └─────────┬─────────┘
+                                       │
+                                      END
+
+fallback_node (no LLM) writes the user-facing answer when retrieval was not confident:
+hard "insufficient data" for factual intents, a partial answer with provenance for narrative ones.
 
 Engineering decision: node names use _node suffix throughout to avoid
 clashing with AgentState TypedDict field names. LangGraph 0.2.x raises
@@ -44,6 +47,7 @@ from __future__ import annotations
 import structlog
 from langgraph.graph import END, StateGraph
 
+from .nodes.fallback_node import fallback_node
 from .nodes.inventory_node import inventory_check_node
 from .nodes.rag_node import rag_retrieval_node
 from .nodes.recommendation_node import recommendation_node
@@ -60,7 +64,8 @@ def route_after_retrieval(state: AgentState) -> str:
     """
     Decide which node to run after RAG retrieval.
 
-    - Fallback triggered → END immediately (honest "insufficient data")
+    - Fallback triggered → fallback_node, then END (deterministic answer; the router key stays
+      "end_fallback" so existing routing tests keep working)
     - reorder/analysis intent → sales_analysis_node (needs full signal stack)
     - search/trend intent → recommendation_node (retrieval is sufficient)
     """
@@ -106,6 +111,7 @@ def build_retail_agent() -> StateGraph:
 
     # _node suffix on all names avoids clash with AgentState field names
     graph.add_node("rag_retrieval_node",      rag_retrieval_node)
+    graph.add_node("fallback_node",           fallback_node)
     graph.add_node("sales_analysis_node",     sales_analysis_node)
     graph.add_node("inventory_check_node",    inventory_check_node)
     graph.add_node("seasonality_check_node",  seasonality_check_node)
@@ -119,7 +125,7 @@ def build_retail_agent() -> StateGraph:
         {
             "sales_analysis_node":  "sales_analysis_node",
             "recommendation_node":  "recommendation_node",
-            "end_fallback":         END,
+            "end_fallback":         "fallback_node",
         },
     )
 
@@ -132,6 +138,7 @@ def build_retail_agent() -> StateGraph:
         },
     )
 
+    graph.add_edge("fallback_node",          END)
     graph.add_edge("inventory_check_node",   "seasonality_check_node")
     graph.add_edge("seasonality_check_node", "recommendation_node")
     graph.add_edge("recommendation_node",    END)
