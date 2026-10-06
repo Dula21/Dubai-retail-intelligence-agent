@@ -100,10 +100,20 @@ def test_unknown_sku_is_insufficient_data(retriever):
 
 
 def test_full_agent_graph_on_fallback_path(retriever):
-    # A product that is not in the catalogue ends the graph right after the RAG node:
+    # A product that is not in the catalogue goes RAG node -> fallback node -> END:
     # no LLM, no sales data, deterministic.
     result = asyncio.run(retail_agent.run_agent("Nike shoes", "en", "search"))
     assert result["fallback_triggered"] is True
-    assert not result.get("recommendation")
+    assert "partial" in result["recommendation"]          # narrative intent: partial answer, labelled
+    assert result["recommendation_confidence"] == 0.0
     assert result["reasoning_trace"][0].startswith("Agent started")
     assert any("RAG retrieval" in step for step in result["reasoning_trace"])
+    assert result["reasoning_trace"][-1].startswith("Fallback:")
+
+
+def test_full_agent_graph_factual_fallback_is_hard_insufficient_data(retriever):
+    result = asyncio.run(retail_agent.run_agent("how many Nike shoes are left", "en", "reorder"))
+    assert result["fallback_triggered"] is True
+    assert result["recommendation"].startswith("Insufficient data")
+    for chunk in result["retrieved_chunks"]:                # candidates must not leak into a factual answer
+        assert chunk["product_name_en"] not in result["recommendation"]
