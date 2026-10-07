@@ -29,6 +29,7 @@ RUN apt-get update && apt-get install -y \
 # If you only change code (not requirements), Docker skips the pip install
 # step on rebuild. This makes rebuilds fast (~5 seconds vs ~5 minutes).
 COPY requirements.txt .
+RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
 RUN pip install --no-cache-dir -r requirements.txt
 
 # ── Application code ──────────────────────────────────────────────────────
