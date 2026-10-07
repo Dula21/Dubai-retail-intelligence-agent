@@ -10,10 +10,18 @@ Hallucination prevention:
   explicitly instructs the LLM not to use numbers or facts not present
   in the provided data — same grounding pattern as Dubai Property Intelligence.
 
-Groq free-tier rate limit handling:
-  On RateLimitError (HTTP 429), degrades gracefully: returns the reasoning
-  trace as the recommendation rather than a 500 error. Lower confidence
-  score signals to the caller that synthesis was unavailable.
+Model configuration:
+  GROQ_MODEL       model id (default openai/gpt-oss-20b). Groq retires models, so this
+                   is an env var: llama-3.1-8b-instant and llama-3.3-70b-versatile were
+                   shut down on 2026-08-16 and now return 404 model_not_found.
+  GROQ_MAX_TOKENS  completion budget (default 1500). gpt-oss models are reasoning models:
+                   reasoning tokens count against this budget, so 400 can leave the
+                   visible answer empty or cut off.
+
+Failure handling (no raw provider errors reach the caller):
+  RateLimitError (HTTP 429) or any other error -> a degraded answer: the deterministic
+  reasoning trace plus a plain-language reason. The full exception goes to the server log
+  only. `error` is set in the returned state, so the API does not cache a degraded answer.
 
 Bilingual output:
   query_language="ar"    → response in Arabic
@@ -32,6 +40,9 @@ from ..state import AgentState, InventorySignal, SalesSignal, SeasonalitySignal
 
 logger = structlog.get_logger(__name__)
 
+DEFAULT_GROQ_MODEL = "openai/gpt-oss-20b"
+DEFAULT_MAX_TOKENS = 1500
+
 # ── Groq client singleton ──────────────────────────────────────────────────────
 
 _groq_client: AsyncGroq | None = None
@@ -45,6 +56,17 @@ def get_groq_client() -> AsyncGroq:
             raise RuntimeError("GROQ_API_KEY environment variable not set")
         _groq_client = AsyncGroq(api_key=api_key)
     return _groq_client
+
+
+def _model_name() -> str:
+    return os.environ.get("GROQ_MODEL", DEFAULT_GROQ_MODEL)
+
+
+def _max_tokens() -> int:
+    try:
+        return int(os.environ.get("GROQ_MAX_TOKENS", DEFAULT_MAX_TOKENS))
+    except ValueError:
+        return DEFAULT_MAX_TOKENS
 
 
 # ── Prompt templates ───────────────────────────────────────────────────────────
@@ -162,6 +184,15 @@ def _compute_confidence(state: AgentState) -> float:
     return round(min(retrieval_score + has_sales + has_inventory + no_error, 1.0), 2)
 
 
+def _degraded_answer(state: AgentState, headline: str) -> str:
+    """Trace-only answer used when the LLM cannot produce one. No provider error text."""
+    trace_summary = " → ".join(state.get("reasoning_trace", []))
+    return (
+        f"[{headline} Agent reasoning trace:]\n\n{trace_summary}\n\n"
+        f"Action: Review the trace above and consult inventory data directly."
+    )
+
+
 # ── Node implementation ────────────────────────────────────────────────────────
 
 async def recommendation_node(state: AgentState) -> dict:
@@ -172,10 +203,13 @@ async def recommendation_node(state: AgentState) -> dict:
         state: Full AgentState with all upstream node outputs
 
     Returns:
-        Partial state dict with recommendation, confidence, and trace entry
+        Partial state dict with recommendation, confidence, and trace entry.
+        On a degraded answer it also sets `error`, so callers can skip caching it.
     """
     confidence = _compute_confidence(state)
     language   = _select_language_label(state.get("query_language", "en"))
+    model      = _model_name()
+    error: str | None = None
 
     prompt = RECOMMENDATION_PROMPT.format(
         query=state["query"],
@@ -190,49 +224,54 @@ async def recommendation_node(state: AgentState) -> dict:
     try:
         client   = get_groq_client()
         response = await client.chat.completions.create(
-            model="llama-3.1-8b-instant",
+            model=model,
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user",   "content": prompt},
             ],
-            max_tokens=400,
+            max_tokens=_max_tokens(),
             temperature=0.15,
         )
-        recommendation = response.choices[0].message.content.strip()
+        recommendation = (response.choices[0].message.content or "").strip()
+        if not recommendation:
+            raise ValueError("empty model response (token budget used up before an answer?)")
 
         logger.info(
             "recommendation_generated",
+            model=model,
             confidence=confidence,
             language=language,
             tokens_used=response.usage.total_tokens if response.usage else "unknown",
         )
         trace = (
-            f"Recommendation generated via Groq llama-3.1-8b-instant "
+            f"Recommendation generated via Groq {model} "
             f"| language={language} | confidence={confidence:.2f}"
         )
 
     except RateLimitError:
         logger.warning("groq_rate_limit_hit", query=state["query"][:50])
-        trace_summary  = " → ".join(state.get("reasoning_trace", []))
-        recommendation = (
-            f"[Rate limit reached — LLM synthesis unavailable. "
-            f"Agent reasoning trace:]\n\n{trace_summary}\n\n"
-            f"Action: Review the trace above and consult inventory data directly."
+        recommendation = _degraded_answer(
+            state, "Rate limit reached — LLM synthesis unavailable."
         )
         confidence = max(confidence - 0.2, 0.0)
         trace      = "Recommendation: Groq rate limit hit — trace-only fallback returned"
+        error      = "recommendation: rate limited"
 
     except Exception as exc:
-        logger.error("recommendation_node_error", error=str(exc))
-        recommendation = (
-            f"Recommendation generation failed: {exc}. "
-            f"Agent trace: {' → '.join(state.get('reasoning_trace', []))}"
+        # Full detail goes to the server log only. Callers get a generic reason.
+        logger.error("recommendation_node_error", model=model, error=str(exc))
+        recommendation = _degraded_answer(
+            state, "LLM synthesis unavailable — the recommendation service could not respond."
         )
         confidence = 0.0
-        trace      = f"Recommendation error: {exc}"
+        trace      = f"Recommendation: LLM unavailable ({type(exc).__name__}) — trace-only fallback returned"
+        error      = f"recommendation: {type(exc).__name__}"
 
-    return {
+    update = {
         "recommendation":            recommendation,
         "recommendation_confidence": confidence,
         "reasoning_trace":           state["reasoning_trace"] + [trace],
     }
+    if error:
+        update["error"] = error
+    return update

@@ -15,11 +15,24 @@ Redis caching:
     Query results cached by (query_hash, date) with 1-hour TTL.
     Date component ensures yesterday's reorder recommendations
     don't serve for today's query (inventory changes daily).
+    Responses produced after a technical error are NOT cached, so a one-off
+    failure (e.g. the vector store being briefly unavailable) is not served
+    from Redis for the whole TTL.
 
-    FIX vs earlier version: Redis client now comes from app.state.redis
-    which is set in main.py lifespan. Previous version read from
-    request.app.state.redis but main.py never set it — Redis was
-    silently None on every request.
+Fallback behaviour (architecture principle 10):
+    The graph's fallback_node always fills `recommendation`, so a fallback is a
+    normal 200 response with fallback_triggered=true:
+      - factual intents (reorder, analysis): "Insufficient data" and NO candidate
+        products in retrieved_products (a client must not show them as answers)
+      - narrative intents (search, trend): partial answer with candidates and a
+        LOW confidence label
+    The 422 branch below is a safety net for the case where no recommendation
+    was produced at all.
+
+FIX vs earlier version: Redis client now comes from app.state.redis
+which is set in main.py lifespan. Previous version read from
+request.app.state.redis but main.py never set it — Redis was
+silently None on every request.
 """
 
 from __future__ import annotations
@@ -42,7 +55,7 @@ from .models.agent_models import (
     RetrievedProductResponse,
     SeasonalityResponse,
 )
-from .services.intent_classifier import classify_intent, detect_language
+from .services.intent_classifier import classify_intent, detect_language, is_factual_intent
 
 logger = structlog.get_logger(__name__)
 router = APIRouter(tags=["agent"])
@@ -80,9 +93,9 @@ async def agent_query(
     Flow:
     1. Language detection + intent classification (rule-based, instant)
     2. Redis cache check (1-hour TTL, date-keyed)
-    3. LangGraph agent invocation (5 nodes, conditional routing)
-    4. Response formatting + cache write
-    5. Fallback response if retrieval confidence below threshold
+    3. LangGraph agent invocation (6 nodes, conditional routing)
+    4. Response formatting + cache write (skipped after a technical error)
+    5. Fallback answer (from fallback_node) if retrieval was not confident enough
     """
     query = body.query
     query_language = detect_language(query)
@@ -122,7 +135,9 @@ async def agent_query(
             detail=f"Agent invocation failed: {exc}",
         )
 
-    # ── Fallback response ──────────────────────────────────────────────────
+    # ── Safety net: fallback with no answer text at all ────────────────────
+    # fallback_node always sets `recommendation`, so this only fires if the
+    # graph ended on a fallback without producing one.
     if state.get("fallback_triggered") and not state.get("recommendation"):
         fallback = FallbackResponse(
             message=(
@@ -138,7 +153,12 @@ async def agent_query(
         return JSONResponse(status_code=422, content=fallback.model_dump())
 
     # ── Build response ─────────────────────────────────────────────────────
-    retrieved_products = [
+    # Hard fallback (factual intent, uncertain retrieval): do not expose the
+    # candidate products either. The text says "insufficient data"; the JSON
+    # must not hand the client a list that looks like an answer.
+    hard_fallback = bool(state.get("fallback_triggered")) and is_factual_intent(intent)
+
+    retrieved_products = [] if hard_fallback else [
         RetrievedProductResponse(
             sku_id=c["sku_id"],
             product_name_en=c["product_name_en"],
@@ -169,7 +189,9 @@ async def agent_query(
     )
 
     # ── Cache write ────────────────────────────────────────────────────────
-    if redis:
+    # Never cache an answer produced after a technical error: it would be
+    # served for the whole TTL even though the failure may have been momentary.
+    if redis and not state.get("error"):
         try:
             await redis.setex(
                 cache_key,
@@ -197,14 +219,15 @@ async def agent_health() -> dict:
     from .agents.retail_agent import retail_agent
 
     return {
-        "status":        "healthy",
+        "status":         "healthy",
         "graph_compiled": retail_agent is not None,
         "nodes": [
-           "rag_retrieval_node",
+            "rag_retrieval_node",
             "sales_analysis_node",
-           "inventory_check_node",
-          "seasonality_check_node",
-           "recommendation_node",
+            "inventory_check_node",
+            "seasonality_check_node",
+            "recommendation_node",
+            "fallback_node",
         ],
         "phase": 2,
     }
