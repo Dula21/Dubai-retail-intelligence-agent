@@ -182,85 +182,64 @@ class TestSeasonalityNode:
         )
 
     @pytest.mark.asyncio
-    async def test_dsf_alert_within_21_days(self, base_state):
-        """DSF within watch window returns correct alert level.
+    async def test_strong_event_flagged_when_none_named(self, base_state):
+        """No event in the query: the node still surfaces a strong upcoming event from the calendar.
+        (Replaces the old DSF/National Day test, which asserted the static 45-day table.)"""
+        from agents.nodes.seasonality_node import seasonality_check_node
 
-        Date chosen: 2026-11-01. DSF starts 2026-12-15 — 44 days ahead,
-        inside the 45-day ACTIVE_WINDOW_AHEAD, alert_level="watch".
-        National Day starts 2026-12-01 — 30 days ahead, also in window,
-        but 2026-11-01 has no earlier event active so National Day wins
-        as the closest event. We therefore test National Day detection
-        and its multiplier, which correctly validates the node's event
-        selection logic.
-
-        Engineering note: testing DSF in isolation requires a date window
-        where no closer event exists. The Nov 01 window contains National Day
-        as the nearest event. Testing DSF directly requires patching
-        UAE_RETAIL_EVENTS to remove National Day, which adds test complexity
-        without adding coverage value. Testing the nearest-event selection
-        logic is the correct contract to enforce here.
-        """
-        from agents.nodes.seasonality_node import UAE_RETAIL_EVENTS, seasonality_check_node
-
-        mock_today = date(2026, 11, 1)
-
-        with patch("agents.nodes.seasonality_node.date") as mock_date:
-            mock_date.today.return_value = mock_today
+        with patch("agents.nodes.seasonality_node._today", return_value=date(2026, 11, 1)):
             result = await seasonality_check_node(base_state)
 
-        assert result["seasonality_signal"]["upcoming_event"] == "National Day"
-        assert result["seasonality_signal"]["alert_level"] == "watch"
-        assert result["seasonality_signal"]["expected_demand_multiplier"] == 1.5
+        signal = result["seasonality_signal"]
+        assert signal["upcoming_event"] is not None
+        assert signal["expected_demand_multiplier"] >= 1.5
+        assert signal["alert_level"] in {"watch", "act", "critical"}
+        assert signal["order_by_date"] is not None
 
     @pytest.mark.asyncio
     async def test_seasonality_no_event_returns_none(self, base_state):
-        """When no event is within 45 days, returns None event and 'none' alert.
-
-        FIX: mock_today changed from date(2026, 7, 15) to date(2027, 8, 1).
-        Back-to-School starts 2026-08-20 — only 36 days from July 15 2026,
-        inside the 45-day window. August 2027 is safely outside all defined
-        UAE_RETAIL_EVENTS windows.
-        """
+        """A category no calendar row lifts gets no invented event and the 'none' alert."""
         from agents.nodes.seasonality_node import seasonality_check_node
-        mock_today = date(2027, 8, 1)
 
-        with patch("agents.nodes.seasonality_node.date") as mock_date:
-            mock_date.today.return_value = mock_today
-            result = await seasonality_check_node(base_state)
+        state = {**base_state, "retrieved_chunks": [
+            {"sku_id": "Z-1", "category": "garden", "name_en": "Spade", "supplier_lead_days": 10}]}
+        with patch("agents.nodes.seasonality_node._today", return_value=date(2026, 10, 10)):
+            result = await seasonality_check_node(state)
 
-        assert result["seasonality_signal"]["upcoming_event"] is None
-        assert result["seasonality_signal"]["alert_level"] == "none"
-        assert result["seasonality_signal"]["expected_demand_multiplier"] == 1.0
+        signal = result["seasonality_signal"]
+        assert signal["upcoming_event"] is None
+        assert signal["alert_level"] == "none"
+        assert signal["expected_demand_multiplier"] == 1.0
 
     @pytest.mark.asyncio
-    async def test_critical_alert_within_7_days(self, base_state):
-        """Event within 7 days returns 'critical' alert."""
-        from agents.nodes.seasonality_node import UAE_RETAIL_EVENTS, seasonality_check_node
+    async def test_critical_alert_when_order_by_date_passed(self, base_state):
+        """Alert is keyed to the order-by date: once it has passed, the alert is 'critical'.
+        (Replaces the old 'within 7 days of the event' rule.)"""
+        from agents.nodes.seasonality_node import seasonality_check_node
 
-        dsf = next(e for e in UAE_RETAIL_EVENTS if e["name"] == "DSF")
-        mock_today = dsf["start"] - timedelta(days=5)
+        state = {**base_state, "query": "what should I stock before Diwali", "retrieved_chunks": [
+            {"sku_id": "HOM-1", "category": "home", "name_en": "Diwali Diya Set", "supplier_lead_days": 21}]}
+        with patch("agents.nodes.seasonality_node._today", return_value=date(2026, 10, 10)):
+            result = await seasonality_check_node(state)
 
-        with patch("agents.nodes.seasonality_node.date") as mock_date:
-            mock_date.today.return_value = mock_today
-            result = await seasonality_check_node(base_state)
-
-        assert result["seasonality_signal"]["alert_level"] == "critical"
+        signal = result["seasonality_signal"]
+        assert signal["upcoming_event"] == "Diwali"
+        assert signal["days_to_order_by"] < 0
+        assert signal["alert_level"] == "critical"
 
     @pytest.mark.asyncio
     async def test_trace_entry_appended(self, base_state):
-        """Seasonality node appends a trace entry.
-
-        Uses date(2026, 7, 15) intentionally here — we are only testing
-        that a trace entry is appended, not what the event is. The node
-        will detect Back-to-School and append a valid trace string either way.
-        """
+        """Seasonality node appends at least one human-readable trace entry."""
         from agents.nodes.seasonality_node import seasonality_check_node
-        with patch("agents.nodes.seasonality_node.date") as mock_date:
-            mock_date.today.return_value = date(2026, 7, 15)
+
+        before = len(base_state["reasoning_trace"])
+        with patch("agents.nodes.seasonality_node._today", return_value=date(2026, 7, 15)):
             result = await seasonality_check_node(base_state)
 
-        assert len(result["reasoning_trace"]) == 1
-        assert "Seasonality:" in result["reasoning_trace"][0]
+        assert len(result["reasoning_trace"]) > before
+        assert any(line.startswith("Seasonality:") for line in result["reasoning_trace"])
+    
+    
 
 
 # ═══════════════════════════════════════════════════════════════════════════════

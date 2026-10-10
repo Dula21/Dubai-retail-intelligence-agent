@@ -69,7 +69,7 @@ class SeasonalitySignal(TypedDict):
     """
     Upcoming UAE retail event detection.
 
-    Phase 2: static lookup table (fast, no external calls, no Prophet required).
+    Phase 2: The signal is calendar-driven
     Phase 3: replaced by Prophet predictions trained on 24-month synthetic
     history with UAE seasonality multipliers baked in.
 
@@ -77,10 +77,20 @@ class SeasonalitySignal(TypedDict):
     Production fix: hijri-converter library. Documented in README as a
     known limitation — signals engineering maturity, not an oversight.
     """
-    upcoming_event: Optional[str]       # "DSF" | "Ramadan" | "National Day" | None
-    days_until_event: Optional[int]
-    expected_demand_multiplier: float   # 1.0 = baseline, 2.1 = DSF peak
-    alert_level: str                    # "none" | "watch" | "act" | "critical"
+    upcoming_event: Optional[str]       # calendar event name, e.g. "Diwali" | None
+    days_until_event: Optional[int]     # negative = already running
+    expected_demand_multiplier: float   # 1.0 = baseline; from the lift table for the retrieved products
+    alert_level: str                    # "none" | "watch" | "act" | "critical" (keyed to the order-by date)
+    # Added with the calendar-driven node. NotRequired so older code/tests that build the 4-field signal keep working.
+    event_start: NotRequired[Optional[str]]
+    event_end: NotRequired[Optional[str]]
+    order_by_date: NotRequired[Optional[str]]
+    days_to_order_by: NotRequired[Optional[int]]
+    lead_time_days: NotRequired[Optional[int]]
+    lead_time_assumed: NotRequired[bool]
+    date_basis: NotRequired[Optional[str]]
+    named_in_query: NotRequired[bool]
+    other_upcoming: NotRequired[list]
 
 
 class AgentState(TypedDict):
