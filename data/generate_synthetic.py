@@ -19,6 +19,9 @@ Inventory is SIMULATED, not invented separately
   inventory_snapshot.csv is the END STATE of that simulation, so stock, reorder points, days_of_stock_left
   and sales all agree with each other (the earlier files did not: sales implied 5-15x more demand).
 
+  sales_history.csv carries stockout_occurred (1 = demand exceeded stock that day), matching the field the
+  catalogue loader summarises as stockout_days.
+
 Status rule (documented, deterministic):  critical if days_of_stock_left < 7;
   overstock if days_of_stock_left > 35;  otherwise healthy.
 
@@ -48,7 +51,8 @@ WAREHOUSES = ["DIP", "Ras Al Khor", "JAFZA"]
 
 # Output column names. If your sales loader expects different names, change the right-hand side only.
 SALES_COLUMNS = {"date": "date", "sku_id": "sku_id", "units_sold": "units_sold",
-                 "unit_price_aed": "unit_price_aed", "revenue_aed": "revenue_aed"}
+                 "unit_price_aed": "unit_price_aed", "revenue_aed": "revenue_aed",
+                 "stockout_occurred": "stockout_occurred"}
 
 
 def _truthy(series: pd.Series) -> np.ndarray:
@@ -170,6 +174,9 @@ def generate(cat: pd.DataFrame, calendar: pd.DataFrame, lifts: pd.DataFrame, end
         S["units_sold"]: sold_w.ravel(),
         S["unit_price_aed"]: unit_price.ravel(),
         S["revenue_aed"]: np.round(sold_w * unit_price, 2).ravel(),
+        # 1 when stock ran out and customers wanted more than was sold (observed sales were censored).
+        # This is observable in a real retailer's data (an out-of-stock flag), unlike the true demand.
+        S["stockout_occurred"]: (demand[WARMUP_DAYS:] > sold_w).astype(int).ravel(),
     })
     # EVALUATION ONLY: true demand before stockouts censored it. Never feed this to the agent.
     truth = pd.DataFrame({"date": sales[S["date"]], "sku_id": sales[S["sku_id"]],
