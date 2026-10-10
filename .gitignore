@@ -1,11 +1,11 @@
 # ============================================================
-# Dubai Retail Intelligence Agent — .gitignore
+# Dubai Retail Intelligence Agent - .gitignore
 # ============================================================
 
-# ── SECRETS — never commit these ─────────────────────────────────────────
+# -- SECRETS - never commit these ------------------------------
 .env
 
-# ── Python ────────────────────────────────────────────────────────────────
+# -- Python ----------------------------------------------------
 __pycache__/
 *.py[cod]
 *.pyo
@@ -17,43 +17,41 @@ build/
 venv/
 .venv/
 
-# ── ML Model cache (300MB — don't commit to git) ─────────────────────────
+# -- ML model cache (~2GB - never commit) ----------------------
 .model_cache/
 
-# ── Vector store (regenerate with FORCE_REINGEST=true) ───────────────────
+# -- Vector store (regenerate with FORCE_REINGEST=true) --------
 .chroma_db/
-.chroma_db_exp1
-# ── Data files (large CSVs — use Git LFS or document generation steps) ───
-# Commit the generator script, not the generated data
+.chroma_db*/
+
+# -- Data files ------------------------------------------------
+# Policy: commit the generator scripts, not the generated data.
+# All data is SYNTHETIC. Regenerate with:
+#   python data/synthetic/generate_dataset.py     (catalogue)
+#   python data/make_calendar.py                  (calendar + event lifts)
+#   python data/generate_synthetic.py --catalogue data/synthetic/product_catalogue.csv --out-dir data/synthetic
 data/synthetic/*.csv
 data/synthetic/*.json
 # Exception: keep metadata file (small, documents the dataset)
 !data/synthetic/dataset_metadata.json
+# Scratch output / backups / evaluation-only ground truth
+data/synthetic_v2/
+data/synthetic_v1_backup/
 
-# ── IDE ───────────────────────────────────────────────────────────────────
+# -- IDE -------------------------------------------------------
 .vscode/
 .idea/
 *.swp
 
-# ── OS ────────────────────────────────────────────────────────────────────
+# -- OS --------------------------------------------------------
 .DS_Store
 Thumbs.db
 
-# ── Docker ────────────────────────────────────────────────────────────────
-# Don't ignore docker-compose.yml — that should be committed
+# -- Docker ----------------------------------------------------
+# Don't ignore docker-compose.yml - that should be committed
 # But ignore any local override files
 docker-compose.override.yml
 
-# ── Logs ──────────────────────────────────────────────────────────────────
+# -- Logs ------------------------------------------------------
 *.log
 logs/
-.chroma_db*/
-data/synthetic_v2/ground_truth_demand.csv
-data/synthetic_v2/ground_truth_demand.csv
-data/synthetic_v1_backup/
-
-data/synthetic_v2/ground_truth_demand.csv
-data/synthetic_v1_backup/
-
-data/synthetic_v2/ground_truth_demand.csv
-data/synthetic_v1_backup/
