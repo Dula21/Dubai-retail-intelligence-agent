@@ -85,6 +85,14 @@ def test_schema_and_shapes(data):
     assert (sales["units_sold"] >= 0).all() and (inv["current_stock_units"] >= 0).all()
 
 
+def test_sales_columns_are_what_the_agent_reads(data):
+    """Column names are a contract with sales_node / the catalogue loader. Changing them breaks the agent."""
+    sales = data[3]
+    assert list(sales.columns) == ["date", "sku_id", "units_sold", "unit_price_aed", "revenue_aed",
+                                   "stockout_occurred"]
+    assert sales["stockout_occurred"].isin([0, 1]).all()
+
+
 def test_same_seed_same_data(data):
     cat, cal, lifts, sales, inv, *_ = data
     sales2, inv2, *_ = gen.generate(cat, cal, lifts, END, 730, seed=7)
@@ -94,6 +102,14 @@ def test_same_seed_same_data(data):
 def test_sales_never_exceed_true_demand(data):
     cat, cal, lifts, sales, inv, truth, _ = data
     assert (sales["units_sold"].to_numpy() <= truth["demand_units"].to_numpy()).all()
+
+
+def test_stockout_flag_matches_censoring(data):
+    """stockout_occurred == 1 exactly when observed sales were cut below true demand."""
+    cat, cal, lifts, sales, inv, truth, _ = data
+    censored = (sales["units_sold"].to_numpy() < truth["demand_units"].to_numpy()).astype(int)
+    assert (sales["stockout_occurred"].to_numpy() == censored).all()
+    assert 0 < sales["stockout_occurred"].mean() < 0.35        # real stockouts exist, but are not the norm
 
 
 def test_hero_and_keyword_skus_lift_more_than_plain_category(data):
