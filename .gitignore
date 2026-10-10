@@ -48,3 +48,12 @@ docker-compose.override.yml
 *.log
 logs/
 .chroma_db*/
+data/synthetic_v2/ground_truth_demand.csv
+data/synthetic_v2/ground_truth_demand.csv
+data/synthetic_v1_backup/
+
+data/synthetic_v2/ground_truth_demand.csv
+data/synthetic_v1_backup/
+
+data/synthetic_v2/ground_truth_demand.csv
+data/synthetic_v1_backup/
