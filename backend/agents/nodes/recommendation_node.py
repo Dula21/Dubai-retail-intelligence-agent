@@ -5,6 +5,15 @@ Node 5: Generate final recommendation via Groq LLM.
 
 Synthesises all upstream signals into a human-readable recommendation.
 
+Seasonality now arrives from the calendar-driven node with event dates, the supplier lead time and
+an ORDER-BY date. The prompt shows the model all of it, including "order-by date PASSED N days ago",
+so the answer can say plainly that the retailer is late instead of describing a comfortable window.
+
+Planning answers keep two questions apart (TIMING section of the prompt): is stock critical today, and
+is the EVENT order deadline urgent. A WATCH alert is never described as urgent; critical stock is
+reported as a separate, current problem. No order quantities are stated: a reorder point is a
+trigger level, and the deterministic quantity engine is Phase 3.
+
 Hallucination prevention:
   All data passed to the LLM is injected from AgentState. The prompt
   explicitly instructs the LLM not to use numbers or facts not present
@@ -82,6 +91,22 @@ Rules you must follow without exception:
 4. Keep the recommendation under 200 words — retailers are busy
 5. End with a clear action: REORDER NOW / MONITOR / INVESTIGATE / NO ACTION NEEDED
 6. If responding in Arabic, keep SKU codes, AED values, and numbers in their original form
+7. Dates in the answer must come from the DATA section. If the order-by date has PASSED, say so
+   plainly and recommend expediting; never describe a passed deadline as upcoming
+8. Never invent rules, formulas, safety-stock percentages or order quantities. If DATA contains no
+   suggested quantity, say the quantity must be confirmed by the retailer
+9. If DATA says the supplier lead time is assumed, or that event dates are an estimate, say so
+10. A reorder point is a trigger level, NOT an order quantity. Never write "reorder N units" using a
+    reorder point, a sales rate or the demand multiplier. State no order quantities at all
+11. Keep two questions apart, using the TIMING section: (a) is stock critical TODAY, whatever the
+    event, and (b) is the EVENT order deadline urgent. If the alert level is WATCH, say the event
+    deadline is not yet urgent and give the date; a critical stock level is then a separate,
+    current problem. Never describe a WATCH deadline as urgent, and never describe stock that
+    is not critical as a problem
+12. Two different numbers must never be mixed up. The EXPECTED demand multiplier comes from the
+    calendar lift table (UAE SEASONALITY). The OBSERVED lift comes from past sales (SALES SIGNALS).
+    Never call the expected multiplier a past, observed or historical lift, and never cite
+    SALES SIGNALS for the calendar multiplier
 """
 
 RECOMMENDATION_PROMPT = """\
@@ -101,6 +126,9 @@ INVENTORY STATUS:
 UAE SEASONALITY:
 {seasonality_text}
 
+TIMING (stock today and the event deadline are separate questions):
+{timing_text}
+
 RETRIEVAL CONFIDENCE: {confidence:.2f} (threshold: 0.72)
 
 Based on the data above, generate a retail merchandising recommendation in {language}.
@@ -116,24 +144,45 @@ Structure your response:
 def _format_products(chunks: list) -> str:
     if not chunks:
         return "No products retrieved"
-    return "\n".join(
-        f"  • {c['product_name_en']} ({c['product_name_ar']}) "
-        f"| SKU: {c['sku_id']} | Category: {c['category']} "
-        f"| Relevance: {c['similarity_score']:.3f}"
-        for c in chunks
-    )
+    lines = []
+    for c in chunks:
+        line = (f"  • {c['product_name_en']} ({c['product_name_ar']}) "
+                f"| SKU: {c['sku_id']} | Category: {c['category']}")
+        if c.get("event_lift"):
+            # Chosen by the calendar lift table, not by vector search: there is no similarity score to show.
+            line += (f" | selected by {c.get('event_name', 'event')} lift table: "
+                     f"expected lift {c['event_lift']}x")
+        else:
+            line += f" | Relevance: {c['similarity_score']:.3f}"
+        lines.append(line)
+    return "\n".join(lines)
 
 
 def _format_sales(signals: list[SalesSignal]) -> str:
     if not signals:
         return "No sales data available"
-    return "\n".join(
-        f"  • {s['sku_id']}: {s['avg_daily_units']:.1f} units/day "
-        f"| trend={s['trend_direction']}"
-        + (f", peaks during {s['peak_period']}" if s["peak_period"] else "")
-        + f" | data confidence={s['confidence']:.2f}"
-        for s in signals
-    )
+    lines = []
+    event = next((s["event_name"] for s in signals if s.get("event_name")), None)
+    if event:
+        observed = [s["observed_event_lift"] for s in signals if s.get("observed_event_lift") is not None]
+        if observed:
+            lines.append(f"  Observed {event} lift in past years across these SKUs: {min(observed)}x to "
+                         f"{max(observed)}x (measured from sales history; the calendar multiplier in UAE "
+                         "SEASONALITY is an expectation, not a past result)")
+        else:
+            lines.append(f"  Observed {event} lift: insufficient history for every SKU")
+    for s in signals:
+        line = f"  • {s['sku_id']}: {s['avg_daily_units']:.1f} units/day | trend={s['trend_direction']}"
+        if s.get("event_name"):
+            observed = s.get("observed_event_lift")
+            line += (f" | observed {s['event_name']} lift in past years: {observed}x"
+                     if observed is not None else
+                     f" | observed {s['event_name']} lift: insufficient history")
+        elif s["peak_period"]:
+            line += f", peaks during {s['peak_period']}"
+        line += f" | data confidence={s['confidence']:.2f}"
+        lines.append(line)
+    return "\n".join(lines)
 
 
 def _format_inventory(signals: list[InventorySignal]) -> str:
@@ -154,14 +203,82 @@ def _format_inventory(signals: list[InventorySignal]) -> str:
     return "\n".join(lines)
 
 
+def _order_by_line(signal: SeasonalitySignal) -> str | None:
+    order_by = signal.get("order_by_date")
+    if not order_by:
+        return None
+    days_left = signal.get("days_to_order_by")
+    days_until = signal.get("days_until_event")
+    if days_until is not None and days_until <= 0:
+        status = "event already running"
+    elif days_left is None:
+        status = ""
+    elif days_left < 0:
+        status = f"PASSED {-days_left} days ago"
+    elif days_left == 0:
+        status = "today"
+    else:
+        status = f"{days_left} days left"
+    return f"order-by date: {order_by}" + (f" ({status})" if status else "")
+
+
 def _format_seasonality(signal: SeasonalitySignal) -> str:
     if not signal or not signal.get("upcoming_event"):
-        return "No UAE retail events in the next 45 days — baseline demand"
-    return (
-        f"  • {signal['upcoming_event']} in {signal['days_until_event']} days "
-        f"| expected demand: {signal['expected_demand_multiplier']}x baseline "
-        f"| alert level: {signal['alert_level'].upper()}"
-    )
+        return "No UAE retail event lifting these products in the next 90 days: baseline demand"
+
+    days_until = signal.get("days_until_event")
+    timing = ("running now" if days_until is not None and days_until <= 0
+              else f"starts in {days_until} days")
+    dates = (f" {signal['event_start']} to {signal['event_end']}"
+             if signal.get("event_start") and signal.get("event_end") else "")
+    lines = [
+        f"  • {signal['upcoming_event']}{dates} ({timing})",
+        f"    expected demand: {signal['expected_demand_multiplier']}x baseline "
+        f"(from the synthetic calendar lift table)",
+    ]
+    if signal.get("lead_time_days") is not None:
+        assumed = " (ASSUMED: no supplier data on the retrieved products)" if signal.get("lead_time_assumed") else ""
+        lines.append(f"    supplier lead time: {signal['lead_time_days']} days{assumed}")
+    order_line = _order_by_line(signal)
+    if order_line:
+        lines.append(f"    {order_line}")
+    lines.append(f"    alert level: {signal['alert_level'].upper()}")
+    if signal.get("date_basis") == "estimate_verify":
+        lines.append("    note: event dates are an ESTIMATE until officially announced: verify")
+    others = signal.get("other_upcoming") or []
+    if others:
+        lines.append("    also coming up: " + "; ".join(
+            f"{o['name']} ({o['start']}, {o['multiplier']}x, order by {o['order_by']})" for o in others))
+    return "\n".join(lines)
+
+
+def _format_timing(state: AgentState) -> str:
+    """
+    Two separate facts, computed here so the model does not blend them:
+      * stock today: how many of the listed SKUs are critical (independent of any event);
+      * event deadline: what the alert level says about the ORDER-BY date.
+    """
+    signals = state.get("inventory_signals") or []
+    known = [i for i in signals if i["current_stock"] != -1]
+    critical = [i["sku_id"] for i in known if i["is_critical"]]
+    if not known:
+        stock = "stock today: insufficient data"
+    elif critical:
+        stock = (f"stock today: {len(critical)} of {len(known)} listed SKUs are CRITICAL right now "
+                 f"({', '.join(critical)}); this is a current stock problem, whatever the event")
+    else:
+        stock = f"stock today: none of the {len(known)} listed SKUs is critical"
+
+    seasonality = state.get("seasonality_signal") or {}
+    level = (seasonality.get("alert_level") or "none").lower()
+    meaning = {
+        "critical": "the order-by date has PASSED: the event order is late, expedite it",
+        "act": "the order-by date is close or the event is running: order now",
+        "watch": "the order-by date is still ahead: NOT urgent for the event yet, give the date",
+        "none": "no event lifts these products: no event deadline",
+    }.get(level, "unknown")
+    event = f"event deadline ({seasonality.get('upcoming_event') or 'none'}): alert {level.upper()}: {meaning}"
+    return f"  • {stock}\n  • {event}"
 
 
 def _select_language_label(query_language: str) -> str:
@@ -172,16 +289,29 @@ def _select_language_label(query_language: str) -> str:
     return "English"
 
 
+def _is_event_selection(state: AgentState) -> bool:
+    return any(c.get("event_name") for c in state.get("retrieved_chunks", []))
+
+
 def _compute_confidence(state: AgentState) -> float:
     """
-    Composite confidence score for the final recommendation.
-    Weights: retrieval 40%, sales data 30%, inventory data 20%, no error 10%.
+    Data-coverage score for the recommendation (NOT a calibrated probability; rework planned in Phase 3).
+
+    Retrieval path:  retrieval similarity 40%, sales data 30%, inventory data 20%, no error 10%.
+    Event-planning path: SKUs were chosen by the calendar lift table, not by similarity, so there is no
+    retrieval score to credit. That 40% becomes at most 20% (lift-table selection, synthetic) and the
+    score can never reach 1.0; a supplier lead time that had to be assumed costs a further 10%.
     """
-    retrieval_score = state.get("retrieval_confidence", 0.0) * 0.4
-    has_sales       = 0.3 if state.get("sales_signals")     else 0.0
-    has_inventory   = 0.2 if state.get("inventory_signals") else 0.0
-    no_error        = 0.1 if not state.get("error")         else 0.0
-    return round(min(retrieval_score + has_sales + has_inventory + no_error, 1.0), 2)
+    has_sales     = 0.3 if state.get("sales_signals")     else 0.0
+    has_inventory = 0.2 if state.get("inventory_signals") else 0.0
+    no_error      = 0.1 if not state.get("error")         else 0.0
+    if _is_event_selection(state):
+        selection = 0.2 if state.get("retrieved_chunks") else 0.0
+        assumed = (state.get("seasonality_signal") or {}).get("lead_time_assumed")
+        penalty = 0.1 if assumed else 0.0
+        return round(max(selection + has_sales + has_inventory + no_error - penalty, 0.0), 2)
+    retrieval = state.get("retrieval_confidence", 0.0) * 0.4
+    return round(min(retrieval + has_sales + has_inventory + no_error, 1.0), 2)
 
 
 def _degraded_answer(state: AgentState, headline: str) -> str:
@@ -217,6 +347,7 @@ async def recommendation_node(state: AgentState) -> dict:
         sales_text=_format_sales(state.get("sales_signals", [])),
         inventory_text=_format_inventory(state.get("inventory_signals", [])),
         seasonality_text=_format_seasonality(state.get("seasonality_signal", {})),
+        timing_text=_format_timing(state),
         confidence=state.get("retrieval_confidence", 0.0),
         language=language,
     )

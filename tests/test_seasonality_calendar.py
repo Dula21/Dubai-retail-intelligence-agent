@@ -1,4 +1,4 @@
-"""
+﻿"""
 tests/test_seasonality_calendar.py
 -----------------------------------
 The seasonality node must read the UAE retail calendar (synthetic, see data/make_calendar.py),
@@ -12,6 +12,7 @@ from pathlib import Path
 import pytest
 
 from backend.agents.nodes import seasonality_node as sn
+from services import event_aliases  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 pytestmark = pytest.mark.skipif(
@@ -33,8 +34,8 @@ def test_every_alias_targets_a_real_calendar_event():
     events, source = sn._load_events()
     assert source == "calendar"
     names = {e.name for e in events}
-    assert set(sn.EVENT_ALIASES) <= names
-    assert {n for ns in sn.GENERIC_ALIASES.values() for n in ns} <= names
+    assert set(event_aliases.EVENT_ALIASES) <= names
+    assert {n for ns in event_aliases.GENERIC_ALIASES.values() for n in ns} <= names
 
 
 def test_named_event_diwali_gets_dates_and_order_by(monkeypatch):
@@ -72,9 +73,9 @@ def test_past_occurrence_is_never_offered(monkeypatch):
 
 
 def test_eid_is_not_matched_inside_other_words(monkeypatch):
-    assert sn._named_event_names("show me side tables and provided items") == set()
-    assert sn._named_event_names("eid dress") == {"Eid al-Fitr", "Eid al-Adha"}
-    assert sn._named_event_names("eid al-adha gifts") == {"Eid al-Adha"}
+    assert event_aliases.named_event_names("show me side tables and provided items") == set()
+    assert event_aliases.named_event_names("eid dress") == {"Eid al-Fitr", "Eid al-Adha"}
+    assert event_aliases.named_event_names("eid al-adha gifts") == {"Eid al-Adha"}
 
 
 def test_no_event_named_picks_a_relevant_upcoming_event_within_horizon(monkeypatch):
@@ -120,3 +121,5 @@ def test_signal_keeps_the_original_four_fields(monkeypatch):
     sig, _ = run("", FASHION, date(2026, 10, 10), monkeypatch)
     for key in ("upcoming_event", "days_until_event", "expected_demand_multiplier", "alert_level"):
         assert key in sig
+
+

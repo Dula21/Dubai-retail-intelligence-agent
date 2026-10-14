@@ -1,226 +1,235 @@
 # Dubai Retail Intelligence Agent
 
-> Bilingual Arabic/English agentic RAG system for Dubai mid-market retail.  
-> Replaces a AED 15,000–25,000/month merchandising manager with an autonomous AI layer.
+> Bilingual Arabic/English agentic RAG system for Dubai mid-market retail.
+> Aims to give sellers who cannot afford a dedicated merchandising manager an autonomous
+> merchandising layer: what to stock, when to order it, and why.
 
-**Status:** Phase 2 complete — LangGraph agentic loop, 55 tests passing  
-**Stack:** LangGraph · LangChain · ChromaDB · multilingual-e5-large · Prophet · Groq · FastAPI  
-**Data:** Synthetic — 500 SKUs, 365,000 sales rows, UAE seasonality modeled
+**Status:** Phase 2 complete (LangGraph agentic loop, calendar-driven seasonality, event-planning route) · 178 tests passing
+**Stack:** LangGraph · LangChain · ChromaDB · multilingual-e5-large · Groq · FastAPI · Redis · Docker
+**Wired, not yet used:** PostgreSQL (audit log, Phase 3) · **Planned:** Prophet forecasting (Phase 3)
+**Data:** Synthetic. 500 SKUs, daily sales history, a UAE retail calendar for 2024–2027. See [Dataset](#dataset).
 
 ---
 
-## The Problem
+## The problem
 
-Dubai mid-market retailers selling on noon, their own website, and physical stores have no unified system connecting:
+Dubai mid-market retailers selling on noon, their own websites and physical stores have no unified system
+connecting what is selling, what is running low, and what to stock for Ramadan, Eid, Diwali, DSF and National Day.
+Reorder decisions are made on gut feel, event surges are missed every year, and Arabic/English catalogues are
+inconsistently tagged and hard to search.
 
-- What customers are searching for
-- What is currently selling
-- What inventory is running low
-- What to stock for Ramadan, DSF, and National Day
-
-Reorder decisions are made on gut feel. Demand surges during Dubai's major retail events are missed every year. Product catalogues exist in Arabic and English with inconsistent tagging and poor searchability.
-
-This system solves that problem autonomously.
+(The monthly cost of a merchandising manager is an assumption behind the project, not a measured figure.)
 
 ---
 
 ## Architecture
 
 ```
-User Query (Arabic or English)
-        ↓
-Language Detection  [Unicode Arabic block ratio]
-        ↓
-Intent Classification  [rule-based: reorder / analysis / trend / search]
-        ↓
-Bilingual Embedding  [multilingual-e5-large]
-        ↓
-Confidence Gate  [floor: 0.72 cosine + margin-based routing]
-        ↓
-ChromaDB Vector Store  [metadata-filtered + cosine similarity]
-        ↓
-LangGraph Agent Loop  [conditional routing based on intent]
-    ├── Node 1: RAG Retrieval      [bilingual, margin-gated, deduplicated]
-    ├── Node 2: Sales Analysis     [30-day trend, UAE peak period detection]
-    ├── Node 3: Inventory Check    [runway days, critical flag, hard fallback]
-    ├── Node 4: Seasonality Check  [DSF / Ramadan / National Day / Eid]
-    └── Node 5: Recommendation     [Groq LLM, grounded prompt, bilingual output]
-        ↓
-Explainable Reasoning Trace  [every node appends — returned to caller]
-        ↓
-Bilingual Response (Arabic / English)
-        ↓
-Audit Log  [PostgreSQL]
+Query (Arabic or English)
+   |
+API layer: language detection (Unicode Arabic ratio) + rule-based intent classification
+   |
+   +-- event_planning  ("what should I stock more of before Diwali")
+   |      event_candidates_node: event from the calendar -> SKUs the event lifts (no vector search)
+   |         -> sales_analysis -> inventory_check -> seasonality_check -> recommendation
+   |
+   +-- everything else
+          rag_retrieval_node: multilingual-e5-large + ChromaDB, margin-gated
+             +-- low confidence -> fallback_node (no LLM) -> END
+             +-- search / trend -> recommendation
+             +-- reorder / analysis -> sales_analysis -> inventory_check -> seasonality_check -> recommendation
+
+Every node appends to a human-readable reasoning trace that is returned to the caller.
+Redis caches answers for 1 hour; the key is (code version, normalised query, date).
 ```
 
-### Routing logic
+### Routing
 
-Search and trend queries route directly to the recommendation node (2 nodes total).  
-Reorder and analysis queries run the full 5-node path.  
-Fallback triggers exit immediately at the RAG node — no LLM call made.
+- **Search and trend** queries: retrieval, then recommendation (2 nodes).
+- **Reorder and analysis** queries: retrieval, sales, inventory, seasonality, recommendation (5 nodes).
+- **Event-planning** queries: event candidates, sales, inventory, seasonality, recommendation (5 nodes, no vector search).
+- **Fallback** exits at the retrieval node. No LLM call is made.
 
----
+### Try it
 
-## Build Phases
-
-| Phase | Scope | Status | Tests |
-|-------|-------|--------|-------|
-| 1 | Bilingual RAG over product catalogue | ✅ Complete | 25 |
-| 2 | LangGraph agentic loop | ✅ Complete | 30 |
-| 3 | Autonomous reorder recommendation engine | 📋 Planned | — |
-| 4 | Arabic dialect polish + bilingual response generation | 📋 Planned | — |
-
-**Total tests passing: 55**
+```
+what should I stock more of before Diwali        -> event planning, order-by date, real SKUs
+what should I stock before Ramadan                -> same route, expected vs observed lift
+how many units left of FSH-0014                   -> exact SKU lookup, factual, hard fallback if unknown
+ما هي المنتجات التي يجب أن أخزنها قبل رمضان؟         -> Arabic planning question
+```
 
 ---
 
-## Quick Start
+## Quick start
 
 ```bash
-# 1. Clone and install
+# 1. Install
 git clone https://github.com/Dula21/dubai-retail-intelligence-agent
 cd dubai-retail-intelligence-agent
 pip install -r requirements.txt
 
-# 2. Generate synthetic UAE retail dataset
-python data/synthetic/generate_dataset.py
-# → Creates product_catalogue.csv (500 SKUs)
-# → Creates sales_history.csv (365,000 rows, 24 months)
-# → Creates inventory_snapshot.csv
+# 2. Generate the synthetic dataset (CSVs are not committed; generators are)
+#    Exact commands are documented at the top of .gitignore.
 
-# 3. Run via Docker (recommended)
-docker compose up --build
-# API available at http://localhost:8000
+# 3. Configure: .env needs GROQ_API_KEY and POSTGRES_PASSWORD
 
-# 4. Test a bilingual query
-curl -X POST http://localhost:8000/agent/query \
+# 4. Run with Docker (code is baked into the image: rebuild after every change)
+docker compose up -d --build
+# first start downloads the embedding model and indexes the catalogue (a few minutes)
+
+# 5. Ask a question
+curl -X POST http://localhost:8000/api/v1/agent/query \
   -H "Content-Type: application/json" \
-  -d '{"query": "what should I reorder before Ramadan?", "language": "en"}'
+  -d '{"query": "what should I stock more of before Diwali"}'
 
-# Arabic query — same endpoint
-curl -X POST http://localhost:8000/agent/query \
-  -H "Content-Type: application/json" \
-  -d '{"query": "ما هي المنتجات التي يجب إعادة طلبها قبل رمضان؟", "language": "ar"}'
-
-# 5. Run tests
-docker compose exec api pytest tests/ -v
-# 55 tests, all passing
+# 6. Tests (the container runs Python 3.12 and langgraph 0.2.4: the reference environment)
+docker compose exec api python -m pytest tests -q
 ```
 
+The response contains the recommendation, a confidence score, the reasoning trace, the selected products
+(`relevance_score` is `null` for calendar-selected SKUs, with `selection_basis` and `event_lift` instead) and the
+seasonality signal.
+
 ---
 
-## Key Engineering Decisions
+## Key engineering decisions
 
-### Why LangGraph over a LangChain chain?
+### Event planning is its own intent, not a flavour of "reorder"
+A reorder question is a lookup about specific products and is a factual field, so it goes through retrieval and the
+hard fallback. "What should I stock before Diwali" names no product: near-identical variants tie within about 0.003,
+so gating it on retrieval margin returned "insufficient data" to a question the calendar can answer. Planning now
+starts from the calendar: event, then the SKUs it lifts, then the normal signal chain.
+*Trade-off:* the lift table is synthetic, and equal-lift SKUs are ranked by shortest stock runway.
 
-A chain runs the same steps in the same order for every query. A reorder query and a search query have fundamentally different data requirements — running sales analysis and inventory checks on a simple search query wastes latency and compute. LangGraph's conditional edges let the agent take different paths based on live state. Search queries run 2 nodes. Reorder queries run 5. That routing decision is the difference between a pipeline and an agent.
+### One calendar drives data, seasonality and (next) forecasting
+`uae_retail_calendar.csv` plus `event_lifts.csv` feed the data generator and the seasonality node. Hijri dates use
+Umm al-Qura; Dubai Shopping Festival is marked `estimate_verify` because its dates are announced yearly.
+The order-by date is `event start - lead-in days - supplier lead days - 5 buffer days`, and the alert level is keyed to
+that date, not to the event date.
+*Trade-off:* the file must be regenerated each year; the old hard-coded table went stale silently.
 
-### Margin-based confidence routing over absolute threshold
+### Expected and observed lift are never mixed
+The calendar says what to expect (for example 3.5x). The sales node measures what the history shows for the event that
+was asked about. Both are shown, and the prompt forbids calling the expectation a past result. Past sales are censored
+by stockouts, so observed lift can read low.
 
-Absolute cosine thresholds drift with query length and phrasing. A 3-word Arabic query and a 15-word English query produce different score ranges for identical retrieval quality. The margin between top-1 and top-3 retrieved chunks is query-length invariant — a small margin means the retriever is uncertain regardless of absolute score level. Fallback requires both conditions: margin below threshold AND the queried entity absent from top-3 chunks. Either condition alone is insufficient.
+### Honest data handling
+Missing stock is `-1`, never `0`, and an unknown SKU is never "critical". Supplier lead time that had to be assumed is
+flagged in the trace and the prompt. The recommendation states no order quantities: a reorder point is a trigger level,
+not an order size (a deterministic quantity engine is Phase 3). Confidence is a data-coverage score, not a calibrated
+probability, and never reaches 1.0 on the planning route.
 
-Known limitation: chunks are deduplicated by content hash before margin calculation. Without deduplication, identical content in multiple source documents makes top-3 scores look artificially flat, triggering false fallbacks on correct retrievals.
+### Margin-based confidence routing over an absolute threshold
+The 0.72 cosine floor does not discriminate on this catalogue: 16 of 16 not-in-catalogue queries passed it
+(see `eval/RESULTS.md`). Routing uses the margin between the best product and the next *different* product (variants
+collapsed). Fallback needs both a small margin and the queried entity absent from the top results.
+*Limit:* the 0.01 threshold was read off the queries it was evaluated on; a held-out set is needed.
 
 ### Field-type fallback split
+Factual fields (SKU counts, stock, prices) use a hard fallback: uncertain retrieval returns "insufficient data" and
+nothing else. Narrative fields (trend summaries, reorder reasoning) allow a partial answer with provenance.
 
-Factual fields (SKU counts, stock levels, prices) use hard fallback — if retrieval is uncertain, return "insufficient data" and nothing else. A wrong inventory number is unrecoverable; a retailer acts on it immediately.
+### LangGraph over a chain
+Different questions need different data. Search runs 2 nodes; reorder and planning run 5. Conditional edges, including
+two entry routes, are what make it an agent and not a fixed pipeline.
 
-Narrative fields (trend summaries, reorder reasoning) allow partial synthesis with explicit provenance: *"Based on [source], [partial answer]. Note: this is partial — verify before acting."* A partial explanation is still useful. A wrong stock count is not.
+### TypedDict inside the graph, Pydantic at the API boundary
+Validation cost is justified where untrusted input arrives, not on every node transition.
 
-### TypedDict over Pydantic for graph-internal state
+### multilingual-e5-large over separate Arabic and English models
+One shared embedding space lets an Arabic query find an English-tagged product. Trade-off: a ~2 GB model download.
 
-LangGraph manages state transitions natively with TypedDict. Using Pydantic inside the graph adds serialization overhead on every node transition (5 transitions per query). Pydantic is used at the API boundary where validation matters. Inside the graph, TypedDict is the right tool. This distinction signals understanding of where validation cost is justified versus where it adds latency without benefit.
+### ChromaDB over Pinecone
+Runs locally (relevant to UAE data-residency concerns) with built-in metadata filtering. Documented boundary: above
+~1M vectors, use a distributed store.
 
-### Why multilingual-e5-large over separate Arabic/English models?
-
-Cross-lingual retrieval: an Arabic query finding an English-tagged product works naturally in a shared embedding space. Two separate spaces cannot do this. The 300MB model size is the only trade-off, acceptable for a cloud-deployed Dubai retail system.
-
-### Why ChromaDB over Pinecone?
-
-Matches UAE data residency concerns (operational data stays local), runs without cloud dependency, and has built-in metadata filtering critical for `price < AED 200` type queries. At >1M vectors: Weaviate or managed Pinecone. Documented as a known scale boundary.
-
-### Why daily sales granularity over weekly?
-
-The UAE weekend is Friday–Saturday, not Saturday–Sunday. Weekly aggregation loses this signal and distorts DSF and Ramadan day-level spike detection. Daily granularity is a real production consideration — weekly aggregation is the common mistake.
+### Daily sales granularity
+The UAE weekend has been Saturday–Sunday since 2022; weekly aggregation hides day-level spikes around Ramadan and DSF.
 
 ### Caching scale ceiling
-
-Current approach: TTL-based Redis invalidation tied to data upload events. Works at SME scale (hundreds to low thousands of SKUs).
-
-Scale ceiling: breaks at millions of keys (noon-scale). Next architectural step: event-driven cache invalidation tied to inventory update events, LRU eviction policy, and partitioned Redis keys by product category.
+Current approach: 1-hour TTL, keyed on query, date and code version. Works at SME scale (hundreds to low thousands of
+SKUs). It breaks at millions of keys (noon scale). Next architectural step: event-driven invalidation tied to inventory
+updates, an LRU eviction policy and Redis keys partitioned by product category.
 
 ---
 
-## Production Bugs Fixed
+## Production bugs found and fixed
 
-Issues found during development that are not documented in tutorials or library docs:
+- **LangGraph node name clash.** LangGraph raises `ValueError` if a node name equals an `AgentState` field name. All
+  nodes carry a `_node` suffix.
+- **structlog reserved keyword.** `event=` collides with structlog's own parameter (`TypeError: got multiple values`).
+  It came back in a later node and was renamed (`upcoming_event=`, `event_name=`).
+- **Relative imports under pytest vs uvicorn.** Tests resolve `agents.*`, uvicorn resolves `backend.agents.*`. The
+  Dockerfile sets `PYTHONPATH=/app/backend` so both styles work.
+- **A mocked retriever hid a real integration bug.** Unit tests mocked a list shape; the real retriever returns a
+  dictionary, so every query failed on real data while 59 tests were green. Integration tests now use the real shape.
+- **Stock silently read as zero.** The node looked for `current_stock`; the data has `current_stock_units`. Fix: read the
+  real columns, use `-1` for missing, and never flag unknown stock as critical.
+- **Code baked into the Docker image.** A plain `docker compose up` ran old code. Rebuild after every change.
+- **Silent stale vector index (fixed).** The Docker volume kept a 300-document index while the catalogue had 500 SKUs, because
+  startup skipped re-ingestion whenever documents existed. Found when container tests diverged from local ones
+  (top-1 scores matched to 0.001; the margin differed 6x). Fix: the collection name carries a content fingerprint, a
+  changed catalogue builds a new collection, old ones are pruned. Covered by 10 tests; 178 pass locally and in Docker
+  on a fresh volume.
+- **`.env` risk in the image.** `.dockerignore` keeps secrets, history and generated data out of the build context.
 
-**LangGraph node name clash (Phase 2)**  
-LangGraph 0.2.x raises `ValueError` at startup if a node name matches a field name in the `AgentState` TypedDict. Fix: suffix all node names with `_node`. The state field `recommendation` and the node name `recommendation` cannot coexist.
-
-**structlog reserved keyword (Phase 2)**  
-`structlog` reserves `event` as its own parameter — it is the log message itself. Passing `event=` as a keyword argument to any `logger.*()` call raises `TypeError: got multiple values for argument 'event'`. Fix: rename to `upcoming_event=`.
-
-**Relative import depth in pytest (Phase 2)**  
-When pytest adds `backend/` to `sys.path` via `conftest.py`, modules resolve as `agents.*` not `backend.agents.*`. Three-dot relative imports (`from ...services import`) climb above the package root and fail with `ImportError: attempted relative import beyond top-level package`. Fix: use absolute imports from the `sys.path` root.
-
-**PYTHONPATH mismatch between pytest and uvicorn (Phase 3 prep)**
-Pytest used `conftest.py` to add `/app/backend` to `sys.path`, allowing bare `services.*`imports. uvicorn starts without that manipulation, so the same imports failed at runtime. Fix: `ENV PYTHONPATH=/app/backend` in the Dockerfile.
+### Known issues (open)
+- Lift multipliers are synthetic, not learned from history. Equal-lift SKUs are ranked by runway.
+- No order-quantity engine yet; confidence is not calibrated (Phase 3).
 
 ---
 
 ## Dataset
 
-All data is **synthetic** — generated by `data/synthetic/generate_dataset.py`.
+All data is **synthetic**, produced by `data/generate_synthetic.py` and `data/make_calendar.py`. CSVs are ignored by
+git; regenerate them with the commands documented in `.gitignore`. Exact counts are in
+`data/synthetic/dataset_metadata.json`.
 
-| File | Rows | Description |
-|------|------|-------------|
-| `product_catalogue.csv` | 500 | SKUs across 5 categories, bilingual names, AED pricing |
-| `sales_history.csv` | 365,000 | Daily sales per SKU, 24 months, UAE event flags |
-| `inventory_snapshot.csv` | 500 | Current stock levels, 15% in critical status |
+| File | Description |
+|------|-------------|
+| `product_catalogue.csv` | 500 SKUs in five categories, bilingual names, AED prices, supplier lead times |
+| `sales_history.csv` | Daily sales per SKU, generated from the calendar, censored by stockouts, with a `stockout_occurred` flag |
+| `inventory_snapshot.csv` | Current stock per SKU: 324 healthy, 127 critical, 49 overstock |
+| `uae_retail_calendar.csv` | 17 events across 2024–2027 (67 rows): Ramadan, both Eids, Diwali, Christmas, White Friday, DSF, National Day and more |
+| `event_lifts.csv` | Expected demand multiplier per event, category and keyword |
+| `ground_truth_demand.csv` | True uncensored demand. Evaluation only; the agent never reads it |
 
-UAE events modeled: Ramadan 2025/2026, Eid Al-Fitr/Al-Adha, DSF 2025/2026, National Day 2024/2025, Back-to-School.
-
-**Known limitation:** Hijri calendar dates are approximate. Production fix: `hijri-converter` library. Documented as a known limitation — signals engineering maturity.
+**Known limitations:** the lift table is synthetic and every number is hypothetical; DSF dates are estimates until
+announced; the catalogue has no festival-specific products yet (diyas, sweet boxes, Christmas decor).
 
 ---
 
 ## Tests
 
-```
-tests/test_phase1.py — 25 tests
-├── TestDataGeneration (8)      — dataset integrity, seasonality validation
-├── TestLanguageDetection (5)   — Arabic/English/mixed detection
-├── TestDocumentPreparation (4) — E5 prefix, bilingual document construction
-├── TestConfidenceGate (3)      — threshold logic
-└── TestCatalogueLoader (5)     — CSV loading, type casting, sales indexing
+178 tests across: Phase 1 retrieval and data checks, synthetic-data invariants, real-CSV inventory checks, intent and
+routing, calendar seasonality, the recommendation node (fake model client), the event-planning route end to end on real
+data, sales-event analysis, the API layer (null relevance for calendar-selected SKUs, cache version, health), the RAG
+node with the real retriever, the real-retriever smoke cases, and stale-index detection (fake embedder, real Chroma).
 
-tests/test_phase2_agent.py — 30 tests
-├── TestIntentClassifierEnglish (4)  — reorder / analysis / search / trend
-├── TestIntentClassifierArabic (2)   — Arabic reorder and analysis
-├── TestLanguageDetection (6)        — EN / AR / mixed / empty / SKU extraction
-├── TestFactualIntentFlag (4)        — hard vs partial fallback routing
-├── TestSeasonalityNode (4)          — DSF / Ramadan / National Day alert levels
-├── TestInventoryNode (3)            — runway, critical flag, missing SKU sentinel
-├── TestAgentRouting (5)             — conditional edge routing by intent
-└── TestAgentEndToEnd (2)            — full trace, Groq rate limit degradation
 ```
+python -m pytest tests -q
+```
+
+The container run is the reference (Python 3.12, langgraph 0.2.4). Model-loading tests are slow on CPU.
 
 ---
 
-## Project Context
+## Project context
 
-This is the third project in a production AI engineering portfolio targeting a full-time AI Software Engineer role in Dubai by December 2026.
+Third project in a production AI engineering portfolio targeting a full-time AI Software Engineer role in Dubai.
 
-| Project | Core Tech | Market Focus |
+| Project | Core tech | Market focus |
 |---------|-----------|--------------|
 | Logistics Oracle | Dual-LLM routing, Prophet, Redis | JAFZA logistics operators |
 | Dubai Property Intelligence | RAG, hallucination prevention, DLD data | Dubai real estate |
 | **Dubai Retail Intelligence Agent** | **LangGraph, bilingual RAG, Arabic NLP** | **noon sellers, mid-market retail** |
 
-Three projects. One coherent story. One market. One engineer.
+| Phase | Scope | Status |
+|-------|-------|--------|
+| 1 | Bilingual RAG over the product catalogue | Complete |
+| 2 | LangGraph agentic loop, event planning | Complete |
+| 3 | Autonomous reorder engine: quantities, calibrated confidence, human override, audit log | Planned |
+| 4 | Arabic dialect polish and bilingual response generation | Planned |
 
----
-
-*Started: August 2026 · Target completion: November 2026*  
-*GitHub: github.com/Dula21*
+*Started: August 2026 · GitHub: github.com/Dula21*

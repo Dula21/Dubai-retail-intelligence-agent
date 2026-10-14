@@ -12,7 +12,9 @@ Endpoints:
     GET  /api/v1/agent/health — Agent graph health check
 
 Redis caching:
-    Query results cached by (query_hash, date) with 1-hour TTL.
+    Query results cached by (cache version, query_hash, date) with 1-hour TTL.
+    CACHE_VERSION (env AGENT_CACHE_VERSION) is bumped when node logic or prompts change, so answers
+    produced by older code are never served after a deploy.
     Date component ensures yesterday's reorder recommendations
     don't serve for today's query (inventory changes daily).
     Responses produced after a technical error are NOT cached, so a one-off
@@ -61,16 +63,19 @@ logger = structlog.get_logger(__name__)
 router = APIRouter(tags=["agent"])
 
 CACHE_TTL_SECONDS = int(os.getenv("AGENT_CACHE_TTL", "3600"))
+# Bump when node logic, prompts or the response shape change (old cached answers then stop matching).
+CACHE_VERSION = os.getenv("AGENT_CACHE_VERSION", "p2-planning-1")
 
 
 def _cache_key(query: str) -> str:
     """
-    Cache key: hash of (normalised query, today's date).
-    Date component ensures stale inventory data doesn't persist overnight.
+    Cache key: hash of (cache version, normalised query, today's date).
+    Date component ensures stale inventory data doesn't persist overnight; the version component
+    ensures answers made by older code are not served after a deploy.
     """
     normalised = query.lower().strip()
     today = date.today().isoformat()
-    raw = f"{normalised}:{today}"
+    raw = f"{CACHE_VERSION}:{normalised}:{today}"
     return f"agent:query:{hashlib.sha256(raw.encode()).hexdigest()[:16]}"
 
 
@@ -93,7 +98,7 @@ async def agent_query(
     Flow:
     1. Language detection + intent classification (rule-based, instant)
     2. Redis cache check (1-hour TTL, date-keyed)
-    3. LangGraph agent invocation (6 nodes, conditional routing)
+    3. LangGraph agent invocation (7 nodes, two entry routes: retrieval or event calendar)
     4. Response formatting + cache write (skipped after a technical error)
     5. Fallback answer (from fallback_node) if retrieval was not confident enough
     """
@@ -158,13 +163,17 @@ async def agent_query(
     # must not hand the client a list that looks like an answer.
     hard_fallback = bool(state.get("fallback_triggered")) and is_factual_intent(intent)
 
+    # Event-planning SKUs are chosen by the calendar lift table, not by vector search, so they carry
+    # no similarity score: report null plus the lift, never a placeholder 1.0.
     retrieved_products = [] if hard_fallback else [
         RetrievedProductResponse(
             sku_id=c["sku_id"],
             product_name_en=c["product_name_en"],
             product_name_ar=c["product_name_ar"],
             category=c["category"],
-            relevance_score=c["similarity_score"],
+            relevance_score=None if c.get("event_name") else c["similarity_score"],
+            selection_basis="calendar_lift" if c.get("event_name") else "similarity",
+            event_lift=c.get("event_lift"),
         )
         for c in state.get("retrieved_chunks", [])
     ]
@@ -223,6 +232,7 @@ async def agent_health() -> dict:
         "graph_compiled": retail_agent is not None,
         "nodes": [
             "rag_retrieval_node",
+            "event_candidates_node",
             "sales_analysis_node",
             "inventory_check_node",
             "seasonality_check_node",

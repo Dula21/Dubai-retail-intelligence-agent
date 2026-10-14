@@ -12,6 +12,14 @@ White Friday, DSF, Back to School, etc. For each event we compare mean daily
 units inside the event windows against mean units on days outside ALL event
 windows, and report the strongest event with lift >= 1.2.
 
+Planning questions ("what should I stock before Ramadan"): the retrieved chunks carry the event they were
+chosen for, so the node answers about THAT event only: the observed lift of each SKU inside the event's
+past windows versus its baseline, and nothing about unrelated events. A SKU's "strongest event ever"
+(which can be a noisy 7-day window such as Holi) is not what the retailer asked.
+
+Known limit: the history is censored by stockouts (a SKU that sold out cannot show a peak), so observed
+lifts tend to read LOW against the calendar's table. Both numbers are shown so the gap is visible.
+
 Fallback: if the calendar file is missing, the old month-name table is used
 so the agent still works (and says so in the logs).
 
@@ -29,6 +37,7 @@ from __future__ import annotations
 
 import os
 import re
+from collections import Counter
 from functools import lru_cache
 from pathlib import Path
 
@@ -115,6 +124,25 @@ def _detect_peak_period_calendar(sku_df: pd.DataFrame, windows: dict[str, frozen
     return best_event if best_ratio >= PEAK_MIN_LIFT else None
 
 
+def _observed_event_lift(sku_df: pd.DataFrame, windows: dict[str, frozenset], slug: str) -> float | None:
+    """
+    Mean daily units inside the event's windows / mean daily units outside ALL event windows.
+    None when the event is not covered by enough days of this SKU's history, or the baseline is zero.
+    """
+    days = windows.get(slug)
+    if not days:
+        return None
+    inside = sku_df[sku_df["date"].isin(days)]
+    if len(inside) < PEAK_MIN_EVENT_DAYS:
+        return None
+    all_event_days = set().union(*windows.values())
+    outside = sku_df[~sku_df["date"].isin(all_event_days)]
+    baseline = outside["units_sold"].mean() if not outside.empty else sku_df["units_sold"].mean()
+    if not baseline or baseline <= 0:
+        return None
+    return round(float(inside["units_sold"].mean() / baseline), 2)
+
+
 def _detect_peak_period_months(sku_df: pd.DataFrame) -> str | None:
     """Old month-name fallback (used only if the calendar file is missing)."""
     overall_mean = sku_df["units_sold"].mean()
@@ -160,6 +188,29 @@ def _compute_trend(sku_df: pd.DataFrame) -> str:
     return "stable"
 
 
+def _summary_trace(signals: list, event_name: str | None, table_lift) -> str:
+    """One short trace line. Event questions report only that event; others count the peaks."""
+    rising = sum(1 for s in signals if s["trend_direction"] == "rising")
+    falling = sum(1 for s in signals if s["trend_direction"] == "falling")
+    if event_name:
+        observed = [s["observed_event_lift"] for s in signals if s.get("observed_event_lift") is not None]
+        unknown = len(signals) - len(observed)
+        if observed:
+            hit = sum(1 for x in observed if x >= PEAK_MIN_LIFT)
+            detail = (f"observed {event_name} lift {min(observed)}x to {max(observed)}x, "
+                      f"{hit} of {len(observed)} at or above {PEAK_MIN_LIFT}x")
+        else:
+            detail = f"no SKU has enough past {event_name} history to measure a lift"
+        if unknown and observed:
+            detail += f", {unknown} without enough history"
+        table = f"; calendar table says {table_lift}x" if table_lift else ""
+        return (f"Sales analysis ({event_name}): {len(signals)} SKUs, rising={rising}, falling={falling}, "
+                f"{detail}{table}. History is censored by stockouts, so observed lifts can read low")
+    peaks = dict(Counter(s["peak_period"] for s in signals if s["peak_period"]).most_common())
+    return (f"Sales analysis: analysed {len(signals)} SKUs, rising={rising}, falling={falling}, "
+            f"peak_periods={peaks}")
+
+
 async def sales_analysis_node(state: AgentState) -> dict:
     """
     Node 2: analyse sales history for each retrieved SKU.
@@ -176,8 +227,14 @@ async def sales_analysis_node(state: AgentState) -> dict:
             ],
         }
 
+    # Planning route: the chunks say which event they were chosen for.
+    event_name = next((c.get("event_name") for c in chunks if c.get("event_name")), None)
+    table_lift = next((c.get("event_lift") for c in chunks if c.get("event_lift")), None)
+    event_slug = _slug(event_name) if event_name else None
+
     try:
         df = _load_sales_df()
+        windows = _load_event_windows() if event_slug else {}
         signals: list[SalesSignal] = []
 
         for chunk in chunks:
@@ -197,26 +254,30 @@ async def sales_analysis_node(state: AgentState) -> dict:
 
             avg_daily = float(sku_df["units_sold"].mean())
             trend = _compute_trend(sku_df)
-            peak = _detect_peak_period(sku_df)
+            observed = None
+            if event_slug:
+                observed = _observed_event_lift(sku_df, windows, event_slug)
+                peak = event_slug if observed is not None and observed >= PEAK_MIN_LIFT else None
+            else:
+                peak = _detect_peak_period(sku_df)
             data_completeness = min(len(sku_df) / 365.0, 1.0)
 
-            signals.append(SalesSignal(
+            signal = SalesSignal(
                 sku_id=sku_id,
                 avg_daily_units=round(avg_daily, 2),
                 trend_direction=trend,
                 peak_period=peak,
                 confidence=round(data_completeness * 0.9, 2),
-            ))
+            )
+            if event_slug:
+                signal["event_name"] = event_name
+                signal["observed_event_lift"] = observed
+            signals.append(signal)
 
             logger.debug("sku_sales_analysed", sku_id=sku_id, avg_daily=avg_daily,
                          trend=trend, peak=peak)
 
-        trace = (
-            f"Sales analysis: analysed {len(signals)} SKUs, "
-            f"rising={sum(1 for s in signals if s['trend_direction'] == 'rising')}, "
-            f"falling={sum(1 for s in signals if s['trend_direction'] == 'falling')}, "
-            f"peak_periods={[s['peak_period'] for s in signals if s['peak_period']]}"
-        )
+        trace = _summary_trace(signals, event_name, table_lift)
 
         return {
             "sales_signals": signals,

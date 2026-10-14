@@ -3,12 +3,17 @@
 # ============================================================
 # Three services:
 #   api      — FastAPI + embedding model + ChromaDB
-#   redis    — caching layer (used in Phase 2, wired now)
-#   postgres — persistent storage (used in Phase 2, wired now)
+#   redis    — caching layer (answers cached 1 h, keyed on query + date)
+#   postgres — persistent storage (wired; used from Phase 3)
 #
 # HOW TO RUN:
 #   First time:  docker compose up --build
-#   After that:  docker compose up
+#   After ANY code change:  docker compose up -d --build   (code is baked into the image;
+#                           only ./data is mounted, so a plain "up" runs the OLD code)
+#   Flush cache: docker compose exec redis redis-cli FLUSHDB
+#   Re-index:    docker compose down; docker volume rm retail_agent_chroma_db; docker compose up -d
+#                (do this after regenerating the catalogue; NOT "down -v", which also deletes the model cache)
+#   Run tests:   docker compose exec api python -m pytest tests -q
 #   Stop:        docker compose down
 #   Full reset:  docker compose down -v   ← also deletes volumes
 
@@ -57,7 +62,7 @@ services:
     image: redis:7-alpine
     container_name: retail_agent_redis
     ports:
-      - "6379:6379"       # expose to localhost for debugging
+      - "127.0.0.1:6379:6379"   # localhost only: not reachable from other machines
     volumes:
       - redis_data:/data  # persist Redis data between restarts
     command: redis-server --appendonly yes  # enable persistence
@@ -73,7 +78,7 @@ services:
     image: postgres:16-alpine
     container_name: retail_agent_postgres
     ports:
-      - "5432:5432"       # expose to localhost for debugging with pgAdmin
+      - "127.0.0.1:5432:5432"   # localhost only (pgAdmin on this machine still works)
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./backend/database/init.sql:/docker-entrypoint-initdb.d/init.sql

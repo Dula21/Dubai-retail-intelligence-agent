@@ -66,9 +66,9 @@ class TestIntentClassifierEnglish:
 
     def test_reorder_intent_detected(self):
         """Reorder keywords correctly classified."""
-        assert classify_intent("what should I reorder before DSF?") == "reorder"
-        assert classify_intent("stock is running low on summer dresses") == "reorder"
-        assert classify_intent("inventory check for SKU-4421") == "reorder"
+        assert classify_intent("what should I reorder before DSF?") == "event_planning"
+        assert classify_intent("how many units left of FSH-0014") == "reorder"
+        assert classify_intent("what should I reorder") == "reorder"
 
     def test_analysis_intent_detected(self):
         """Analysis keywords correctly classified."""

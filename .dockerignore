@@ -1,10 +1,28 @@
-  .git
-  .venv
-  venv
-  .model_cache
-  .chroma_db*
-  __pycache__
-  *.pyc
-  .pytest_cache
-  .env
-  eval/*.json
+# Keep secrets, history and local junk OUT of the image (COPY . . copies everything not listed here).
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+
+# Local environments and caches
+.venv
+venv
+__pycache__/
+*.pyc
+.pytest_cache/
+.model_cache/
+.chroma_db*
+
+# Generated data: mounted at runtime by docker-compose (./data:/app/data), never baked into the image
+data/synthetic/
+data/synthetic_v1_backup/
+data/synthetic_v2/
+
+# Archives and editor files
+*.zip
+.vscode/
+.idea/
+
+# Local eval outputs (from your previous .dockerignore)
+eval/*.json

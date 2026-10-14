@@ -21,6 +21,7 @@ Field-type fallback split (per architecture principles):
 """
 
 from __future__ import annotations
+from .event_aliases import is_event_planning_query
 
 import re
 import structlog
@@ -80,6 +81,8 @@ def classify_intent(query: str) -> str:
         Intent label string
     """
     q_lower = query.lower().strip()
+    if is_event_planning_query(query):
+        return "event_planning"
 
     # Check reorder signals
     if any(k in q_lower for k in REORDER_KEYWORDS_EN) or \

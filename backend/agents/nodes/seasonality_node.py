@@ -32,6 +32,9 @@ Engineering decision: calendar file over a hard-coded table.
   each year (make_calendar.py does that); the old hard-coded table silently went stale instead.
 Fallback: if the calendar file is missing, the old static table is used and the trace says so.
 
+Chunk enrichment: the RAG chunk has no supplier lead time or tags, so those are read from the catalogue
+CSV by SKU (agents/catalogue.py). Missing everywhere -> the default is used and the trace says "assumed".
+
 Known limits (documented, not hidden):
   * multipliers come from the synthetic calendar's lift table, not from observed history yet.
   * DSF dates are an estimate until Dubai Tourism announces them (date_basis = estimate_verify).
@@ -50,6 +53,9 @@ from pathlib import Path
 
 import structlog
 
+from services.event_aliases import named_event_names
+
+from .. import catalogue
 from ..state import AgentState, SeasonalitySignal
 
 logger = structlog.get_logger(__name__)
@@ -83,32 +89,6 @@ UAE_RETAIL_EVENTS = [
      "categories": ["fashion", "food", "home"]},
 ]
 
-# Query phrases (English + Arabic) -> exact calendar event names. Latin and Arabic are matched on
-# word boundaries so "eid" does not match "side". A test checks every name exists in the calendar.
-EVENT_ALIASES: dict[str, tuple[str, ...]] = {
-    "Ramadan": ("ramadan", "ramadhan", "رمضان"),
-    "Eid al-Fitr": ("eid al-fitr", "eid al fitr", "eid ul fitr", "عيد الفطر"),
-    "Eid al-Adha": ("eid al-adha", "eid al adha", "eid ul adha", "عيد الأضحى", "عيد الاضحى"),
-    "Diwali": ("diwali", "deepavali", "ديوالي", "دوالي"),
-    "Holi": ("holi", "هولي"),
-    "Navratri-Dussehra": ("navratri", "dussehra", "dasara", "نافراتري"),
-    "UAE National Day": ("national day", "اليوم الوطني", "عيد الاتحاد"),
-    "Christmas": ("christmas", "xmas", "كريسماس", "الكريسماس", "عيد الميلاد"),
-    "New Year / Year-End Sale": ("new year", "year-end", "year end", "رأس السنة"),
-    "Valentine's Day": ("valentine", "valentines", "فالنتين", "عيد الحب"),
-    "Mother's Day": ("mother's day", "mothers day", "mother day", "عيد الأم", "عيد الام"),
-    "Back to School": ("back to school", "back-to-school", "العودة للمدارس", "العودة إلى المدارس"),
-    "Summer Season": ("summer", "الصيف"),
-    "Winter Season": ("winter", "الشتاء"),
-    "Singles Day 11.11": ("singles day", "11.11", "يوم العزاب"),
-    "White Friday": ("white friday", "black friday", "الجمعة البيضاء", "الجمعة السوداء"),
-    "Dubai Shopping Festival": ("dsf", "shopping festival", "مهرجان دبي للتسوق"),
-}
-# Only used when no specific phrase matched: "eid" alone means both Eids.
-GENERIC_ALIASES: dict[str, tuple[str, ...]] = {
-    "eid": ("Eid al-Fitr", "Eid al-Adha"),
-    "العيد": ("Eid al-Fitr", "Eid al-Adha"),
-}
 QUERY_KEYS = ("query", "user_query", "question", "original_query")
 
 
@@ -172,11 +152,24 @@ def _load_events() -> tuple:
 
 # ── helpers ───────────────────────────────────────────────────────────────────
 
+_FIELD_ALIASES = {"name_en": ("name_en", "product_name_en")}
+
+
 def _chunk_field(chunk: dict, key: str):
-    value = chunk.get(key)
-    if value in (None, ""):
-        value = (chunk.get("metadata") or {}).get(key)
-    return value
+    """
+    Field of a retrieved chunk. The RAG chunk carries only sku_id, product_name_en/ar, category and a
+    content preview, so fields it lacks (supplier_lead_days, tags_en) are read from the catalogue CSV
+    by SKU. Missing everywhere -> None (callers then say 'assumed', never invent a value).
+    """
+    for name in _FIELD_ALIASES.get(key, (key,)):
+        value = chunk.get(name)
+        if value in (None, ""):
+            value = (chunk.get("metadata") or {}).get(name)
+        if value not in (None, ""):
+            return value
+    row = catalogue.get_row(str(chunk.get("sku_id", "")))
+    value = row.get(key)
+    return value if value not in (None, "") else None
 
 
 def _query_text(state: AgentState) -> str:
@@ -185,22 +178,6 @@ def _query_text(state: AgentState) -> str:
         if isinstance(value, str) and value.strip():
             return value
     return ""
-
-
-def _phrase_in(phrase: str, text: str) -> bool:
-    return re.search(rf"(?<!\w){re.escape(phrase)}(?!\w)", text) is not None
-
-
-def _named_event_names(query: str) -> set[str]:
-    q = query.lower()
-    specific = {name for name, phrases in EVENT_ALIASES.items() if any(_phrase_in(p, q) for p in phrases)}
-    if specific:
-        return specific
-    generic: set[str] = set()
-    for phrase, names in GENERIC_ALIASES.items():
-        if _phrase_in(phrase, q):
-            generic.update(names)
-    return generic
 
 
 def _lead_time(chunks: list) -> tuple[int, bool]:
@@ -215,11 +192,27 @@ def _lead_time(chunks: list) -> tuple[int, bool]:
     return (max(values), False) if values else (DEFAULT_LEAD_TIME_DAYS, True)
 
 
+def lift_for(event: Event, category: str, text: str) -> float:
+    """
+    Peak lift the event gives ONE product (category + name/tags text): max over matching rows of the
+    lift table, the same rule the synthetic data generator uses (hero-flag boost not applied). 1.0 = none.
+    """
+    best = 1.0
+    category = (category or "").lower()
+    text = (text or "").lower()
+    for lift_cat, pattern, mult in event.lifts:
+        if lift_cat != category:
+            continue
+        if pattern is not None and not pattern.search(text):
+            continue
+        best = max(best, mult)
+    return best
+
+
 def _multiplier(event: Event, chunks: list) -> float:
     """
-    Expected peak lift for the retrieved products, from the same lift table the generator uses
-    (category rows, plus keyword rows when a product's name/tags match). 1.0 = no lift.
-    With no products to look at, the event's overall peak is returned.
+    Expected peak lift for the retrieved products (max over products). With no products to look at,
+    the event's overall peak is returned. 1.0 = no lift.
     """
     if not event.lifts:
         return 1.0
@@ -227,14 +220,9 @@ def _multiplier(event: Event, chunks: list) -> float:
         return round(max(m for _, _, m in event.lifts), 2)
     best = 1.0
     for chunk in chunks:
-        category = str(_chunk_field(chunk, "category") or "").lower()
-        text = " ".join(str(_chunk_field(chunk, k) or "") for k in ("name_en", "tags_en")).lower()
-        for lift_cat, pattern, mult in event.lifts:
-            if lift_cat != category:
-                continue
-            if pattern is not None and not pattern.search(text):
-                continue
-            best = max(best, mult)
+        category = str(_chunk_field(chunk, "category") or "")
+        text = " ".join(str(_chunk_field(chunk, k) or "") for k in ("name_en", "tags_en"))
+        best = max(best, lift_for(event, category, text))
     return round(best, 2)
 
 
@@ -280,6 +268,50 @@ def _order_phrase(d: dict) -> str:
     return f"order-by {d['order_by']} ({n} days left)"
 
 
+# ── event selection (shared with the event-candidates node) ──────────────────
+
+def pick_event(query: str, chunks: list, today: date, lead_days: int, force_name: str | None = None):
+    """
+    Choose the event to talk about. force_name (the event the candidates node already planned for)
+    wins over the query text, so both nodes always talk about the same event.
+
+    Returns (event, others, named, notes):
+      event   the Event, or None when nothing relevant is in the horizon
+      others  runner-up descriptions (dicts), strongest/soonest first
+      named   calendar event names found in the query (set, may be empty)
+      notes   trace lines explaining a fallback decision
+    """
+    events, _source = _load_events()
+    named = {force_name} if force_name else (named_event_names(query) if query else set())
+    notes: list[str] = []
+
+    if named:
+        horizon_end = today + timedelta(days=NAMED_EVENT_HORIZON_DAYS)
+        matches = [e for e in events if e.name in named and e.end >= today and e.start <= horizon_end]
+        if matches:
+            return matches[0], [], named, notes
+        notes.append(f"Seasonality: query names {sorted(named)} but no occurrence within "
+                     f"{NAMED_EVENT_HORIZON_DAYS} days in the calendar; falling back to the next relevant event")
+
+    horizon_end = today + timedelta(days=HORIZON_DAYS)
+    scored = []
+    for e in events:
+        if e.end >= today and e.start <= horizon_end:
+            d = _describe(e, today, chunks, lead_days)
+            if d["multiplier"] >= MIN_LIFT:
+                scored.append((e, d))
+    # Ranking: a long-running season (e.g. Summer) must not hide a sharper event about to start, and a
+    # mild event (1.2x) must not outrank a strong one (2.6x) just because it starts a few days earlier.
+    scored.sort(key=lambda ed: (
+        ed[1]["ongoing"] and (ed[0].end - ed[0].start).days > BACKGROUND_EVENT_DAYS,
+        ed[1]["multiplier"] < STRONG_LIFT,
+        ed[0].start,
+    ))
+    if not scored:
+        return None, [], named, notes
+    return scored[0][0], [d for _, d in scored[1:1 + OTHER_EVENTS_SHOWN]], named, notes
+
+
 # ── node ──────────────────────────────────────────────────────────────────────
 
 async def seasonality_check_node(state: AgentState) -> dict:
@@ -291,7 +323,7 @@ async def seasonality_check_node(state: AgentState) -> dict:
     """
     today = _today()
     chunks = list(state.get("retrieved_chunks", []))
-    events, source = _load_events()
+    _events, source = _load_events()
     lead_days, lead_assumed = _lead_time(chunks)
     query = _query_text(state)
     trace: list[str] = []
@@ -299,34 +331,10 @@ async def seasonality_check_node(state: AgentState) -> dict:
     if source != "calendar":
         trace.append("Seasonality: calendar file not found; using the static fallback table (dates may be stale)")
 
-    named = _named_event_names(query) if query else set()
-    primary: dict | None = None
-    others: list[dict] = []
-
-    if named:
-        horizon_end = today + timedelta(days=NAMED_EVENT_HORIZON_DAYS)
-        matches = [e for e in events if e.name in named and e.end >= today and e.start <= horizon_end]
-        if matches:
-            primary = _describe(matches[0], today, chunks, lead_days)
-        else:
-            trace.append(f"Seasonality: query names {sorted(named)} but no occurrence within "
-                         f"{NAMED_EVENT_HORIZON_DAYS} days in the calendar; falling back to the next relevant event")
-
-    if primary is None:
-        horizon_end = today + timedelta(days=HORIZON_DAYS)
-        candidates = [_describe(e, today, chunks, lead_days) for e in events
-                      if e.end >= today and e.start <= horizon_end]
-        candidates = [c for c in candidates if c["multiplier"] >= MIN_LIFT]
-        # Ranking: a long-running season (e.g. Summer) must not hide a sharper event about to start, and a
-        # mild event (1.2x) must not outrank a strong one (2.6x) just because it starts a few days earlier.
-        candidates.sort(key=lambda c: (
-            c["ongoing"] and (date.fromisoformat(c["end"]) - date.fromisoformat(c["start"])).days
-            > BACKGROUND_EVENT_DAYS,
-            c["multiplier"] < STRONG_LIFT,
-            c["start"],
-        ))
-        if candidates:
-            primary, others = candidates[0], candidates[1:1 + OTHER_EVENTS_SHOWN]
+    planned = next((c.get("event_name") for c in chunks if c.get("event_name")), None)
+    event, others, named, notes = pick_event(query, chunks, today, lead_days, force_name=planned)
+    trace.extend(notes)
+    primary = _describe(event, today, chunks, lead_days) if event else None
 
     if primary is None:
         signal = SeasonalitySignal(

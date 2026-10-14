@@ -4,6 +4,8 @@
 # Versions pinned for reproducibility (minor version locked). Review quarterly.
 # NOTE: torch is NOT listed here. The Dockerfile installs the CPU-only build first
 # (no GPU on the target hosts), so sentence-transformers does not pull the CUDA build.
+# Local development runs newer packages than these pins (Python 3.14, langgraph 1.x);
+# the container (Python 3.12, langgraph 0.2.4) is the reference environment: run the tests there.
 
 # ── Core ML / Embeddings ──────────────────────────────────────────────────
 sentence-transformers==3.0.1        # multilingual-e5-large embedding model
@@ -15,10 +17,11 @@ chromadb==0.5.3                     # Embedded persistent vector store
 langchain==0.2.14
 langchain-community==0.2.12
 langchain-groq==0.1.9
-langgraph==0.2.4                    # Agentic reasoning loop (local tests ran on 1.x; see tests in container)
+langgraph==0.2.4                    # Agentic reasoning loop (graph uses add_conditional_edges(START, ...))
 
 # ── LLM Provider ──────────────────────────────────────────────────────────
-groq==0.11.0                        # Llama 3.1 inference (free tier)
+groq==0.11.0                        # Groq client (free tier). Model comes from the GROQ_MODEL env var
+                                    # (default openai/gpt-oss-20b); Groq retires models, so never hard-code it.
 
 # ── Forecasting ───────────────────────────────────────────────────────────
 # prophet==1.1.5                    # Disabled until the forecasting node imports it (heavy install)

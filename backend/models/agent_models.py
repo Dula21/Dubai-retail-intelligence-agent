@@ -59,7 +59,19 @@ class RetrievedProductResponse(BaseModel):
     product_name_en: str
     product_name_ar: str
     category: str
-    relevance_score: float = Field(ge=0.0, le=1.0)
+    relevance_score: Optional[float] = Field(
+        None, ge=0.0, le=1.0,
+        description="Vector-similarity score. null when the product was chosen by the calendar "
+                    "(selection_basis = calendar_lift): there is no similarity to report",
+    )
+    selection_basis: str = Field(
+        "similarity",
+        description="How this product was chosen: similarity (vector search) | calendar_lift "
+                    "(event-planning route, from the synthetic calendar lift table)",
+    )
+    event_lift: Optional[float] = Field(
+        None, description="Expected demand multiplier from the calendar lift table (calendar_lift only)",
+    )
 
 
 class SeasonalityResponse(BaseModel):
@@ -80,8 +92,9 @@ class AgentQueryResponse(BaseModel):
     It is what makes the system explainable to a retailer asking
     "why did you tell me to reorder 200 units?"
 
-    confidence: composite score (0.0–1.0). Below 0.5 should be treated
-    as indicative rather than definitive by the caller.
+    confidence: data-coverage score (0.0–1.0), not a calibrated probability. Below 0.5 should be
+    treated as indicative rather than definitive by the caller. On the event-planning route it
+    never reaches 1.0 (SKUs are chosen from a synthetic lift table, not retrieved by similarity).
     """
     # Core outputs
     recommendation: Optional[str] = Field(
@@ -123,7 +136,7 @@ class AgentQueryResponse(BaseModel):
     )
     intent: str = Field(
         "search",
-        description="Classified query intent: reorder | analysis | search | trend",
+        description="Classified query intent: reorder | analysis | search | trend | event_planning",
     )
 
 

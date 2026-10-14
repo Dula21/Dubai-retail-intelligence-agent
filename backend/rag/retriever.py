@@ -30,9 +30,11 @@ often more impressive than saying you used it.
 from __future__ import annotations
 
 import csv
+import hashlib
 import json
 import os
 import time
+from datetime import date, timedelta
 from typing import Any, Optional
 
 try:
@@ -110,12 +112,22 @@ class RetailCatalogueLoader:
         if self._sales_index is not None:
             return self._sales_index
 
-        if not self.sales_path or not os.path.exists(self.sales_path):
+        if not self.sales_path:
+            # Not an error: the sales node reads the sales CSV itself, so retrieval results carry no
+            # sales context unless a path is passed in.
+            logger.debug("sales_enrichment_disabled", reason="no sales_path given")
+            return {}
+        if not os.path.exists(self.sales_path):
             logger.warning("sales_file_not_found", path=self.sales_path)
             return {}
 
         rows = load_csv(self.sales_path)
         index: dict[str, dict] = {}
+        # "Last 30 days" is relative to the newest date IN THE DATA, not a hard-coded date
+        # (the old fixed cutoff silently turned into a 80+ day window as the data moved on).
+        newest = max((r["date"] for r in rows), default=None)
+        cutoff = ((date.fromisoformat(newest[:10]) - timedelta(days=30)).isoformat()
+                  if newest else "9999-12-31")
 
         for row in rows:
             sku_id = row["sku_id"]
@@ -138,8 +150,7 @@ class RetailCatalogueLoader:
             idx["stockout_days"] += int(row.get("stockout_occurred", 0))
             idx["all_dates"].append(date_s)
 
-            # Approximate last-30-day: dates after 2026-07-15
-            if date_s >= "2026-07-15":
+            if date_s >= cutoff:
                 idx["last_30d_units"] += units
 
         # Compute averages, clean up helper fields
@@ -165,7 +176,7 @@ class RetailVectorStore:
     Handles: ingestion, persistence, and confidence-gated query.
     """
 
-    COLLECTION_NAME = "dubai_retail_catalogue_v1"
+    COLLECTION_NAME = "dubai_retail_catalogue_v1"   # base name; the live collection is <base>_<fingerprint>
 
     def __init__(
         self,
@@ -176,6 +187,7 @@ class RetailVectorStore:
         self.persist_directory = persist_directory
         self.embedding_manager = embedding_manager or EmbeddingManager(config)
         self._collection = None
+        self._active_name = self.COLLECTION_NAME
 
     def _get_chroma_client(self):
         """Lazy-init ChromaDB client."""
@@ -191,7 +203,7 @@ class RetailVectorStore:
         if self._collection is None:
             client = self._get_chroma_client()
             self._collection = client.get_or_create_collection(
-                name=self.COLLECTION_NAME,
+                name=self._active_name,
                 # ENGINEERING NOTE: cosine distance for normalised embeddings.
                 # ChromaDB stores distance (1 - cosine), so we convert back
                 # in the retrieval step. Alternatively use "ip" (inner product)
@@ -201,6 +213,33 @@ class RetailVectorStore:
             )
         return self._collection
 
+    @staticmethod
+    def _fingerprint(chunks: list[dict]) -> str:
+        """Short hash of exactly what would be embedded (ids + texts): changes with the catalogue
+        content AND with the chunking strategy, so either one triggers a re-index."""
+        digest = hashlib.sha256()
+        for c in chunks:
+            digest.update(f"{c['doc_id']}\t{c['text']}\n".encode("utf-8"))
+        return digest.hexdigest()[:12]
+
+    def _prune_old_collections(self, keep: str) -> None:
+        """Delete this store's collections from earlier catalogues (stale indexes must not pile up)."""
+        client = self._get_chroma_client()
+        try:
+            listed = client.list_collections()
+        except Exception as exc:  # pragma: no cover - defensive: never fail startup over housekeeping
+            logger.warning("collection_prune_skipped", error=str(exc))
+            return
+        for item in listed:
+            # chromadb returns Collection objects in some versions and plain names in others
+            name = getattr(item, "name", item)
+            if isinstance(name, str) and name.startswith(self.COLLECTION_NAME) and name != keep:
+                try:
+                    client.delete_collection(name)
+                    logger.info("stale_collection_deleted", name=name)
+                except Exception as exc:  # pragma: no cover
+                    logger.warning("stale_collection_delete_failed", name=name, error=str(exc))
+
     def ingest_catalogue(
         self,
         catalogue_rows: list[dict],
@@ -208,38 +247,57 @@ class RetailVectorStore:
     ) -> int:
         """
         Embed and store the product catalogue in ChromaDB.
-        
+
         Args:
             catalogue_rows:  List of product dicts from RetailCatalogueLoader
-            force_reingest:  If True, drop existing collection and re-embed.
-                             Use when catalogue data changes significantly.
-        
+            force_reingest:  If True, drop the current collection and re-embed.
+
         Returns: Number of documents ingested.
-        
-        ENGINEERING NOTE: force_reingest=False is the default so that a
-        server restart doesn't trigger a ~2 minute re-embedding of 500 SKUs.
-        Redis will cache embeddings in Phase 2 for sub-second warm starts.
+
+        ENGINEERING DECISION: the collection name carries a fingerprint of the catalogue content.
+        Before: "any documents present" meant "ready". A persisted index of the old 300-SKU catalogue
+        was therefore accepted silently for a 500-SKU catalogue (found when container tests diverged
+        from local ones). Now a changed catalogue (or chunking) maps to a NEW collection name, so it is
+        re-indexed automatically and old collections are deleted. A collection whose document count
+        differs from the expected chunk count (an interrupted ingest) is rebuilt too.
+        Trade-off: any catalogue edit re-embeds everything (about 2 minutes for 500 SKUs on CPU). At
+        scale this becomes incremental upserts keyed by a per-SKU content hash.
         """
+        chunks = chunk_catalogue_for_embedding(catalogue_rows)
+        fingerprint = self._fingerprint(chunks)
+        self._active_name = f"{self.COLLECTION_NAME}_{fingerprint}"
+        self._collection = None   # re-resolve against the fingerprinted name
+        self._prune_old_collections(keep=self._active_name)
+
         if force_reingest:
-            client = self._get_chroma_client()
             try:
-                client.delete_collection(self.COLLECTION_NAME)
+                self._get_chroma_client().delete_collection(self._active_name)
             except Exception:
                 pass
-            self._collection = None  # Reset so it gets recreated
+            self._collection = None
 
-        # Check if already ingested
         existing_count = self.collection.count()
-        if existing_count > 0 and not force_reingest:
+        if existing_count == len(chunks) and not force_reingest:
             logger.info(
                 "vector_store_already_populated",
                 existing_docs=existing_count,
-                message="Skipping re-ingestion. Use force_reingest=True to rebuild.",
+                expected_docs=len(chunks),
+                fingerprint=fingerprint,
+                message="Index matches the catalogue. Skipping re-ingestion.",
             )
             return existing_count
-
-        chunks = chunk_catalogue_for_embedding(catalogue_rows)
-        
+        if existing_count > 0:
+            logger.warning(
+                "vector_store_incomplete_rebuilding",
+                existing_docs=existing_count,
+                expected_docs=len(chunks),
+                fingerprint=fingerprint,
+            )
+            try:
+                self._get_chroma_client().delete_collection(self._active_name)
+            except Exception:
+                pass
+            self._collection = None
         # Batch embed
         logger.info("embedding_catalogue", chunk_count=len(chunks))
         start = time.perf_counter()
