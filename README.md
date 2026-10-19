@@ -4,8 +4,8 @@
 > Aims to give sellers who cannot afford a dedicated merchandising manager an autonomous
 > merchandising layer: what to stock, when to order it, and why.
 
-**Status:** Phase 2 complete (LangGraph agentic loop, calendar-driven seasonality, event-planning route) · 178 tests passing
-**Stack:** LangGraph · LangChain · ChromaDB · multilingual-e5-large · Groq · FastAPI · Redis · Docker
+**Status:** Phase 2 complete (LangGraph agentic loop, calendar-driven seasonality, event-planning route) · 179 tests passing
+**Stack:** LangGraph · LangChain · ChromaDB · multilingual-e5-small · Groq · FastAPI · Redis · Docker
 **Wired, not yet used:** PostgreSQL (audit log, Phase 3) · **Planned:** Prophet forecasting (Phase 3)
 **Data:** Synthetic. 500 SKUs, daily sales history, a UAE retail calendar for 2024–2027. See [Dataset](#dataset).
 
@@ -34,7 +34,7 @@ API layer: language detection (Unicode Arabic ratio) + rule-based intent classif
    |         -> sales_analysis -> inventory_check -> seasonality_check -> recommendation
    |
    +-- everything else
-          rag_retrieval_node: multilingual-e5-large + ChromaDB, margin-gated
+          rag_retrieval_node: multilingual-e5-small + ChromaDB, margin-gated
              +-- low confidence -> fallback_node (no LLM) -> END
              +-- search / trend -> recommendation
              +-- reorder / analysis -> sales_analysis -> inventory_check -> seasonality_check -> recommendation
@@ -124,7 +124,8 @@ probability, and never reaches 1.0 on the planning route.
 The 0.72 cosine floor does not discriminate on this catalogue: 16 of 16 not-in-catalogue queries passed it
 (see `eval/RESULTS.md`). Routing uses the margin between the best product and the next *different* product (variants
 collapsed). Fallback needs both a small margin and the queried entity absent from the top results.
-*Limit:* the 0.01 threshold was read off the queries it was evaluated on; a held-out set is needed.
+The threshold is 0.015 for e5-small (it was 0.01 for e5-large; the smaller models give larger margins, so the same number catches fewer wrong results).
+*Limit:* the threshold was read off the queries it was evaluated on (59 Gulf queries plus 16 not-in-catalogue); a held-out set is needed.
 
 ### Field-type fallback split
 Factual fields (SKU counts, stock, prices) use a hard fallback: uncertain retrieval returns "insufficient data" and
@@ -137,8 +138,16 @@ two entry routes, are what make it an agent and not a fixed pipeline.
 ### TypedDict inside the graph, Pydantic at the API boundary
 Validation cost is justified where untrusted input arrives, not on every node transition.
 
-### multilingual-e5-large over separate Arabic and English models
-One shared embedding space lets an Arabic query find an English-tagged product. Trade-off: a ~2 GB model download.
+### One multilingual embedding model, sized by measurement (e5-small, not e5-large)
+One shared embedding space lets an Arabic query find an English-tagged product, so there is no per-language routing. Three sizes of the same family were measured on a 4-CPU Docker host:
+
+| Model | Gulf set top-1 (59) | Right product in top 3 | Embedding p50 | `/search` p95 |
+|---|---|---|---|---|
+| e5-large | 0.932 | 100% | 465 ms | 872 ms (misses the 500 ms target) |
+| e5-base | 0.864 | 96.6% | 177 ms | not measured end to end |
+| e5-small (chosen) | 0.864 | 96.6% | 35 ms | 76 ms |
+
+*Why small:* it meets both project targets (retrieval accuracy above 85%, catalogue query under 500 ms). *Trade-off:* about 7 points of top-1 accuracy on the Gulf set, mostly near-ties between neighbouring products, which the margin check and the partial-answer fallback are designed to catch. The 0.864 margin over the 85% target is thin on 59 synthetic queries. *Alternative kept in mind:* two models (small for search, large for the agent), rejected for now as more RAM, two indexes and more code for a small gain. Details in `eval/RESULTS.md`.
 
 ### ChromaDB over Pinecone
 Runs locally (relevant to UAE data-residency concerns) with built-in metadata filtering. Documented boundary: above
@@ -177,6 +186,24 @@ updates, an LRU eviction policy and Redis keys partitioned by product category.
 ### Known issues (open)
 - Lift multipliers are synthetic, not learned from history. Equal-lift SKUs are ranked by runway.
 - No order-quantity engine yet; confidence is not calibrated (Phase 3).
+- Agent answers that call the LLM take about 10 to 20 seconds (see Performance). Where that time goes has not been profiled per node yet.
+- The smaller embedding model costs about 7 points of top-1 accuracy on the Gulf set; the 85% target is met only narrowly.
+
+---
+
+## Performance
+
+Measured with `eval/measure_latency.py`: one client, sequential requests, client-side round trip, Docker on a 4-CPU laptop (no GPU), synthetic 500-SKU catalogue, e5-small.
+
+| Case | n | p50 | p95 |
+|---|---|---|---|
+| `/search`, 50 different English and Arabic queries (cold embedding) | 50 | 44 ms | 76 ms |
+| `/search`, same query repeated | 50 | 47 ms | 88 ms |
+| Agent, distinct questions (calls Groq) | 8 | 14.5 s | 20.6 s |
+| Agent, same question repeated (Redis hit) | 20 | 10 ms | 26 ms |
+
+Target: catalogue query p95 under 500 ms: **met** (76 ms). With e5-large the same test gave a p95 of 872 ms.
+Limits: `/search` has no cache of its own (repeat and distinct queries cost the same); agent numbers come from only 8 requests on the Groq free tier and vary a lot; p99 over 50 samples is effectively the slowest request. This is not a load test.
 
 ---
 
@@ -202,7 +229,7 @@ announced; the catalogue has no festival-specific products yet (diyas, sweet box
 
 ## Tests
 
-178 tests across: Phase 1 retrieval and data checks, synthetic-data invariants, real-CSV inventory checks, intent and
+179 tests across: Phase 1 retrieval and data checks, synthetic-data invariants, real-CSV inventory checks, intent and
 routing, calendar seasonality, the recommendation node (fake model client), the event-planning route end to end on real
 data, sales-event analysis, the API layer (null relevance for calendar-selected SKUs, cache version, health), the RAG
 node with the real retriever, the real-retriever smoke cases, and stale-index detection (fake embedder, real Chroma).

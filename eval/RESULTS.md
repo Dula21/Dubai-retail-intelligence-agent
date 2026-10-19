@@ -1,6 +1,6 @@
 # Bilingual retrieval evaluation (Dubai Retail Intelligence Agent)
 
-Date: 2026-10-05 (Phase 1) · Phase 2 section added 2026-10-14 · Baseline commit: `6fdc697` · Model: `intfloat/multilingual-e5-large` · Vector store: ChromaDB (cosine)
+Date: 2026-10-05 (Phase 1) · Phase 2 section added 2026-10-14 · Embedding-model section added 2026-10-19 · Baseline commit: `6fdc697` · Model for the Phase 1 results below: `intfloat/multilingual-e5-large` (production model is now e5-small, see the last results section) · Vector store: ChromaDB (cosine)
 
 > **Data transparency:** the catalogue and all queries are **synthetic**. No real retailer data or real user logs were used.
 > Queries were drafted with an AI assistant and have not been validated by native Gulf Arabic speakers.
@@ -107,11 +107,53 @@ Test status: 178 passed locally (Python 3.14) and 178 passed in the Docker image
 
 Not yet done: the lift table is synthetic; observed lift has not been compared with `ground_truth_demand.csv`; margin thresholds are still not validated on held-out data; no deterministic order-quantity engine; confidence is not calibrated.
 
+## Embedding model choice and latency (2026-10-19)
+
+**Question:** can `/search` meet the 500 ms target, and at what accuracy cost?
+**Method:** `eval/measure_latency.py` (end-to-end `/search` and agent latency), `eval/profile_embedding.py` (embedding step alone, inside the container), `eval/run_candidate_eval.py` (the Gulf and exact-name evals for another model, in its own index folder). Docker on a 4-CPU laptop, single client.
+
+### Latency: the embedding step is the bottleneck
+| Model | Embedding p50 / p95 | `/search` p50 / p95 (50 distinct queries) |
+|---|---|---|
+| e5-large | 465 / 1091 ms (n=20, 2 threads) | 502 / 872 ms (**target missed**) |
+| e5-base | 177 / 815 ms (n=40; noisy run) | not measured |
+| e5-small | 35 / 94 ms (n=40) | 44 / 76 ms (**target met**) |
+
+The server-reported time was 490 ms of a 502 ms round trip for e5-large, so almost all of the time was inside the search call. More CPU threads did not help on this host (1 thread: 1202 ms, 2: 465 ms, 4: 771 ms; noisy). A repeated query cost the same as a new one: `/search` has no cache.
+
+### Accuracy on the 59 Gulf-style queries (same queries, same method)
+| Model | top-1 all | Gulf (39) | code-switched (15) | spelling (5) | right product in top 3 | exact names, Arabic top-1 |
+|---|---|---|---|---|---|---|
+| e5-large | 0.932 (55/59) | 0.923 | 0.933 | 1.00 | 100% | 75/75 |
+| e5-base | 0.864 (51/59) | 0.872 | 0.800 | 1.00 | 96.6% | 74/75 |
+| e5-small | 0.864 (51/59) | 0.846 | 0.867 | 1.00 | 96.6% | not recorded |
+
+Base and small tie overall; differences between them are one query per group. The extra misses (versus large) are mostly near-ties between neighbouring products, for example `ملابس سباحة للمحجبات` (right product second by 0.005), plus cases where the right product fell out of the top 3 (`مخدات للمجلس` for both smaller models, `dates فاخر` for small, `سبيكر` for base).
+
+### Margin threshold must change with the model
+Margin to the next different product (variants collapsed). Correct n=55 for large, 51 for base and small; wrong or absent n=20 for large, 24 for the others, so the columns are not exactly comparable.
+
+| Rule | large: kept / caught | base: kept / caught | small: kept / caught |
+|---|---|---|---|
+| margin >= 0.01 | 0.78 / 0.90 | 0.82 / 0.71 | 0.82 / 0.67 |
+| margin >= 0.015 | 0.67 / 0.90 | 0.75 / 0.88 | 0.77 / 0.88 |
+
+Production threshold changed from 0.01 (large) to 0.015 (small). Same caveat as before: thresholds were read off the same queries; a held-out set is still needed. The 0.72 score floor still does not discriminate: all 16 not-in-catalogue queries passed it with e5-base as well.
+
+### Decision
+Switched production to **e5-small**: 13x faster at the median, meets both project targets (accuracy above 85%, catalogue query under 500 ms). Cost: about 7 points of top-1 on this sample; the 85% margin is thin on 59 synthetic queries. Rejected for now: two models (small for search, large for the agent) because of the extra RAM, two indexes and code; ONNX/int8 quantisation of e5-large (not tested); caching query embeddings (does not help the cold path).
+A bug found on the way: the index fingerprint did not include the model name, so switching models would have reused the old index. Fixed, with a test.
+
+### Agent latency (not improved by this change, and expected not to be)
+The agent path takes 10 to 20 seconds when it calls Groq (n=8 per run, free tier, large variation: median 9.8 s with e5-large, 14.5 s with e5-small; with 8 requests this is most likely run-to-run noise, since the agent does not spend its time in the embedding step). The embedding step was about 5% of it. Where the rest goes has not been profiled per node. A cached agent answer takes about 10 ms.
+
+Test status after the switch: 179 passed locally (Python 3.14).
+
 ## Limitations
 
 - Synthetic catalogue with 75 base products; no footwear, phones, TVs or laptops. Results do not transfer to a real, more diverse catalogue.
 - 59 queries is a small sample; queries are synthetic and not native-validated.
-- Phase 1 numbers are retrieval only. Latency (target under 500 ms on e5-large, CPU) has **not** been measured.
+- Phase 1 numbers are retrieval only and were measured with e5-large. Latency is now measured (see the embedding-model section); it is a single-client test on a 4-CPU laptop, not a load test.
 - Not tested: BGE-M3, a cross-encoder reranker, translate-query-to-English, Arabic normalisation of documents (only light normalisation inside BM25).
 - Confidence thresholds are not validated on held-out data.
 

@@ -1,0 +1,5713 @@
+{
+ "label": "multilingual-e5-base_baseline_v2",
+ "model": "intfloat/multilingual-e5-base",
+ "rows": [
+  {
+   "category": "fashion",
+   "en": "Summer Dress",
+   "ar": "فستان صيفي",
+   "relevant": [
+    "FSH-0001",
+    "FSH-0016",
+    "FSH-0031",
+    "FSH-0046",
+    "FSH-0061",
+    "FSH-0076",
+    "FSH-0091",
+    "FSH-0106"
+   ],
+   "hits": {
+    "en": [
+     [
+      "FSH-0001",
+      0.85,
+      "Summer Dress"
+     ],
+     [
+      "FSH-0031",
+      0.8491,
+      "Summer Dress Plus"
+     ],
+     [
+      "FSH-0076",
+      0.8486,
+      "Summer Dress 6"
+     ],
+     [
+      "FSH-0046",
+      0.8473,
+      "Summer Dress Premium"
+     ],
+     [
+      "FSH-0091",
+      0.8473,
+      "Summer Dress 7"
+     ]
+    ],
+    "ar": [
+     [
+      "FSH-0076",
+      0.8634,
+      "Summer Dress 6"
+     ],
+     [
+      "FSH-0091",
+      0.8624,
+      "Summer Dress 7"
+     ],
+     [
+      "FSH-0001",
+      0.8619,
+      "Summer Dress"
+     ],
+     [
+      "FSH-0106",
+      0.8612,
+      "Summer Dress 8"
+     ],
+     [
+      "FSH-0061",
+      0.8602,
+      "Summer Dress Lite"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "fashion",
+   "en": "Abaya Classic",
+   "ar": "عباءة كلاسيكية",
+   "relevant": [
+    "FSH-0002",
+    "FSH-0017",
+    "FSH-0032",
+    "FSH-0047",
+    "FSH-0062",
+    "FSH-0077",
+    "FSH-0092",
+    "FSH-0107"
+   ],
+   "hits": {
+    "en": [
+     [
+      "FSH-0047",
+      0.8596,
+      "Abaya Classic Premium"
+     ],
+     [
+      "FSH-0002",
+      0.8596,
+      "Abaya Classic"
+     ],
+     [
+      "FSH-0032",
+      0.8584,
+      "Abaya Classic Plus"
+     ],
+     [
+      "FSH-0017",
+      0.8583,
+      "Abaya Classic Pro"
+     ],
+     [
+      "FSH-0062",
+      0.8539,
+      "Abaya Classic Lite"
+     ]
+    ],
+    "ar": [
+     [
+      "FSH-0032",
+      0.8544,
+      "Abaya Classic Plus"
+     ],
+     [
+      "FSH-0002",
+      0.8519,
+      "Abaya Classic"
+     ],
+     [
+      "FSH-0107",
+      0.8494,
+      "Abaya Classic 8"
+     ],
+     [
+      "FSH-0062",
+      0.8476,
+      "Abaya Classic Lite"
+     ],
+     [
+      "FSH-0092",
+      0.8474,
+      "Abaya Classic 7"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "fashion",
+   "en": "Casual Jeans",
+   "ar": "جينز كاجوال",
+   "relevant": [
+    "FSH-0003",
+    "FSH-0018",
+    "FSH-0033",
+    "FSH-0048",
+    "FSH-0063",
+    "FSH-0078",
+    "FSH-0093",
+    "FSH-0108"
+   ],
+   "hits": {
+    "en": [
+     [
+      "FSH-0003",
+      0.8536,
+      "Casual Jeans"
+     ],
+     [
+      "FSH-0063",
+      0.8527,
+      "Casual Jeans Lite"
+     ],
+     [
+      "FSH-0048",
+      0.8517,
+      "Casual Jeans Premium"
+     ],
+     [
+      "FSH-0033",
+      0.8484,
+      "Casual Jeans Plus"
+     ],
+     [
+      "FSH-0108",
+      0.8481,
+      "Casual Jeans 8"
+     ]
+    ],
+    "ar": [
+     [
+      "FSH-0003",
+      0.8259,
+      "Casual Jeans"
+     ],
+     [
+      "FSH-0018",
+      0.8226,
+      "Casual Jeans Pro"
+     ],
+     [
+      "FSH-0033",
+      0.8197,
+      "Casual Jeans Plus"
+     ],
+     [
+      "FSH-0108",
+      0.8176,
+      "Casual Jeans 8"
+     ],
+     [
+      "FSH-0048",
+      0.8161,
+      "Casual Jeans Premium"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "fashion",
+   "en": "Linen Shirt",
+   "ar": "قميص كتان",
+   "relevant": [
+    "FSH-0004",
+    "FSH-0019",
+    "FSH-0034",
+    "FSH-0049",
+    "FSH-0064",
+    "FSH-0079",
+    "FSH-0094",
+    "FSH-0109"
+   ],
+   "hits": {
+    "en": [
+     [
+      "FSH-0004",
+      0.8576,
+      "Linen Shirt"
+     ],
+     [
+      "FSH-0064",
+      0.8538,
+      "Linen Shirt Lite"
+     ],
+     [
+      "FSH-0049",
+      0.8527,
+      "Linen Shirt Premium"
+     ],
+     [
+      "FSH-0019",
+      0.851,
+      "Linen Shirt Pro"
+     ],
+     [
+      "FSH-0034",
+      0.8497,
+      "Linen Shirt Plus"
+     ]
+    ],
+    "ar": [
+     [
+      "FSH-0004",
+      0.8643,
+      "Linen Shirt"
+     ],
+     [
+      "FSH-0064",
+      0.8625,
+      "Linen Shirt Lite"
+     ],
+     [
+      "FSH-0109",
+      0.8615,
+      "Linen Shirt 8"
+     ],
+     [
+      "FSH-0079",
+      0.8611,
+      "Linen Shirt 6"
+     ],
+     [
+      "FSH-0094",
+      0.8586,
+      "Linen Shirt 7"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "fashion",
+   "en": "Maxi Skirt",
+   "ar": "تنورة ماكسي",
+   "relevant": [
+    "FSH-0005",
+    "FSH-0020",
+    "FSH-0035",
+    "FSH-0050",
+    "FSH-0065",
+    "FSH-0080",
+    "FSH-0095",
+    "FSH-0110"
+   ],
+   "hits": {
+    "en": [
+     [
+      "FSH-0005",
+      0.871,
+      "Maxi Skirt"
+     ],
+     [
+      "FSH-0020",
+      0.8687,
+      "Maxi Skirt Pro"
+     ],
+     [
+      "FSH-0035",
+      0.8678,
+      "Maxi Skirt Plus"
+     ],
+     [
+      "FSH-0065",
+      0.8647,
+      "Maxi Skirt Lite"
+     ],
+     [
+      "FSH-0050",
+      0.8631,
+      "Maxi Skirt Premium"
+     ]
+    ],
+    "ar": [
+     [
+      "FSH-0035",
+      0.8726,
+      "Maxi Skirt Plus"
+     ],
+     [
+      "FSH-0050",
+      0.8688,
+      "Maxi Skirt Premium"
+     ],
+     [
+      "FSH-0020",
+      0.8682,
+      "Maxi Skirt Pro"
+     ],
+     [
+      "FSH-0110",
+      0.8676,
+      "Maxi Skirt 8"
+     ],
+     [
+      "FSH-0080",
+      0.8661,
+      "Maxi Skirt 6"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "fashion",
+   "en": "Kandura White",
+   "ar": "كندورة بيضاء",
+   "relevant": [
+    "FSH-0006",
+    "FSH-0021",
+    "FSH-0036",
+    "FSH-0051",
+    "FSH-0066",
+    "FSH-0081",
+    "FSH-0096",
+    "FSH-0111"
+   ],
+   "hits": {
+    "en": [
+     [
+      "FSH-0006",
+      0.841,
+      "Kandura White"
+     ],
+     [
+      "FSH-0051",
+      0.837,
+      "Kandura White Premium"
+     ],
+     [
+      "FSH-0021",
+      0.8366,
+      "Kandura White Pro"
+     ],
+     [
+      "FSH-0066",
+      0.8346,
+      "Kandura White Lite"
+     ],
+     [
+      "FSH-0111",
+      0.8322,
+      "Kandura White 8"
+     ]
+    ],
+    "ar": [
+     [
+      "FSH-0006",
+      0.8646,
+      "Kandura White"
+     ],
+     [
+      "FSH-0066",
+      0.8611,
+      "Kandura White Lite"
+     ],
+     [
+      "FSH-0051",
+      0.8606,
+      "Kandura White Premium"
+     ],
+     [
+      "FSH-0036",
+      0.8577,
+      "Kandura White Plus"
+     ],
+     [
+      "FSH-0021",
+      0.8564,
+      "Kandura White Pro"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "fashion",
+   "en": "Sports Leggings",
+   "ar": "ليغنز رياضي",
+   "relevant": [
+    "FSH-0007",
+    "FSH-0022",
+    "FSH-0037",
+    "FSH-0052",
+    "FSH-0067",
+    "FSH-0082",
+    "FSH-0097",
+    "FSH-0112"
+   ],
+   "hits": {
+    "en": [
+     [
+      "FSH-0067",
+      0.8722,
+      "Sports Leggings Lite"
+     ],
+     [
+      "FSH-0007",
+      0.8695,
+      "Sports Leggings"
+     ],
+     [
+      "FSH-0082",
+      0.8683,
+      "Sports Leggings 6"
+     ],
+     [
+      "FSH-0112",
+      0.866,
+      "Sports Leggings 8"
+     ],
+     [
+      "FSH-0037",
+      0.8653,
+      "Sports Leggings Plus"
+     ]
+    ],
+    "ar": [
+     [
+      "FSH-0007",
+      0.8499,
+      "Sports Leggings"
+     ],
+     [
+      "FSH-0037",
+      0.8496,
+      "Sports Leggings Plus"
+     ],
+     [
+      "FSH-0022",
+      0.8437,
+      "Sports Leggings Pro"
+     ],
+     [
+      "FSH-0112",
+      0.8433,
+      "Sports Leggings 8"
+     ],
+     [
+      "FSH-0082",
+      0.841,
+      "Sports Leggings 6"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "fashion",
+   "en": "Formal Blazer",
+   "ar": "بليزر رسمي",
+   "relevant": [
+    "FSH-0008",
+    "FSH-0023",
+    "FSH-0038",
+    "FSH-0053",
+    "FSH-0068",
+    "FSH-0083",
+    "FSH-0098",
+    "FSH-0113"
+   ],
+   "hits": {
+    "en": [
+     [
+      "FSH-0008",
+      0.87,
+      "Formal Blazer"
+     ],
+     [
+      "FSH-0023",
+      0.8674,
+      "Formal Blazer Pro"
+     ],
+     [
+      "FSH-0053",
+      0.8657,
+      "Formal Blazer Premium"
+     ],
+     [
+      "FSH-0113",
+      0.8632,
+      "Formal Blazer 8"
+     ],
+     [
+      "FSH-0068",
+      0.8624,
+      "Formal Blazer Lite"
+     ]
+    ],
+    "ar": [
+     [
+      "FSH-0023",
+      0.8612,
+      "Formal Blazer Pro"
+     ],
+     [
+      "FSH-0008",
+      0.8586,
+      "Formal Blazer"
+     ],
+     [
+      "FSH-0053",
+      0.8564,
+      "Formal Blazer Premium"
+     ],
+     [
+      "FSH-0038",
+      0.8537,
+      "Formal Blazer Plus"
+     ],
+     [
+      "FSH-0068",
+      0.8536,
+      "Formal Blazer Lite"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "fashion",
+   "en": "Beach Kaftan",
+   "ar": "كفتان شاطئي",
+   "relevant": [
+    "FSH-0009",
+    "FSH-0024",
+    "FSH-0039",
+    "FSH-0054",
+    "FSH-0069",
+    "FSH-0084",
+    "FSH-0099",
+    "FSH-0114"
+   ],
+   "hits": {
+    "en": [
+     [
+      "FSH-0009",
+      0.8826,
+      "Beach Kaftan"
+     ],
+     [
+      "FSH-0069",
+      0.8742,
+      "Beach Kaftan Lite"
+     ],
+     [
+      "FSH-0054",
+      0.873,
+      "Beach Kaftan Premium"
+     ],
+     [
+      "FSH-0099",
+      0.8722,
+      "Beach Kaftan 7"
+     ],
+     [
+      "FSH-0039",
+      0.8717,
+      "Beach Kaftan Plus"
+     ]
+    ],
+    "ar": [
+     [
+      "FSH-0009",
+      0.8778,
+      "Beach Kaftan"
+     ],
+     [
+      "FSH-0069",
+      0.8723,
+      "Beach Kaftan Lite"
+     ],
+     [
+      "FSH-0039",
+      0.8696,
+      "Beach Kaftan Plus"
+     ],
+     [
+      "FSH-0024",
+      0.8696,
+      "Beach Kaftan Pro"
+     ],
+     [
+      "FSH-0114",
+      0.8673,
+      "Beach Kaftan 8"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "fashion",
+   "en": "Winter Coat",
+   "ar": "معطف شتوي",
+   "relevant": [
+    "FSH-0010",
+    "FSH-0025",
+    "FSH-0040",
+    "FSH-0055",
+    "FSH-0070",
+    "FSH-0085",
+    "FSH-0100",
+    "FSH-0115"
+   ],
+   "hits": {
+    "en": [
+     [
+      "FSH-0010",
+      0.843,
+      "Winter Coat"
+     ],
+     [
+      "FSH-0055",
+      0.8392,
+      "Winter Coat Premium"
+     ],
+     [
+      "FSH-0115",
+      0.8377,
+      "Winter Coat 8"
+     ],
+     [
+      "FSH-0070",
+      0.8365,
+      "Winter Coat Lite"
+     ],
+     [
+      "FSH-0100",
+      0.8356,
+      "Winter Coat 7"
+     ]
+    ],
+    "ar": [
+     [
+      "FSH-0040",
+      0.8565,
+      "Winter Coat Plus"
+     ],
+     [
+      "FSH-0085",
+      0.8564,
+      "Winter Coat 6"
+     ],
+     [
+      "FSH-0010",
+      0.8532,
+      "Winter Coat"
+     ],
+     [
+      "FSH-0025",
+      0.852,
+      "Winter Coat Pro"
+     ],
+     [
+      "FSH-0115",
+      0.8511,
+      "Winter Coat 8"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "fashion",
+   "en": "Palazzo Pants",
+   "ar": "بنطال بالاتزو",
+   "relevant": [
+    "FSH-0011",
+    "FSH-0026",
+    "FSH-0041",
+    "FSH-0056",
+    "FSH-0071",
+    "FSH-0086",
+    "FSH-0101",
+    "FSH-0116"
+   ],
+   "hits": {
+    "en": [
+     [
+      "FSH-0086",
+      0.8264,
+      "Palazzo Pants 6"
+     ],
+     [
+      "FSH-0011",
+      0.8225,
+      "Palazzo Pants"
+     ],
+     [
+      "FSH-0056",
+      0.8204,
+      "Palazzo Pants Premium"
+     ],
+     [
+      "FSH-0101",
+      0.8189,
+      "Palazzo Pants 7"
+     ],
+     [
+      "FSH-0041",
+      0.8187,
+      "Palazzo Pants Plus"
+     ]
+    ],
+    "ar": [
+     [
+      "FSH-0011",
+      0.8703,
+      "Palazzo Pants"
+     ],
+     [
+      "FSH-0041",
+      0.8679,
+      "Palazzo Pants Plus"
+     ],
+     [
+      "FSH-0056",
+      0.8649,
+      "Palazzo Pants Premium"
+     ],
+     [
+      "FSH-0071",
+      0.8632,
+      "Palazzo Pants Lite"
+     ],
+     [
+      "FSH-0026",
+      0.8631,
+      "Palazzo Pants Pro"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "fashion",
+   "en": "Embroidered Abaya",
+   "ar": "عباءة مطرزة",
+   "relevant": [
+    "FSH-0012",
+    "FSH-0027",
+    "FSH-0042",
+    "FSH-0057",
+    "FSH-0072",
+    "FSH-0087",
+    "FSH-0102",
+    "FSH-0117"
+   ],
+   "hits": {
+    "en": [
+     [
+      "FSH-0012",
+      0.8718,
+      "Embroidered Abaya"
+     ],
+     [
+      "FSH-0057",
+      0.8708,
+      "Embroidered Abaya Premium"
+     ],
+     [
+      "FSH-0027",
+      0.8681,
+      "Embroidered Abaya Pro"
+     ],
+     [
+      "FSH-0072",
+      0.8679,
+      "Embroidered Abaya Lite"
+     ],
+     [
+      "FSH-0042",
+      0.8675,
+      "Embroidered Abaya Plus"
+     ]
+    ],
+    "ar": [
+     [
+      "FSH-0012",
+      0.8563,
+      "Embroidered Abaya"
+     ],
+     [
+      "FSH-0042",
+      0.8559,
+      "Embroidered Abaya Plus"
+     ],
+     [
+      "FSH-0057",
+      0.8508,
+      "Embroidered Abaya Premium"
+     ],
+     [
+      "FSH-0027",
+      0.8499,
+      "Embroidered Abaya Pro"
+     ],
+     [
+      "FSH-0102",
+      0.8472,
+      "Embroidered Abaya 7"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "fashion",
+   "en": "Denim Jacket",
+   "ar": "جاكيت جينز",
+   "relevant": [
+    "FSH-0013",
+    "FSH-0028",
+    "FSH-0043",
+    "FSH-0058",
+    "FSH-0073",
+    "FSH-0088",
+    "FSH-0103",
+    "FSH-0118"
+   ],
+   "hits": {
+    "en": [
+     [
+      "FSH-0013",
+      0.8586,
+      "Denim Jacket"
+     ],
+     [
+      "FSH-0058",
+      0.8553,
+      "Denim Jacket Premium"
+     ],
+     [
+      "FSH-0073",
+      0.8536,
+      "Denim Jacket Lite"
+     ],
+     [
+      "FSH-0103",
+      0.8525,
+      "Denim Jacket 7"
+     ],
+     [
+      "FSH-0118",
+      0.8509,
+      "Denim Jacket 8"
+     ]
+    ],
+    "ar": [
+     [
+      "FSH-0013",
+      0.8111,
+      "Denim Jacket"
+     ],
+     [
+      "FSH-0028",
+      0.8081,
+      "Denim Jacket Pro"
+     ],
+     [
+      "FSH-0103",
+      0.8062,
+      "Denim Jacket 7"
+     ],
+     [
+      "FSH-0043",
+      0.8038,
+      "Denim Jacket Plus"
+     ],
+     [
+      "FSH-0073",
+      0.8037,
+      "Denim Jacket Lite"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "fashion",
+   "en": "Printed T-Shirt",
+   "ar": "تيشيرت مطبوع",
+   "relevant": [
+    "FSH-0014",
+    "FSH-0029",
+    "FSH-0044",
+    "FSH-0059",
+    "FSH-0074",
+    "FSH-0089",
+    "FSH-0104",
+    "FSH-0119"
+   ],
+   "hits": {
+    "en": [
+     [
+      "FSH-0014",
+      0.8622,
+      "Printed T-Shirt"
+     ],
+     [
+      "FSH-0029",
+      0.8605,
+      "Printed T-Shirt Pro"
+     ],
+     [
+      "FSH-0074",
+      0.8589,
+      "Printed T-Shirt Lite"
+     ],
+     [
+      "FSH-0059",
+      0.8568,
+      "Printed T-Shirt Premium"
+     ],
+     [
+      "FSH-0044",
+      0.8567,
+      "Printed T-Shirt Plus"
+     ]
+    ],
+    "ar": [
+     [
+      "FSH-0014",
+      0.8557,
+      "Printed T-Shirt"
+     ],
+     [
+      "FSH-0044",
+      0.8541,
+      "Printed T-Shirt Plus"
+     ],
+     [
+      "FSH-0029",
+      0.853,
+      "Printed T-Shirt Pro"
+     ],
+     [
+      "FSH-0059",
+      0.8526,
+      "Printed T-Shirt Premium"
+     ],
+     [
+      "FSH-0074",
+      0.8518,
+      "Printed T-Shirt Lite"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "fashion",
+   "en": "Modest Swimwear",
+   "ar": "مايو محتشم",
+   "relevant": [
+    "FSH-0015",
+    "FSH-0030",
+    "FSH-0045",
+    "FSH-0060",
+    "FSH-0075",
+    "FSH-0090",
+    "FSH-0105",
+    "FSH-0120"
+   ],
+   "hits": {
+    "en": [
+     [
+      "FSH-0075",
+      0.8671,
+      "Modest Swimwear Lite"
+     ],
+     [
+      "FSH-0030",
+      0.8656,
+      "Modest Swimwear Pro"
+     ],
+     [
+      "FSH-0015",
+      0.8655,
+      "Modest Swimwear"
+     ],
+     [
+      "FSH-0090",
+      0.8596,
+      "Modest Swimwear 6"
+     ],
+     [
+      "FSH-0120",
+      0.859,
+      "Modest Swimwear 8"
+     ]
+    ],
+    "ar": [
+     [
+      "FSH-0015",
+      0.8332,
+      "Modest Swimwear"
+     ],
+     [
+      "FSH-0060",
+      0.8331,
+      "Modest Swimwear Premium"
+     ],
+     [
+      "FSH-0045",
+      0.8326,
+      "Modest Swimwear Plus"
+     ],
+     [
+      "FSH-0030",
+      0.8326,
+      "Modest Swimwear Pro"
+     ],
+     [
+      "FSH-0120",
+      0.8287,
+      "Modest Swimwear 8"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "electronics",
+   "en": "Wireless Earbuds",
+   "ar": "سماعات لاسلكية",
+   "relevant": [
+    "ELC-0121",
+    "ELC-0136",
+    "ELC-0151",
+    "ELC-0166",
+    "ELC-0181",
+    "ELC-0196",
+    "ELC-0211"
+   ],
+   "hits": {
+    "en": [
+     [
+      "ELC-0121",
+      0.8627,
+      "Wireless Earbuds"
+     ],
+     [
+      "ELC-0166",
+      0.8614,
+      "Wireless Earbuds Premium"
+     ],
+     [
+      "ELC-0136",
+      0.8606,
+      "Wireless Earbuds Pro"
+     ],
+     [
+      "ELC-0151",
+      0.8599,
+      "Wireless Earbuds Plus"
+     ],
+     [
+      "ELC-0211",
+      0.8553,
+      "Wireless Earbuds 7"
+     ]
+    ],
+    "ar": [
+     [
+      "ELC-0211",
+      0.8565,
+      "Wireless Earbuds 7"
+     ],
+     [
+      "ELC-0181",
+      0.853,
+      "Wireless Earbuds Lite"
+     ],
+     [
+      "ELC-0196",
+      0.8524,
+      "Wireless Earbuds 6"
+     ],
+     [
+      "ELC-0151",
+      0.8517,
+      "Wireless Earbuds Plus"
+     ],
+     [
+      "ELC-0121",
+      0.8503,
+      "Wireless Earbuds"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "electronics",
+   "en": "Power Bank 20000mAh",
+   "ar": "بطارية محمولة",
+   "relevant": [
+    "ELC-0122",
+    "ELC-0137",
+    "ELC-0152",
+    "ELC-0167",
+    "ELC-0182",
+    "ELC-0197",
+    "ELC-0212"
+   ],
+   "hits": {
+    "en": [
+     [
+      "ELC-0122",
+      0.8915,
+      "Power Bank 20000mAh"
+     ],
+     [
+      "ELC-0167",
+      0.8894,
+      "Power Bank 20000mAh Premium"
+     ],
+     [
+      "ELC-0152",
+      0.8874,
+      "Power Bank 20000mAh Plus"
+     ],
+     [
+      "ELC-0137",
+      0.887,
+      "Power Bank 20000mAh Pro"
+     ],
+     [
+      "ELC-0197",
+      0.8853,
+      "Power Bank 20000mAh 6"
+     ]
+    ],
+    "ar": [
+     [
+      "ELC-0152",
+      0.8618,
+      "Power Bank 20000mAh Plus"
+     ],
+     [
+      "ELC-0122",
+      0.8596,
+      "Power Bank 20000mAh"
+     ],
+     [
+      "ELC-0137",
+      0.859,
+      "Power Bank 20000mAh Pro"
+     ],
+     [
+      "ELC-0167",
+      0.8575,
+      "Power Bank 20000mAh Premium"
+     ],
+     [
+      "ELC-0182",
+      0.8569,
+      "Power Bank 20000mAh Lite"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "electronics",
+   "en": "Smart Watch",
+   "ar": "ساعة ذكية",
+   "relevant": [
+    "ELC-0123",
+    "ELC-0138",
+    "ELC-0153",
+    "ELC-0168",
+    "ELC-0183",
+    "ELC-0198",
+    "ELC-0213"
+   ],
+   "hits": {
+    "en": [
+     [
+      "ELC-0138",
+      0.8474,
+      "Smart Watch Pro"
+     ],
+     [
+      "ELC-0153",
+      0.8472,
+      "Smart Watch Plus"
+     ],
+     [
+      "ELC-0123",
+      0.8467,
+      "Smart Watch"
+     ],
+     [
+      "ELC-0168",
+      0.8459,
+      "Smart Watch Premium"
+     ],
+     [
+      "ELC-0198",
+      0.8459,
+      "Smart Watch 6"
+     ]
+    ],
+    "ar": [
+     [
+      "ELC-0213",
+      0.8752,
+      "Smart Watch 7"
+     ],
+     [
+      "ELC-0138",
+      0.8748,
+      "Smart Watch Pro"
+     ],
+     [
+      "ELC-0153",
+      0.8746,
+      "Smart Watch Plus"
+     ],
+     [
+      "ELC-0198",
+      0.874,
+      "Smart Watch 6"
+     ],
+     [
+      "ELC-0123",
+      0.874,
+      "Smart Watch"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "electronics",
+   "en": "Bluetooth Speaker",
+   "ar": "مكبر صوت بلوتوث",
+   "relevant": [
+    "ELC-0124",
+    "ELC-0139",
+    "ELC-0154",
+    "ELC-0169",
+    "ELC-0184",
+    "ELC-0199",
+    "ELC-0214"
+   ],
+   "hits": {
+    "en": [
+     [
+      "ELC-0154",
+      0.8556,
+      "Bluetooth Speaker Plus"
+     ],
+     [
+      "ELC-0184",
+      0.8536,
+      "Bluetooth Speaker Lite"
+     ],
+     [
+      "ELC-0139",
+      0.8514,
+      "Bluetooth Speaker Pro"
+     ],
+     [
+      "ELC-0124",
+      0.851,
+      "Bluetooth Speaker"
+     ],
+     [
+      "ELC-0169",
+      0.8509,
+      "Bluetooth Speaker Premium"
+     ]
+    ],
+    "ar": [
+     [
+      "ELC-0154",
+      0.8947,
+      "Bluetooth Speaker Plus"
+     ],
+     [
+      "ELC-0169",
+      0.8914,
+      "Bluetooth Speaker Premium"
+     ],
+     [
+      "ELC-0139",
+      0.8887,
+      "Bluetooth Speaker Pro"
+     ],
+     [
+      "ELC-0124",
+      0.8886,
+      "Bluetooth Speaker"
+     ],
+     [
+      "ELC-0199",
+      0.8871,
+      "Bluetooth Speaker 6"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "electronics",
+   "en": "USB-C Hub",
+   "ar": "محور USB-C",
+   "relevant": [
+    "ELC-0125",
+    "ELC-0140",
+    "ELC-0155",
+    "ELC-0170",
+    "ELC-0185",
+    "ELC-0200",
+    "ELC-0215"
+   ],
+   "hits": {
+    "en": [
+     [
+      "ELC-0125",
+      0.8649,
+      "USB-C Hub"
+     ],
+     [
+      "ELC-0170",
+      0.864,
+      "USB-C Hub Premium"
+     ],
+     [
+      "ELC-0140",
+      0.8627,
+      "USB-C Hub Pro"
+     ],
+     [
+      "ELC-0215",
+      0.8623,
+      "USB-C Hub 7"
+     ],
+     [
+      "ELC-0155",
+      0.8606,
+      "USB-C Hub Plus"
+     ]
+    ],
+    "ar": [
+     [
+      "ELC-0170",
+      0.8849,
+      "USB-C Hub Premium"
+     ],
+     [
+      "ELC-0125",
+      0.8834,
+      "USB-C Hub"
+     ],
+     [
+      "ELC-0200",
+      0.8805,
+      "USB-C Hub 6"
+     ],
+     [
+      "ELC-0140",
+      0.8799,
+      "USB-C Hub Pro"
+     ],
+     [
+      "ELC-0215",
+      0.8786,
+      "USB-C Hub 7"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "electronics",
+   "en": "Phone Case Premium",
+   "ar": "كفر جوال فاخر",
+   "relevant": [
+    "ELC-0126",
+    "ELC-0141",
+    "ELC-0156",
+    "ELC-0171",
+    "ELC-0186",
+    "ELC-0201",
+    "ELC-0216"
+   ],
+   "hits": {
+    "en": [
+     [
+      "ELC-0141",
+      0.8813,
+      "Phone Case Premium Pro"
+     ],
+     [
+      "ELC-0171",
+      0.8793,
+      "Phone Case Premium Premium"
+     ],
+     [
+      "ELC-0156",
+      0.8761,
+      "Phone Case Premium Plus"
+     ],
+     [
+      "ELC-0126",
+      0.8736,
+      "Phone Case Premium"
+     ],
+     [
+      "ELC-0186",
+      0.8717,
+      "Phone Case Premium Lite"
+     ]
+    ],
+    "ar": [
+     [
+      "ELC-0156",
+      0.8367,
+      "Phone Case Premium Plus"
+     ],
+     [
+      "ELC-0201",
+      0.8348,
+      "Phone Case Premium 6"
+     ],
+     [
+      "ELC-0216",
+      0.8335,
+      "Phone Case Premium 7"
+     ],
+     [
+      "ELC-0141",
+      0.8335,
+      "Phone Case Premium Pro"
+     ],
+     [
+      "ELC-0126",
+      0.8325,
+      "Phone Case Premium"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "electronics",
+   "en": "Ring Light",
+   "ar": "إضاءة حلقية",
+   "relevant": [
+    "ELC-0127",
+    "ELC-0142",
+    "ELC-0157",
+    "ELC-0172",
+    "ELC-0187",
+    "ELC-0202",
+    "ELC-0217"
+   ],
+   "hits": {
+    "en": [
+     [
+      "ELC-0127",
+      0.8543,
+      "Ring Light"
+     ],
+     [
+      "ELC-0187",
+      0.8514,
+      "Ring Light Lite"
+     ],
+     [
+      "ELC-0157",
+      0.8472,
+      "Ring Light Plus"
+     ],
+     [
+      "ELC-0142",
+      0.8471,
+      "Ring Light Pro"
+     ],
+     [
+      "ELC-0172",
+      0.8463,
+      "Ring Light Premium"
+     ]
+    ],
+    "ar": [
+     [
+      "ELC-0187",
+      0.8454,
+      "Ring Light Lite"
+     ],
+     [
+      "ELC-0217",
+      0.8446,
+      "Ring Light 7"
+     ],
+     [
+      "ELC-0127",
+      0.8442,
+      "Ring Light"
+     ],
+     [
+      "ELC-0157",
+      0.8442,
+      "Ring Light Plus"
+     ],
+     [
+      "ELC-0202",
+      0.844,
+      "Ring Light 6"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "electronics",
+   "en": "Laptop Stand",
+   "ar": "حامل لابتوب",
+   "relevant": [
+    "ELC-0128",
+    "ELC-0143",
+    "ELC-0158",
+    "ELC-0173",
+    "ELC-0188",
+    "ELC-0203",
+    "ELC-0218"
+   ],
+   "hits": {
+    "en": [
+     [
+      "ELC-0143",
+      0.8621,
+      "Laptop Stand Pro"
+     ],
+     [
+      "ELC-0128",
+      0.8602,
+      "Laptop Stand"
+     ],
+     [
+      "ELC-0218",
+      0.8556,
+      "Laptop Stand 7"
+     ],
+     [
+      "ELC-0188",
+      0.8553,
+      "Laptop Stand Lite"
+     ],
+     [
+      "ELC-0173",
+      0.8551,
+      "Laptop Stand Premium"
+     ]
+    ],
+    "ar": [
+     [
+      "ELC-0158",
+      0.8527,
+      "Laptop Stand Plus"
+     ],
+     [
+      "ELC-0128",
+      0.8522,
+      "Laptop Stand"
+     ],
+     [
+      "ELC-0188",
+      0.8519,
+      "Laptop Stand Lite"
+     ],
+     [
+      "ELC-0143",
+      0.8515,
+      "Laptop Stand Pro"
+     ],
+     [
+      "ELC-0203",
+      0.8509,
+      "Laptop Stand 6"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "electronics",
+   "en": "Webcam HD",
+   "ar": "كاميرا ويب",
+   "relevant": [
+    "ELC-0129",
+    "ELC-0144",
+    "ELC-0159",
+    "ELC-0174",
+    "ELC-0189",
+    "ELC-0204",
+    "ELC-0219"
+   ],
+   "hits": {
+    "en": [
+     [
+      "ELC-0144",
+      0.8557,
+      "Webcam HD Pro"
+     ],
+     [
+      "ELC-0174",
+      0.8529,
+      "Webcam HD Premium"
+     ],
+     [
+      "ELC-0159",
+      0.8519,
+      "Webcam HD Plus"
+     ],
+     [
+      "ELC-0129",
+      0.8502,
+      "Webcam HD"
+     ],
+     [
+      "ELC-0219",
+      0.8481,
+      "Webcam HD 7"
+     ]
+    ],
+    "ar": [
+     [
+      "ELC-0174",
+      0.8634,
+      "Webcam HD Premium"
+     ],
+     [
+      "ELC-0144",
+      0.8613,
+      "Webcam HD Pro"
+     ],
+     [
+      "ELC-0204",
+      0.8599,
+      "Webcam HD 6"
+     ],
+     [
+      "ELC-0159",
+      0.8594,
+      "Webcam HD Plus"
+     ],
+     [
+      "ELC-0189",
+      0.8589,
+      "Webcam HD Lite"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "electronics",
+   "en": "Wireless Charger",
+   "ar": "شاحن لاسلكي",
+   "relevant": [
+    "ELC-0130",
+    "ELC-0145",
+    "ELC-0160",
+    "ELC-0175",
+    "ELC-0190",
+    "ELC-0205",
+    "ELC-0220"
+   ],
+   "hits": {
+    "en": [
+     [
+      "ELC-0145",
+      0.8671,
+      "Wireless Charger Pro"
+     ],
+     [
+      "ELC-0130",
+      0.8664,
+      "Wireless Charger"
+     ],
+     [
+      "ELC-0160",
+      0.8657,
+      "Wireless Charger Plus"
+     ],
+     [
+      "ELC-0175",
+      0.8635,
+      "Wireless Charger Premium"
+     ],
+     [
+      "ELC-0220",
+      0.863,
+      "Wireless Charger 7"
+     ]
+    ],
+    "ar": [
+     [
+      "ELC-0205",
+      0.8572,
+      "Wireless Charger 6"
+     ],
+     [
+      "ELC-0220",
+      0.8541,
+      "Wireless Charger 7"
+     ],
+     [
+      "ELC-0160",
+      0.8539,
+      "Wireless Charger Plus"
+     ],
+     [
+      "ELC-0130",
+      0.8537,
+      "Wireless Charger"
+     ],
+     [
+      "ELC-0145",
+      0.8536,
+      "Wireless Charger Pro"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "electronics",
+   "en": "Portable Monitor",
+   "ar": "شاشة محمولة",
+   "relevant": [
+    "ELC-0131",
+    "ELC-0146",
+    "ELC-0161",
+    "ELC-0176",
+    "ELC-0191",
+    "ELC-0206"
+   ],
+   "hits": {
+    "en": [
+     [
+      "ELC-0146",
+      0.8615,
+      "Portable Monitor Pro"
+     ],
+     [
+      "ELC-0191",
+      0.8588,
+      "Portable Monitor Lite"
+     ],
+     [
+      "ELC-0161",
+      0.8563,
+      "Portable Monitor Plus"
+     ],
+     [
+      "ELC-0131",
+      0.8552,
+      "Portable Monitor"
+     ],
+     [
+      "ELC-0206",
+      0.8533,
+      "Portable Monitor 6"
+     ]
+    ],
+    "ar": [
+     [
+      "ELC-0146",
+      0.8573,
+      "Portable Monitor Pro"
+     ],
+     [
+      "ELC-0161",
+      0.8571,
+      "Portable Monitor Plus"
+     ],
+     [
+      "ELC-0131",
+      0.8563,
+      "Portable Monitor"
+     ],
+     [
+      "ELC-0206",
+      0.8556,
+      "Portable Monitor 6"
+     ],
+     [
+      "ELC-0191",
+      0.8526,
+      "Portable Monitor Lite"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "electronics",
+   "en": "Gaming Headset",
+   "ar": "سماعة جيمينج",
+   "relevant": [
+    "ELC-0132",
+    "ELC-0147",
+    "ELC-0162",
+    "ELC-0177",
+    "ELC-0192",
+    "ELC-0207"
+   ],
+   "hits": {
+    "en": [
+     [
+      "ELC-0192",
+      0.8587,
+      "Gaming Headset Lite"
+     ],
+     [
+      "ELC-0132",
+      0.8572,
+      "Gaming Headset"
+     ],
+     [
+      "ELC-0162",
+      0.8564,
+      "Gaming Headset Plus"
+     ],
+     [
+      "ELC-0207",
+      0.8558,
+      "Gaming Headset 6"
+     ],
+     [
+      "ELC-0177",
+      0.8544,
+      "Gaming Headset Premium"
+     ]
+    ],
+    "ar": [
+     [
+      "ELC-0132",
+      0.8756,
+      "Gaming Headset"
+     ],
+     [
+      "ELC-0147",
+      0.8716,
+      "Gaming Headset Pro"
+     ],
+     [
+      "ELC-0162",
+      0.8706,
+      "Gaming Headset Plus"
+     ],
+     [
+      "ELC-0177",
+      0.8689,
+      "Gaming Headset Premium"
+     ],
+     [
+      "ELC-0192",
+      0.8668,
+      "Gaming Headset Lite"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "electronics",
+   "en": "Smart Plug",
+   "ar": "فيشة ذكية",
+   "relevant": [
+    "ELC-0133",
+    "ELC-0148",
+    "ELC-0163",
+    "ELC-0178",
+    "ELC-0193",
+    "ELC-0208"
+   ],
+   "hits": {
+    "en": [
+     [
+      "ELC-0148",
+      0.8464,
+      "Smart Plug Pro"
+     ],
+     [
+      "ELC-0178",
+      0.8382,
+      "Smart Plug Premium"
+     ],
+     [
+      "ELC-0133",
+      0.837,
+      "Smart Plug"
+     ],
+     [
+      "ELC-0163",
+      0.8356,
+      "Smart Plug Plus"
+     ],
+     [
+      "ELC-0208",
+      0.8352,
+      "Smart Plug 6"
+     ]
+    ],
+    "ar": [
+     [
+      "ELC-0163",
+      0.8556,
+      "Smart Plug Plus"
+     ],
+     [
+      "ELC-0193",
+      0.8537,
+      "Smart Plug Lite"
+     ],
+     [
+      "ELC-0178",
+      0.852,
+      "Smart Plug Premium"
+     ],
+     [
+      "ELC-0148",
+      0.8513,
+      "Smart Plug Pro"
+     ],
+     [
+      "ELC-0208",
+      0.8498,
+      "Smart Plug 6"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "electronics",
+   "en": "Action Camera",
+   "ar": "كاميرا أكشن",
+   "relevant": [
+    "ELC-0134",
+    "ELC-0149",
+    "ELC-0164",
+    "ELC-0179",
+    "ELC-0194",
+    "ELC-0209"
+   ],
+   "hits": {
+    "en": [
+     [
+      "ELC-0194",
+      0.842,
+      "Action Camera Lite"
+     ],
+     [
+      "ELC-0149",
+      0.8414,
+      "Action Camera Pro"
+     ],
+     [
+      "ELC-0179",
+      0.8399,
+      "Action Camera Premium"
+     ],
+     [
+      "ELC-0164",
+      0.8394,
+      "Action Camera Plus"
+     ],
+     [
+      "ELC-0209",
+      0.8381,
+      "Action Camera 6"
+     ]
+    ],
+    "ar": [
+     [
+      "ELC-0164",
+      0.8624,
+      "Action Camera Plus"
+     ],
+     [
+      "ELC-0209",
+      0.859,
+      "Action Camera 6"
+     ],
+     [
+      "ELC-0134",
+      0.8577,
+      "Action Camera"
+     ],
+     [
+      "ELC-0179",
+      0.8574,
+      "Action Camera Premium"
+     ],
+     [
+      "ELC-0194",
+      0.8555,
+      "Action Camera Lite"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "electronics",
+   "en": "Tablet Stand",
+   "ar": "حامل تابلت",
+   "relevant": [
+    "ELC-0135",
+    "ELC-0150",
+    "ELC-0165",
+    "ELC-0180",
+    "ELC-0195",
+    "ELC-0210"
+   ],
+   "hits": {
+    "en": [
+     [
+      "ELC-0150",
+      0.8609,
+      "Tablet Stand Pro"
+     ],
+     [
+      "ELC-0180",
+      0.8585,
+      "Tablet Stand Premium"
+     ],
+     [
+      "ELC-0135",
+      0.8581,
+      "Tablet Stand"
+     ],
+     [
+      "ELC-0165",
+      0.8568,
+      "Tablet Stand Plus"
+     ],
+     [
+      "ELC-0210",
+      0.8566,
+      "Tablet Stand 6"
+     ]
+    ],
+    "ar": [
+     [
+      "ELC-0165",
+      0.8443,
+      "Tablet Stand Plus"
+     ],
+     [
+      "ELC-0180",
+      0.8424,
+      "Tablet Stand Premium"
+     ],
+     [
+      "ELC-0195",
+      0.8415,
+      "Tablet Stand Lite"
+     ],
+     [
+      "ELC-0135",
+      0.8414,
+      "Tablet Stand"
+     ],
+     [
+      "ELC-0210",
+      0.8409,
+      "Tablet Stand 6"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "home",
+   "en": "Ramadan Lantern",
+   "ar": "فانوس رمضاني",
+   "relevant": [
+    "HOM-0221",
+    "HOM-0236",
+    "HOM-0251",
+    "HOM-0266",
+    "HOM-0281",
+    "HOM-0296",
+    "HOM-0311"
+   ],
+   "hits": {
+    "en": [
+     [
+      "HOM-0221",
+      0.8563,
+      "Ramadan Lantern"
+     ],
+     [
+      "HOM-0281",
+      0.8513,
+      "Ramadan Lantern Lite"
+     ],
+     [
+      "HOM-0236",
+      0.8503,
+      "Ramadan Lantern Pro"
+     ],
+     [
+      "HOM-0251",
+      0.8501,
+      "Ramadan Lantern Plus"
+     ],
+     [
+      "HOM-0266",
+      0.8497,
+      "Ramadan Lantern Premium"
+     ]
+    ],
+    "ar": [
+     [
+      "HOM-0221",
+      0.8591,
+      "Ramadan Lantern"
+     ],
+     [
+      "HOM-0251",
+      0.857,
+      "Ramadan Lantern Plus"
+     ],
+     [
+      "HOM-0296",
+      0.8563,
+      "Ramadan Lantern 6"
+     ],
+     [
+      "HOM-0266",
+      0.8563,
+      "Ramadan Lantern Premium"
+     ],
+     [
+      "HOM-0311",
+      0.8551,
+      "Ramadan Lantern 7"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "home",
+   "en": "Oud Incense Set",
+   "ar": "طقم عود وبخور",
+   "relevant": [
+    "HOM-0222",
+    "HOM-0237",
+    "HOM-0252",
+    "HOM-0267",
+    "HOM-0282",
+    "HOM-0297",
+    "HOM-0312"
+   ],
+   "hits": {
+    "en": [
+     [
+      "HOM-0222",
+      0.8616,
+      "Oud Incense Set"
+     ],
+     [
+      "HOM-0237",
+      0.8596,
+      "Oud Incense Set Pro"
+     ],
+     [
+      "HOM-0252",
+      0.8569,
+      "Oud Incense Set Plus"
+     ],
+     [
+      "HOM-0312",
+      0.8558,
+      "Oud Incense Set 7"
+     ],
+     [
+      "HOM-0282",
+      0.8542,
+      "Oud Incense Set Lite"
+     ]
+    ],
+    "ar": [
+     [
+      "HOM-0222",
+      0.858,
+      "Oud Incense Set"
+     ],
+     [
+      "HOM-0267",
+      0.8568,
+      "Oud Incense Set Premium"
+     ],
+     [
+      "HOM-0252",
+      0.8558,
+      "Oud Incense Set Plus"
+     ],
+     [
+      "HOM-0297",
+      0.8535,
+      "Oud Incense Set 6"
+     ],
+     [
+      "HOM-0282",
+      0.8529,
+      "Oud Incense Set Lite"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "home",
+   "en": "Arabic Coffee Set",
+   "ar": "طقم قهوة عربية",
+   "relevant": [
+    "HOM-0223",
+    "HOM-0238",
+    "HOM-0253",
+    "HOM-0268",
+    "HOM-0283",
+    "HOM-0298",
+    "HOM-0313"
+   ],
+   "hits": {
+    "en": [
+     [
+      "HOM-0223",
+      0.8983,
+      "Arabic Coffee Set"
+     ],
+     [
+      "HOM-0283",
+      0.8958,
+      "Arabic Coffee Set Lite"
+     ],
+     [
+      "HOM-0253",
+      0.8949,
+      "Arabic Coffee Set Plus"
+     ],
+     [
+      "HOM-0238",
+      0.8934,
+      "Arabic Coffee Set Pro"
+     ],
+     [
+      "HOM-0298",
+      0.8924,
+      "Arabic Coffee Set 6"
+     ]
+    ],
+    "ar": [
+     [
+      "HOM-0253",
+      0.8757,
+      "Arabic Coffee Set Plus"
+     ],
+     [
+      "HOM-0298",
+      0.8756,
+      "Arabic Coffee Set 6"
+     ],
+     [
+      "HOM-0283",
+      0.8727,
+      "Arabic Coffee Set Lite"
+     ],
+     [
+      "HOM-0268",
+      0.8724,
+      "Arabic Coffee Set Premium"
+     ],
+     [
+      "HOM-0313",
+      0.8715,
+      "Arabic Coffee Set 7"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "home",
+   "en": "Decorative Cushions",
+   "ar": "وسائد ديكورية",
+   "relevant": [
+    "HOM-0224",
+    "HOM-0239",
+    "HOM-0254",
+    "HOM-0269",
+    "HOM-0284",
+    "HOM-0299",
+    "HOM-0314"
+   ],
+   "hits": {
+    "en": [
+     [
+      "HOM-0254",
+      0.8584,
+      "Decorative Cushions Plus"
+     ],
+     [
+      "HOM-0284",
+      0.8579,
+      "Decorative Cushions Lite"
+     ],
+     [
+      "HOM-0239",
+      0.8575,
+      "Decorative Cushions Pro"
+     ],
+     [
+      "HOM-0224",
+      0.8562,
+      "Decorative Cushions"
+     ],
+     [
+      "HOM-0269",
+      0.856,
+      "Decorative Cushions Premium"
+     ]
+    ],
+    "ar": [
+     [
+      "HOM-0224",
+      0.8764,
+      "Decorative Cushions"
+     ],
+     [
+      "HOM-0299",
+      0.8749,
+      "Decorative Cushions 6"
+     ],
+     [
+      "HOM-0314",
+      0.8749,
+      "Decorative Cushions 7"
+     ],
+     [
+      "HOM-0284",
+      0.8724,
+      "Decorative Cushions Lite"
+     ],
+     [
+      "HOM-0239",
+      0.8707,
+      "Decorative Cushions Pro"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "home",
+   "en": "Prayer Mat Premium",
+   "ar": "سجادة صلاة فاخرة",
+   "relevant": [
+    "HOM-0225",
+    "HOM-0240",
+    "HOM-0255",
+    "HOM-0270",
+    "HOM-0285",
+    "HOM-0300",
+    "HOM-0315"
+   ],
+   "hits": {
+    "en": [
+     [
+      "HOM-0240",
+      0.9056,
+      "Prayer Mat Premium Pro"
+     ],
+     [
+      "HOM-0225",
+      0.8981,
+      "Prayer Mat Premium"
+     ],
+     [
+      "HOM-0270",
+      0.8973,
+      "Prayer Mat Premium Premium"
+     ],
+     [
+      "HOM-0255",
+      0.896,
+      "Prayer Mat Premium Plus"
+     ],
+     [
+      "HOM-0285",
+      0.8956,
+      "Prayer Mat Premium Lite"
+     ]
+    ],
+    "ar": [
+     [
+      "HOM-0315",
+      0.8839,
+      "Prayer Mat Premium 7"
+     ],
+     [
+      "HOM-0255",
+      0.8839,
+      "Prayer Mat Premium Plus"
+     ],
+     [
+      "HOM-0300",
+      0.8836,
+      "Prayer Mat Premium 6"
+     ],
+     [
+      "HOM-0225",
+      0.883,
+      "Prayer Mat Premium"
+     ],
+     [
+      "HOM-0285",
+      0.8821,
+      "Prayer Mat Premium Lite"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "home",
+   "en": "Copper Dallah",
+   "ar": "دلة نحاسية",
+   "relevant": [
+    "HOM-0226",
+    "HOM-0241",
+    "HOM-0256",
+    "HOM-0271",
+    "HOM-0286",
+    "HOM-0301",
+    "HOM-0316"
+   ],
+   "hits": {
+    "en": [
+     [
+      "HOM-0226",
+      0.8553,
+      "Copper Dallah"
+     ],
+     [
+      "HOM-0241",
+      0.8492,
+      "Copper Dallah Pro"
+     ],
+     [
+      "HOM-0286",
+      0.849,
+      "Copper Dallah Lite"
+     ],
+     [
+      "HOM-0256",
+      0.8487,
+      "Copper Dallah Plus"
+     ],
+     [
+      "HOM-0271",
+      0.8486,
+      "Copper Dallah Premium"
+     ]
+    ],
+    "ar": [
+     [
+      "HOM-0226",
+      0.8584,
+      "Copper Dallah"
+     ],
+     [
+      "HOM-0256",
+      0.8537,
+      "Copper Dallah Plus"
+     ],
+     [
+      "HOM-0316",
+      0.853,
+      "Copper Dallah 7"
+     ],
+     [
+      "HOM-0301",
+      0.8525,
+      "Copper Dallah 6"
+     ],
+     [
+      "HOM-0271",
+      0.8514,
+      "Copper Dallah Premium"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "home",
+   "en": "Scented Candles Set",
+   "ar": "شموع عطرية",
+   "relevant": [
+    "HOM-0227",
+    "HOM-0242",
+    "HOM-0257",
+    "HOM-0272",
+    "HOM-0287",
+    "HOM-0302",
+    "HOM-0317"
+   ],
+   "hits": {
+    "en": [
+     [
+      "HOM-0227",
+      0.8734,
+      "Scented Candles Set"
+     ],
+     [
+      "HOM-0287",
+      0.8713,
+      "Scented Candles Set Lite"
+     ],
+     [
+      "HOM-0242",
+      0.8682,
+      "Scented Candles Set Pro"
+     ],
+     [
+      "HOM-0272",
+      0.8678,
+      "Scented Candles Set Premium"
+     ],
+     [
+      "HOM-0302",
+      0.8671,
+      "Scented Candles Set 6"
+     ]
+    ],
+    "ar": [
+     [
+      "HOM-0302",
+      0.8635,
+      "Scented Candles Set 6"
+     ],
+     [
+      "HOM-0317",
+      0.8619,
+      "Scented Candles Set 7"
+     ],
+     [
+      "HOM-0257",
+      0.8619,
+      "Scented Candles Set Plus"
+     ],
+     [
+      "HOM-0227",
+      0.8616,
+      "Scented Candles Set"
+     ],
+     [
+      "HOM-0272",
+      0.8599,
+      "Scented Candles Set Premium"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "home",
+   "en": "Wall Art Islamic",
+   "ar": "لوحة إسلامية",
+   "relevant": [
+    "HOM-0228",
+    "HOM-0243",
+    "HOM-0258",
+    "HOM-0273",
+    "HOM-0288",
+    "HOM-0303",
+    "HOM-0318"
+   ],
+   "hits": {
+    "en": [
+     [
+      "HOM-0258",
+      0.867,
+      "Wall Art Islamic Plus"
+     ],
+     [
+      "HOM-0288",
+      0.8664,
+      "Wall Art Islamic Lite"
+     ],
+     [
+      "HOM-0273",
+      0.8648,
+      "Wall Art Islamic Premium"
+     ],
+     [
+      "HOM-0303",
+      0.863,
+      "Wall Art Islamic 6"
+     ],
+     [
+      "HOM-0318",
+      0.8624,
+      "Wall Art Islamic 7"
+     ]
+    ],
+    "ar": [
+     [
+      "HOM-0288",
+      0.8653,
+      "Wall Art Islamic Lite"
+     ],
+     [
+      "HOM-0318",
+      0.8608,
+      "Wall Art Islamic 7"
+     ],
+     [
+      "HOM-0303",
+      0.8599,
+      "Wall Art Islamic 6"
+     ],
+     [
+      "HOM-0258",
+      0.8581,
+      "Wall Art Islamic Plus"
+     ],
+     [
+      "HOM-0228",
+      0.8561,
+      "Wall Art Islamic"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "home",
+   "en": "Storage Baskets",
+   "ar": "سلال تخزين",
+   "relevant": [
+    "HOM-0229",
+    "HOM-0244",
+    "HOM-0259",
+    "HOM-0274",
+    "HOM-0289",
+    "HOM-0304",
+    "HOM-0319"
+   ],
+   "hits": {
+    "en": [
+     [
+      "HOM-0244",
+      0.8537,
+      "Storage Baskets Pro"
+     ],
+     [
+      "HOM-0289",
+      0.8527,
+      "Storage Baskets Lite"
+     ],
+     [
+      "HOM-0229",
+      0.8511,
+      "Storage Baskets"
+     ],
+     [
+      "HOM-0274",
+      0.8504,
+      "Storage Baskets Premium"
+     ],
+     [
+      "HOM-0319",
+      0.8486,
+      "Storage Baskets 7"
+     ]
+    ],
+    "ar": [
+     [
+      "HOM-0304",
+      0.8565,
+      "Storage Baskets 6"
+     ],
+     [
+      "HOM-0229",
+      0.8554,
+      "Storage Baskets"
+     ],
+     [
+      "HOM-0259",
+      0.8532,
+      "Storage Baskets Plus"
+     ],
+     [
+      "HOM-0289",
+      0.853,
+      "Storage Baskets Lite"
+     ],
+     [
+      "HOM-0319",
+      0.8512,
+      "Storage Baskets 7"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "home",
+   "en": "Table Runner",
+   "ar": "رنر طاولة",
+   "relevant": [
+    "HOM-0230",
+    "HOM-0245",
+    "HOM-0260",
+    "HOM-0275",
+    "HOM-0290",
+    "HOM-0305",
+    "HOM-0320"
+   ],
+   "hits": {
+    "en": [
+     [
+      "HOM-0230",
+      0.8411,
+      "Table Runner"
+     ],
+     [
+      "HOM-0260",
+      0.8358,
+      "Table Runner Plus"
+     ],
+     [
+      "HOM-0245",
+      0.8343,
+      "Table Runner Pro"
+     ],
+     [
+      "HOM-0320",
+      0.8338,
+      "Table Runner 7"
+     ],
+     [
+      "HOM-0305",
+      0.8329,
+      "Table Runner 6"
+     ]
+    ],
+    "ar": [
+     [
+      "HOM-0230",
+      0.8536,
+      "Table Runner"
+     ],
+     [
+      "HOM-0260",
+      0.8519,
+      "Table Runner Plus"
+     ],
+     [
+      "HOM-0245",
+      0.8507,
+      "Table Runner Pro"
+     ],
+     [
+      "HOM-0305",
+      0.8478,
+      "Table Runner 6"
+     ],
+     [
+      "HOM-0320",
+      0.8478,
+      "Table Runner 7"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "home",
+   "en": "Air Freshener Oud",
+   "ar": "معطر جو عود",
+   "relevant": [
+    "HOM-0231",
+    "HOM-0246",
+    "HOM-0261",
+    "HOM-0276",
+    "HOM-0291",
+    "HOM-0306"
+   ],
+   "hits": {
+    "en": [
+     [
+      "HOM-0246",
+      0.8678,
+      "Air Freshener Oud Pro"
+     ],
+     [
+      "HOM-0261",
+      0.8653,
+      "Air Freshener Oud Plus"
+     ],
+     [
+      "HOM-0276",
+      0.8647,
+      "Air Freshener Oud Premium"
+     ],
+     [
+      "HOM-0306",
+      0.8634,
+      "Air Freshener Oud 6"
+     ],
+     [
+      "HOM-0231",
+      0.8634,
+      "Air Freshener Oud"
+     ]
+    ],
+    "ar": [
+     [
+      "HOM-0231",
+      0.8512,
+      "Air Freshener Oud"
+     ],
+     [
+      "HOM-0261",
+      0.8492,
+      "Air Freshener Oud Plus"
+     ],
+     [
+      "HOM-0246",
+      0.8487,
+      "Air Freshener Oud Pro"
+     ],
+     [
+      "HOM-0276",
+      0.8484,
+      "Air Freshener Oud Premium"
+     ],
+     [
+      "HOM-0291",
+      0.8481,
+      "Air Freshener Oud Lite"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "home",
+   "en": "Serving Tray Gold",
+   "ar": "صينية تقديم ذهبية",
+   "relevant": [
+    "HOM-0232",
+    "HOM-0247",
+    "HOM-0262",
+    "HOM-0277",
+    "HOM-0292",
+    "HOM-0307"
+   ],
+   "hits": {
+    "en": [
+     [
+      "HOM-0232",
+      0.8812,
+      "Serving Tray Gold"
+     ],
+     [
+      "HOM-0262",
+      0.8783,
+      "Serving Tray Gold Plus"
+     ],
+     [
+      "HOM-0247",
+      0.8777,
+      "Serving Tray Gold Pro"
+     ],
+     [
+      "HOM-0277",
+      0.8764,
+      "Serving Tray Gold Premium"
+     ],
+     [
+      "HOM-0307",
+      0.8731,
+      "Serving Tray Gold 6"
+     ]
+    ],
+    "ar": [
+     [
+      "HOM-0232",
+      0.8688,
+      "Serving Tray Gold"
+     ],
+     [
+      "HOM-0277",
+      0.8674,
+      "Serving Tray Gold Premium"
+     ],
+     [
+      "HOM-0307",
+      0.8659,
+      "Serving Tray Gold 6"
+     ],
+     [
+      "HOM-0262",
+      0.8658,
+      "Serving Tray Gold Plus"
+     ],
+     [
+      "HOM-0247",
+      0.865,
+      "Serving Tray Gold Pro"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "home",
+   "en": "Throw Blanket",
+   "ar": "بطانية ناعمة",
+   "relevant": [
+    "HOM-0233",
+    "HOM-0248",
+    "HOM-0263",
+    "HOM-0278",
+    "HOM-0293",
+    "HOM-0308"
+   ],
+   "hits": {
+    "en": [
+     [
+      "HOM-0233",
+      0.8693,
+      "Throw Blanket"
+     ],
+     [
+      "HOM-0293",
+      0.8595,
+      "Throw Blanket Lite"
+     ],
+     [
+      "HOM-0263",
+      0.8591,
+      "Throw Blanket Plus"
+     ],
+     [
+      "HOM-0248",
+      0.8576,
+      "Throw Blanket Pro"
+     ],
+     [
+      "HOM-0308",
+      0.8566,
+      "Throw Blanket 6"
+     ]
+    ],
+    "ar": [
+     [
+      "HOM-0308",
+      0.8426,
+      "Throw Blanket 6"
+     ],
+     [
+      "HOM-0293",
+      0.8424,
+      "Throw Blanket Lite"
+     ],
+     [
+      "HOM-0263",
+      0.8402,
+      "Throw Blanket Plus"
+     ],
+     [
+      "HOM-0233",
+      0.84,
+      "Throw Blanket"
+     ],
+     [
+      "HOM-0248",
+      0.8385,
+      "Throw Blanket Pro"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "home",
+   "en": "Fairy Lights",
+   "ar": "إضاءة خيالية",
+   "relevant": [
+    "HOM-0234",
+    "HOM-0249",
+    "HOM-0264",
+    "HOM-0279",
+    "HOM-0294",
+    "HOM-0309"
+   ],
+   "hits": {
+    "en": [
+     [
+      "HOM-0234",
+      0.8299,
+      "Fairy Lights"
+     ],
+     [
+      "HOM-0294",
+      0.829,
+      "Fairy Lights Lite"
+     ],
+     [
+      "HOM-0279",
+      0.8273,
+      "Fairy Lights Premium"
+     ],
+     [
+      "HOM-0264",
+      0.8264,
+      "Fairy Lights Plus"
+     ],
+     [
+      "HOM-0249",
+      0.8219,
+      "Fairy Lights Pro"
+     ]
+    ],
+    "ar": [
+     [
+      "HOM-0309",
+      0.8556,
+      "Fairy Lights 6"
+     ],
+     [
+      "HOM-0294",
+      0.854,
+      "Fairy Lights Lite"
+     ],
+     [
+      "HOM-0234",
+      0.8524,
+      "Fairy Lights"
+     ],
+     [
+      "HOM-0264",
+      0.8506,
+      "Fairy Lights Plus"
+     ],
+     [
+      "HOM-0249",
+      0.8502,
+      "Fairy Lights Pro"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "home",
+   "en": "Herb Planter Set",
+   "ar": "أصص أعشاب",
+   "relevant": [
+    "HOM-0235",
+    "HOM-0250",
+    "HOM-0265",
+    "HOM-0280",
+    "HOM-0295",
+    "HOM-0310"
+   ],
+   "hits": {
+    "en": [
+     [
+      "HOM-0235",
+      0.86,
+      "Herb Planter Set"
+     ],
+     [
+      "HOM-0250",
+      0.8588,
+      "Herb Planter Set Pro"
+     ],
+     [
+      "HOM-0265",
+      0.8579,
+      "Herb Planter Set Plus"
+     ],
+     [
+      "HOM-0295",
+      0.8564,
+      "Herb Planter Set Lite"
+     ],
+     [
+      "HOM-0280",
+      0.8541,
+      "Herb Planter Set Premium"
+     ]
+    ],
+    "ar": [
+     [
+      "HOM-0250",
+      0.8223,
+      "Herb Planter Set Pro"
+     ],
+     [
+      "HOM-0235",
+      0.8189,
+      "Herb Planter Set"
+     ],
+     [
+      "HOM-0265",
+      0.8179,
+      "Herb Planter Set Plus"
+     ],
+     [
+      "HOM-0280",
+      0.8174,
+      "Herb Planter Set Premium"
+     ],
+     [
+      "HOM-0310",
+      0.8153,
+      "Herb Planter Set 6"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "food",
+   "en": "Medjool Dates 1kg",
+   "ar": "تمر مجدول كيلو",
+   "relevant": [
+    "FD-0321",
+    "FD-0336",
+    "FD-0351",
+    "FD-0366",
+    "FD-0381",
+    "FD-0396"
+   ],
+   "hits": {
+    "en": [
+     [
+      "FD-0321",
+      0.8974,
+      "Medjool Dates 1kg"
+     ],
+     [
+      "FD-0381",
+      0.8948,
+      "Medjool Dates 1kg Lite"
+     ],
+     [
+      "FD-0396",
+      0.8945,
+      "Medjool Dates 1kg 6"
+     ],
+     [
+      "FD-0336",
+      0.8927,
+      "Medjool Dates 1kg Pro"
+     ],
+     [
+      "FD-0351",
+      0.8902,
+      "Medjool Dates 1kg Plus"
+     ]
+    ],
+    "ar": [
+     [
+      "FD-0336",
+      0.8684,
+      "Medjool Dates 1kg Pro"
+     ],
+     [
+      "FD-0351",
+      0.8666,
+      "Medjool Dates 1kg Plus"
+     ],
+     [
+      "FD-0396",
+      0.8645,
+      "Medjool Dates 1kg 6"
+     ],
+     [
+      "FD-0366",
+      0.8642,
+      "Medjool Dates 1kg Premium"
+     ],
+     [
+      "FD-0321",
+      0.8618,
+      "Medjool Dates 1kg"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "food",
+   "en": "Arabic Coffee Blend",
+   "ar": "قهوة عربية",
+   "relevant": [
+    "FD-0322",
+    "FD-0337",
+    "FD-0352",
+    "FD-0367",
+    "FD-0382",
+    "FD-0397"
+   ],
+   "hits": {
+    "en": [
+     [
+      "FD-0322",
+      0.8974,
+      "Arabic Coffee Blend"
+     ],
+     [
+      "FD-0352",
+      0.8934,
+      "Arabic Coffee Blend Plus"
+     ],
+     [
+      "FD-0337",
+      0.8919,
+      "Arabic Coffee Blend Pro"
+     ],
+     [
+      "FD-0367",
+      0.8915,
+      "Arabic Coffee Blend Premium"
+     ],
+     [
+      "FD-0382",
+      0.889,
+      "Arabic Coffee Blend Lite"
+     ]
+    ],
+    "ar": [
+     [
+      "HOM-0298",
+      0.8612,
+      "Arabic Coffee Set 6"
+     ],
+     [
+      "HOM-0223",
+      0.8599,
+      "Arabic Coffee Set"
+     ],
+     [
+      "FD-0397",
+      0.8597,
+      "Arabic Coffee Blend 6"
+     ],
+     [
+      "HOM-0253",
+      0.8587,
+      "Arabic Coffee Set Plus"
+     ],
+     [
+      "FD-0322",
+      0.8577,
+      "Arabic Coffee Blend"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "food",
+   "en": "Saffron Premium 5g",
+   "ar": "زعفران فاخر",
+   "relevant": [
+    "FD-0323",
+    "FD-0338",
+    "FD-0353",
+    "FD-0368",
+    "FD-0383",
+    "FD-0398"
+   ],
+   "hits": {
+    "en": [
+     [
+      "FD-0338",
+      0.8855,
+      "Saffron Premium 5g Pro"
+     ],
+     [
+      "FD-0368",
+      0.8841,
+      "Saffron Premium 5g Premium"
+     ],
+     [
+      "FD-0353",
+      0.8827,
+      "Saffron Premium 5g Plus"
+     ],
+     [
+      "FD-0323",
+      0.8819,
+      "Saffron Premium 5g"
+     ],
+     [
+      "FD-0398",
+      0.8768,
+      "Saffron Premium 5g 6"
+     ]
+    ],
+    "ar": [
+     [
+      "FD-0323",
+      0.8516,
+      "Saffron Premium 5g"
+     ],
+     [
+      "FD-0398",
+      0.8511,
+      "Saffron Premium 5g 6"
+     ],
+     [
+      "FD-0353",
+      0.8504,
+      "Saffron Premium 5g Plus"
+     ],
+     [
+      "FD-0338",
+      0.8499,
+      "Saffron Premium 5g Pro"
+     ],
+     [
+      "FD-0368",
+      0.8499,
+      "Saffron Premium 5g Premium"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "food",
+   "en": "Tahini Paste",
+   "ar": "طحينة",
+   "relevant": [
+    "FD-0324",
+    "FD-0339",
+    "FD-0354",
+    "FD-0369",
+    "FD-0384",
+    "FD-0399"
+   ],
+   "hits": {
+    "en": [
+     [
+      "FD-0354",
+      0.8649,
+      "Tahini Paste Plus"
+     ],
+     [
+      "FD-0339",
+      0.8632,
+      "Tahini Paste Pro"
+     ],
+     [
+      "FD-0324",
+      0.8627,
+      "Tahini Paste"
+     ],
+     [
+      "FD-0369",
+      0.8623,
+      "Tahini Paste Premium"
+     ],
+     [
+      "FD-0384",
+      0.8621,
+      "Tahini Paste Lite"
+     ]
+    ],
+    "ar": [
+     [
+      "FD-0354",
+      0.8207,
+      "Tahini Paste Plus"
+     ],
+     [
+      "FD-0324",
+      0.8206,
+      "Tahini Paste"
+     ],
+     [
+      "FD-0399",
+      0.819,
+      "Tahini Paste 6"
+     ],
+     [
+      "FD-0369",
+      0.8137,
+      "Tahini Paste Premium"
+     ],
+     [
+      "FD-0384",
+      0.8123,
+      "Tahini Paste Lite"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "food",
+   "en": "Rose Water 500ml",
+   "ar": "ماء الورد",
+   "relevant": [
+    "FD-0325",
+    "FD-0340",
+    "FD-0355",
+    "FD-0370",
+    "FD-0385",
+    "FD-0400"
+   ],
+   "hits": {
+    "en": [
+     [
+      "FD-0325",
+      0.8908,
+      "Rose Water 500ml"
+     ],
+     [
+      "FD-0340",
+      0.8855,
+      "Rose Water 500ml Pro"
+     ],
+     [
+      "FD-0355",
+      0.8853,
+      "Rose Water 500ml Plus"
+     ],
+     [
+      "FD-0400",
+      0.8851,
+      "Rose Water 500ml 6"
+     ],
+     [
+      "FD-0385",
+      0.8828,
+      "Rose Water 500ml Lite"
+     ]
+    ],
+    "ar": [
+     [
+      "FD-0400",
+      0.8714,
+      "Rose Water 500ml 6"
+     ],
+     [
+      "FD-0325",
+      0.8705,
+      "Rose Water 500ml"
+     ],
+     [
+      "FD-0355",
+      0.8674,
+      "Rose Water 500ml Plus"
+     ],
+     [
+      "FD-0340",
+      0.8649,
+      "Rose Water 500ml Pro"
+     ],
+     [
+      "FD-0370",
+      0.8638,
+      "Rose Water 500ml Premium"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "food",
+   "en": "Mixed Nuts 500g",
+   "ar": "مكسرات مشكلة",
+   "relevant": [
+    "FD-0326",
+    "FD-0341",
+    "FD-0356",
+    "FD-0371",
+    "FD-0386"
+   ],
+   "hits": {
+    "en": [
+     [
+      "FD-0326",
+      0.8762,
+      "Mixed Nuts 500g"
+     ],
+     [
+      "FD-0341",
+      0.8758,
+      "Mixed Nuts 500g Pro"
+     ],
+     [
+      "FD-0371",
+      0.8757,
+      "Mixed Nuts 500g Premium"
+     ],
+     [
+      "FD-0356",
+      0.8739,
+      "Mixed Nuts 500g Plus"
+     ],
+     [
+      "FD-0386",
+      0.8738,
+      "Mixed Nuts 500g Lite"
+     ]
+    ],
+    "ar": [
+     [
+      "FD-0326",
+      0.8526,
+      "Mixed Nuts 500g"
+     ],
+     [
+      "FD-0341",
+      0.8476,
+      "Mixed Nuts 500g Pro"
+     ],
+     [
+      "FD-0356",
+      0.8473,
+      "Mixed Nuts 500g Plus"
+     ],
+     [
+      "FD-0371",
+      0.845,
+      "Mixed Nuts 500g Premium"
+     ],
+     [
+      "FD-0386",
+      0.8445,
+      "Mixed Nuts 500g Lite"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "food",
+   "en": "Cardamom Pods 100g",
+   "ar": "هيل كامل",
+   "relevant": [
+    "FD-0327",
+    "FD-0342",
+    "FD-0357",
+    "FD-0372",
+    "FD-0387"
+   ],
+   "hits": {
+    "en": [
+     [
+      "FD-0372",
+      0.8859,
+      "Cardamom Pods 100g Premium"
+     ],
+     [
+      "FD-0327",
+      0.8848,
+      "Cardamom Pods 100g"
+     ],
+     [
+      "FD-0342",
+      0.8835,
+      "Cardamom Pods 100g Pro"
+     ],
+     [
+      "FD-0387",
+      0.8817,
+      "Cardamom Pods 100g Lite"
+     ],
+     [
+      "FD-0357",
+      0.8795,
+      "Cardamom Pods 100g Plus"
+     ]
+    ],
+    "ar": [
+     [
+      "FD-0357",
+      0.8108,
+      "Cardamom Pods 100g Plus"
+     ],
+     [
+      "FD-0342",
+      0.8048,
+      "Cardamom Pods 100g Pro"
+     ],
+     [
+      "FD-0372",
+      0.801,
+      "Cardamom Pods 100g Premium"
+     ],
+     [
+      "FD-0327",
+      0.8001,
+      "Cardamom Pods 100g"
+     ],
+     [
+      "FD-0387",
+      0.7965,
+      "Cardamom Pods 100g Lite"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "food",
+   "en": "Ghee Premium 500g",
+   "ar": "سمن بلدي فاخر",
+   "relevant": [
+    "FD-0328",
+    "FD-0343",
+    "FD-0358",
+    "FD-0373",
+    "FD-0388"
+   ],
+   "hits": {
+    "en": [
+     [
+      "FD-0343",
+      0.8897,
+      "Ghee Premium 500g Pro"
+     ],
+     [
+      "FD-0328",
+      0.8888,
+      "Ghee Premium 500g"
+     ],
+     [
+      "FD-0358",
+      0.8878,
+      "Ghee Premium 500g Plus"
+     ],
+     [
+      "FD-0388",
+      0.887,
+      "Ghee Premium 500g Lite"
+     ],
+     [
+      "FD-0373",
+      0.8867,
+      "Ghee Premium 500g Premium"
+     ]
+    ],
+    "ar": [
+     [
+      "FD-0358",
+      0.8503,
+      "Ghee Premium 500g Plus"
+     ],
+     [
+      "FD-0328",
+      0.8484,
+      "Ghee Premium 500g"
+     ],
+     [
+      "FD-0373",
+      0.8484,
+      "Ghee Premium 500g Premium"
+     ],
+     [
+      "FD-0343",
+      0.8479,
+      "Ghee Premium 500g Pro"
+     ],
+     [
+      "FD-0388",
+      0.8471,
+      "Ghee Premium 500g Lite"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "food",
+   "en": "Pomegranate Molasses",
+   "ar": "دبس رمان",
+   "relevant": [
+    "FD-0329",
+    "FD-0344",
+    "FD-0359",
+    "FD-0374",
+    "FD-0389"
+   ],
+   "hits": {
+    "en": [
+     [
+      "FD-0329",
+      0.8674,
+      "Pomegranate Molasses"
+     ],
+     [
+      "FD-0389",
+      0.8673,
+      "Pomegranate Molasses Lite"
+     ],
+     [
+      "FD-0359",
+      0.8643,
+      "Pomegranate Molasses Plus"
+     ],
+     [
+      "FD-0374",
+      0.864,
+      "Pomegranate Molasses Premium"
+     ],
+     [
+      "FD-0344",
+      0.8623,
+      "Pomegranate Molasses Pro"
+     ]
+    ],
+    "ar": [
+     [
+      "FD-0359",
+      0.8189,
+      "Pomegranate Molasses Plus"
+     ],
+     [
+      "FD-0374",
+      0.8175,
+      "Pomegranate Molasses Premium"
+     ],
+     [
+      "FD-0344",
+      0.8137,
+      "Pomegranate Molasses Pro"
+     ],
+     [
+      "FD-0329",
+      0.8135,
+      "Pomegranate Molasses"
+     ],
+     [
+      "FD-0389",
+      0.8125,
+      "Pomegranate Molasses Lite"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "food",
+   "en": "Za'atar Blend 200g",
+   "ar": "زعتر مزيج",
+   "relevant": [
+    "FD-0330",
+    "FD-0345",
+    "FD-0360",
+    "FD-0375",
+    "FD-0390"
+   ],
+   "hits": {
+    "en": [
+     [
+      "FD-0345",
+      0.9,
+      "Za'atar Blend 200g Pro"
+     ],
+     [
+      "FD-0330",
+      0.8996,
+      "Za'atar Blend 200g"
+     ],
+     [
+      "FD-0390",
+      0.8991,
+      "Za'atar Blend 200g Lite"
+     ],
+     [
+      "FD-0360",
+      0.8987,
+      "Za'atar Blend 200g Plus"
+     ],
+     [
+      "FD-0375",
+      0.8982,
+      "Za'atar Blend 200g Premium"
+     ]
+    ],
+    "ar": [
+     [
+      "FD-0330",
+      0.8771,
+      "Za'atar Blend 200g"
+     ],
+     [
+      "FD-0360",
+      0.8753,
+      "Za'atar Blend 200g Plus"
+     ],
+     [
+      "FD-0390",
+      0.8693,
+      "Za'atar Blend 200g Lite"
+     ],
+     [
+      "FD-0375",
+      0.8681,
+      "Za'atar Blend 200g Premium"
+     ],
+     [
+      "FD-0345",
+      0.8658,
+      "Za'atar Blend 200g Pro"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "food",
+   "en": "Halawa Pistachio",
+   "ar": "حلاوة فستق",
+   "relevant": [
+    "FD-0331",
+    "FD-0346",
+    "FD-0361",
+    "FD-0376",
+    "FD-0391"
+   ],
+   "hits": {
+    "en": [
+     [
+      "FD-0331",
+      0.8675,
+      "Halawa Pistachio"
+     ],
+     [
+      "FD-0376",
+      0.8619,
+      "Halawa Pistachio Premium"
+     ],
+     [
+      "FD-0346",
+      0.8617,
+      "Halawa Pistachio Pro"
+     ],
+     [
+      "FD-0391",
+      0.8612,
+      "Halawa Pistachio Lite"
+     ],
+     [
+      "FD-0361",
+      0.8591,
+      "Halawa Pistachio Plus"
+     ]
+    ],
+    "ar": [
+     [
+      "FD-0331",
+      0.8552,
+      "Halawa Pistachio"
+     ],
+     [
+      "FD-0391",
+      0.8504,
+      "Halawa Pistachio Lite"
+     ],
+     [
+      "FD-0361",
+      0.8496,
+      "Halawa Pistachio Plus"
+     ],
+     [
+      "FD-0376",
+      0.8485,
+      "Halawa Pistachio Premium"
+     ],
+     [
+      "FD-0346",
+      0.846,
+      "Halawa Pistachio Pro"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "food",
+   "en": "Camel Milk Powder",
+   "ar": "حليب إبل بودرة",
+   "relevant": [
+    "FD-0332",
+    "FD-0347",
+    "FD-0362",
+    "FD-0377",
+    "FD-0392"
+   ],
+   "hits": {
+    "en": [
+     [
+      "FD-0377",
+      0.866,
+      "Camel Milk Powder Premium"
+     ],
+     [
+      "FD-0332",
+      0.8653,
+      "Camel Milk Powder"
+     ],
+     [
+      "FD-0362",
+      0.8627,
+      "Camel Milk Powder Plus"
+     ],
+     [
+      "FD-0347",
+      0.8617,
+      "Camel Milk Powder Pro"
+     ],
+     [
+      "FD-0392",
+      0.8616,
+      "Camel Milk Powder Lite"
+     ]
+    ],
+    "ar": [
+     [
+      "FD-0362",
+      0.8915,
+      "Camel Milk Powder Plus"
+     ],
+     [
+      "FD-0332",
+      0.8881,
+      "Camel Milk Powder"
+     ],
+     [
+      "FD-0377",
+      0.8854,
+      "Camel Milk Powder Premium"
+     ],
+     [
+      "FD-0347",
+      0.8828,
+      "Camel Milk Powder Pro"
+     ],
+     [
+      "FD-0392",
+      0.8816,
+      "Camel Milk Powder Lite"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "food",
+   "en": "Dried Figs 500g",
+   "ar": "تين مجفف",
+   "relevant": [
+    "FD-0333",
+    "FD-0348",
+    "FD-0363",
+    "FD-0378",
+    "FD-0393"
+   ],
+   "hits": {
+    "en": [
+     [
+      "FD-0333",
+      0.8926,
+      "Dried Figs 500g"
+     ],
+     [
+      "FD-0378",
+      0.8917,
+      "Dried Figs 500g Premium"
+     ],
+     [
+      "FD-0363",
+      0.8887,
+      "Dried Figs 500g Plus"
+     ],
+     [
+      "FD-0393",
+      0.8883,
+      "Dried Figs 500g Lite"
+     ],
+     [
+      "FD-0348",
+      0.8845,
+      "Dried Figs 500g Pro"
+     ]
+    ],
+    "ar": [
+     [
+      "FD-0333",
+      0.8449,
+      "Dried Figs 500g"
+     ],
+     [
+      "FD-0363",
+      0.8426,
+      "Dried Figs 500g Plus"
+     ],
+     [
+      "FD-0348",
+      0.8425,
+      "Dried Figs 500g Pro"
+     ],
+     [
+      "FD-0393",
+      0.8424,
+      "Dried Figs 500g Lite"
+     ],
+     [
+      "FD-0378",
+      0.8374,
+      "Dried Figs 500g Premium"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "food",
+   "en": "Karak Tea Blend",
+   "ar": "شاي كرك",
+   "relevant": [
+    "FD-0334",
+    "FD-0349",
+    "FD-0364",
+    "FD-0379",
+    "FD-0394"
+   ],
+   "hits": {
+    "en": [
+     [
+      "FD-0364",
+      0.8906,
+      "Karak Tea Blend Plus"
+     ],
+     [
+      "FD-0334",
+      0.8905,
+      "Karak Tea Blend"
+     ],
+     [
+      "FD-0379",
+      0.8882,
+      "Karak Tea Blend Premium"
+     ],
+     [
+      "FD-0394",
+      0.8875,
+      "Karak Tea Blend Lite"
+     ],
+     [
+      "FD-0349",
+      0.8875,
+      "Karak Tea Blend Pro"
+     ]
+    ],
+    "ar": [
+     [
+      "FD-0364",
+      0.8785,
+      "Karak Tea Blend Plus"
+     ],
+     [
+      "FD-0334",
+      0.8774,
+      "Karak Tea Blend"
+     ],
+     [
+      "FD-0379",
+      0.8769,
+      "Karak Tea Blend Premium"
+     ],
+     [
+      "FD-0394",
+      0.8768,
+      "Karak Tea Blend Lite"
+     ],
+     [
+      "FD-0349",
+      0.8764,
+      "Karak Tea Blend Pro"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "food",
+   "en": "Sumac Spice 150g",
+   "ar": "سماق",
+   "relevant": [
+    "FD-0335",
+    "FD-0350",
+    "FD-0365",
+    "FD-0380",
+    "FD-0395"
+   ],
+   "hits": {
+    "en": [
+     [
+      "FD-0335",
+      0.9057,
+      "Sumac Spice 150g"
+     ],
+     [
+      "FD-0380",
+      0.9026,
+      "Sumac Spice 150g Premium"
+     ],
+     [
+      "FD-0350",
+      0.9012,
+      "Sumac Spice 150g Pro"
+     ],
+     [
+      "FD-0365",
+      0.8995,
+      "Sumac Spice 150g Plus"
+     ],
+     [
+      "FD-0395",
+      0.898,
+      "Sumac Spice 150g Lite"
+     ]
+    ],
+    "ar": [
+     [
+      "FD-0335",
+      0.8211,
+      "Sumac Spice 150g"
+     ],
+     [
+      "FD-0380",
+      0.8187,
+      "Sumac Spice 150g Premium"
+     ],
+     [
+      "FD-0365",
+      0.8181,
+      "Sumac Spice 150g Plus"
+     ],
+     [
+      "FD-0395",
+      0.8143,
+      "Sumac Spice 150g Lite"
+     ],
+     [
+      "FD-0350",
+      0.812,
+      "Sumac Spice 150g Pro"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "beauty",
+   "en": "Oud Perfume 50ml",
+   "ar": "عطر عود 50 مل",
+   "relevant": [
+    "BTY-0401",
+    "BTY-0416",
+    "BTY-0431",
+    "BTY-0446",
+    "BTY-0461",
+    "BTY-0476",
+    "BTY-0491"
+   ],
+   "hits": {
+    "en": [
+     [
+      "BTY-0401",
+      0.8905,
+      "Oud Perfume 50ml"
+     ],
+     [
+      "BTY-0416",
+      0.8863,
+      "Oud Perfume 50ml Pro"
+     ],
+     [
+      "BTY-0446",
+      0.8858,
+      "Oud Perfume 50ml Premium"
+     ],
+     [
+      "BTY-0431",
+      0.8847,
+      "Oud Perfume 50ml Plus"
+     ],
+     [
+      "BTY-0491",
+      0.8829,
+      "Oud Perfume 50ml 7"
+     ]
+    ],
+    "ar": [
+     [
+      "BTY-0401",
+      0.8798,
+      "Oud Perfume 50ml"
+     ],
+     [
+      "BTY-0431",
+      0.8774,
+      "Oud Perfume 50ml Plus"
+     ],
+     [
+      "BTY-0476",
+      0.8754,
+      "Oud Perfume 50ml 6"
+     ],
+     [
+      "BTY-0491",
+      0.8753,
+      "Oud Perfume 50ml 7"
+     ],
+     [
+      "BTY-0461",
+      0.8743,
+      "Oud Perfume 50ml Lite"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "beauty",
+   "en": "Rose Face Cream",
+   "ar": "كريم وجه ورد",
+   "relevant": [
+    "BTY-0402",
+    "BTY-0417",
+    "BTY-0432",
+    "BTY-0447",
+    "BTY-0462",
+    "BTY-0477",
+    "BTY-0492"
+   ],
+   "hits": {
+    "en": [
+     [
+      "BTY-0402",
+      0.8788,
+      "Rose Face Cream"
+     ],
+     [
+      "BTY-0462",
+      0.8758,
+      "Rose Face Cream Lite"
+     ],
+     [
+      "BTY-0432",
+      0.8757,
+      "Rose Face Cream Plus"
+     ],
+     [
+      "BTY-0447",
+      0.8729,
+      "Rose Face Cream Premium"
+     ],
+     [
+      "BTY-0417",
+      0.8724,
+      "Rose Face Cream Pro"
+     ]
+    ],
+    "ar": [
+     [
+      "BTY-0402",
+      0.8917,
+      "Rose Face Cream"
+     ],
+     [
+      "BTY-0432",
+      0.8892,
+      "Rose Face Cream Plus"
+     ],
+     [
+      "BTY-0477",
+      0.8864,
+      "Rose Face Cream 6"
+     ],
+     [
+      "BTY-0462",
+      0.8856,
+      "Rose Face Cream Lite"
+     ],
+     [
+      "BTY-0417",
+      0.8847,
+      "Rose Face Cream Pro"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "beauty",
+   "en": "Argan Oil Serum",
+   "ar": "سيروم زيت أركان",
+   "relevant": [
+    "BTY-0403",
+    "BTY-0418",
+    "BTY-0433",
+    "BTY-0448",
+    "BTY-0463",
+    "BTY-0478",
+    "BTY-0493"
+   ],
+   "hits": {
+    "en": [
+     [
+      "BTY-0403",
+      0.8914,
+      "Argan Oil Serum"
+     ],
+     [
+      "BTY-0448",
+      0.8863,
+      "Argan Oil Serum Premium"
+     ],
+     [
+      "BTY-0433",
+      0.8857,
+      "Argan Oil Serum Plus"
+     ],
+     [
+      "BTY-0493",
+      0.8848,
+      "Argan Oil Serum 7"
+     ],
+     [
+      "BTY-0463",
+      0.8836,
+      "Argan Oil Serum Lite"
+     ]
+    ],
+    "ar": [
+     [
+      "BTY-0403",
+      0.8874,
+      "Argan Oil Serum"
+     ],
+     [
+      "BTY-0448",
+      0.8864,
+      "Argan Oil Serum Premium"
+     ],
+     [
+      "BTY-0433",
+      0.8833,
+      "Argan Oil Serum Plus"
+     ],
+     [
+      "BTY-0493",
+      0.8829,
+      "Argan Oil Serum 7"
+     ],
+     [
+      "BTY-0478",
+      0.8825,
+      "Argan Oil Serum 6"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "beauty",
+   "en": "Kohl Eyeliner",
+   "ar": "كحل عيون",
+   "relevant": [
+    "BTY-0404",
+    "BTY-0419",
+    "BTY-0434",
+    "BTY-0449",
+    "BTY-0464",
+    "BTY-0479",
+    "BTY-0494"
+   ],
+   "hits": {
+    "en": [
+     [
+      "BTY-0404",
+      0.8828,
+      "Kohl Eyeliner"
+     ],
+     [
+      "BTY-0464",
+      0.8782,
+      "Kohl Eyeliner Lite"
+     ],
+     [
+      "BTY-0449",
+      0.8772,
+      "Kohl Eyeliner Premium"
+     ],
+     [
+      "BTY-0419",
+      0.8761,
+      "Kohl Eyeliner Pro"
+     ],
+     [
+      "BTY-0434",
+      0.8754,
+      "Kohl Eyeliner Plus"
+     ]
+    ],
+    "ar": [
+     [
+      "BTY-0449",
+      0.857,
+      "Kohl Eyeliner Premium"
+     ],
+     [
+      "BTY-0434",
+      0.8552,
+      "Kohl Eyeliner Plus"
+     ],
+     [
+      "BTY-0404",
+      0.8522,
+      "Kohl Eyeliner"
+     ],
+     [
+      "BTY-0479",
+      0.852,
+      "Kohl Eyeliner 6"
+     ],
+     [
+      "BTY-0419",
+      0.8516,
+      "Kohl Eyeliner Pro"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "beauty",
+   "en": "Micellar Water",
+   "ar": "ماء مايسيلار",
+   "relevant": [
+    "BTY-0405",
+    "BTY-0420",
+    "BTY-0435",
+    "BTY-0450",
+    "BTY-0465",
+    "BTY-0480",
+    "BTY-0495"
+   ],
+   "hits": {
+    "en": [
+     [
+      "BTY-0405",
+      0.8827,
+      "Micellar Water"
+     ],
+     [
+      "BTY-0480",
+      0.8772,
+      "Micellar Water 6"
+     ],
+     [
+      "BTY-0495",
+      0.8752,
+      "Micellar Water 7"
+     ],
+     [
+      "BTY-0465",
+      0.8734,
+      "Micellar Water Lite"
+     ],
+     [
+      "BTY-0420",
+      0.8734,
+      "Micellar Water Pro"
+     ]
+    ],
+    "ar": [
+     [
+      "BTY-0405",
+      0.8405,
+      "Micellar Water"
+     ],
+     [
+      "BTY-0420",
+      0.8364,
+      "Micellar Water Pro"
+     ],
+     [
+      "BTY-0480",
+      0.8363,
+      "Micellar Water 6"
+     ],
+     [
+      "BTY-0435",
+      0.8351,
+      "Micellar Water Plus"
+     ],
+     [
+      "BTY-0495",
+      0.8323,
+      "Micellar Water 7"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "beauty",
+   "en": "Henna Powder",
+   "ar": "حناء طبيعية",
+   "relevant": [
+    "BTY-0406",
+    "BTY-0421",
+    "BTY-0436",
+    "BTY-0451",
+    "BTY-0466",
+    "BTY-0481",
+    "BTY-0496"
+   ],
+   "hits": {
+    "en": [
+     [
+      "BTY-0406",
+      0.8632,
+      "Henna Powder"
+     ],
+     [
+      "BTY-0421",
+      0.8587,
+      "Henna Powder Pro"
+     ],
+     [
+      "BTY-0436",
+      0.8586,
+      "Henna Powder Plus"
+     ],
+     [
+      "BTY-0451",
+      0.8581,
+      "Henna Powder Premium"
+     ],
+     [
+      "BTY-0466",
+      0.8554,
+      "Henna Powder Lite"
+     ]
+    ],
+    "ar": [
+     [
+      "BTY-0481",
+      0.8362,
+      "Henna Powder 6"
+     ],
+     [
+      "BTY-0496",
+      0.8337,
+      "Henna Powder 7"
+     ],
+     [
+      "BTY-0436",
+      0.8289,
+      "Henna Powder Plus"
+     ],
+     [
+      "BTY-0406",
+      0.8284,
+      "Henna Powder"
+     ],
+     [
+      "BTY-0421",
+      0.8237,
+      "Henna Powder Pro"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "beauty",
+   "en": "Lip Gloss Set",
+   "ar": "طقم ملمع شفاه",
+   "relevant": [
+    "BTY-0407",
+    "BTY-0422",
+    "BTY-0437",
+    "BTY-0452",
+    "BTY-0467",
+    "BTY-0482",
+    "BTY-0497"
+   ],
+   "hits": {
+    "en": [
+     [
+      "BTY-0407",
+      0.8821,
+      "Lip Gloss Set"
+     ],
+     [
+      "BTY-0467",
+      0.8776,
+      "Lip Gloss Set Lite"
+     ],
+     [
+      "BTY-0422",
+      0.8758,
+      "Lip Gloss Set Pro"
+     ],
+     [
+      "BTY-0437",
+      0.8739,
+      "Lip Gloss Set Plus"
+     ],
+     [
+      "BTY-0482",
+      0.8728,
+      "Lip Gloss Set 6"
+     ]
+    ],
+    "ar": [
+     [
+      "BTY-0437",
+      0.8531,
+      "Lip Gloss Set Plus"
+     ],
+     [
+      "BTY-0407",
+      0.8526,
+      "Lip Gloss Set"
+     ],
+     [
+      "BTY-0497",
+      0.8513,
+      "Lip Gloss Set 7"
+     ],
+     [
+      "BTY-0482",
+      0.8507,
+      "Lip Gloss Set 6"
+     ],
+     [
+      "BTY-0452",
+      0.8506,
+      "Lip Gloss Set Premium"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "beauty",
+   "en": "Facial Mask Pack",
+   "ar": "قناع وجه",
+   "relevant": [
+    "BTY-0408",
+    "BTY-0423",
+    "BTY-0438",
+    "BTY-0453",
+    "BTY-0468",
+    "BTY-0483",
+    "BTY-0498"
+   ],
+   "hits": {
+    "en": [
+     [
+      "BTY-0438",
+      0.8812,
+      "Facial Mask Pack Plus"
+     ],
+     [
+      "BTY-0423",
+      0.8789,
+      "Facial Mask Pack Pro"
+     ],
+     [
+      "BTY-0453",
+      0.8767,
+      "Facial Mask Pack Premium"
+     ],
+     [
+      "BTY-0498",
+      0.8765,
+      "Facial Mask Pack 7"
+     ],
+     [
+      "BTY-0468",
+      0.8764,
+      "Facial Mask Pack Lite"
+     ]
+    ],
+    "ar": [
+     [
+      "BTY-0483",
+      0.8732,
+      "Facial Mask Pack 6"
+     ],
+     [
+      "BTY-0498",
+      0.8711,
+      "Facial Mask Pack 7"
+     ],
+     [
+      "BTY-0408",
+      0.8702,
+      "Facial Mask Pack"
+     ],
+     [
+      "BTY-0453",
+      0.8696,
+      "Facial Mask Pack Premium"
+     ],
+     [
+      "BTY-0438",
+      0.8692,
+      "Facial Mask Pack Plus"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "beauty",
+   "en": "Hair Mask Argan",
+   "ar": "قناع شعر أركان",
+   "relevant": [
+    "BTY-0409",
+    "BTY-0424",
+    "BTY-0439",
+    "BTY-0454",
+    "BTY-0469",
+    "BTY-0484",
+    "BTY-0499"
+   ],
+   "hits": {
+    "en": [
+     [
+      "BTY-0409",
+      0.8867,
+      "Hair Mask Argan"
+     ],
+     [
+      "BTY-0439",
+      0.8849,
+      "Hair Mask Argan Plus"
+     ],
+     [
+      "BTY-0469",
+      0.8837,
+      "Hair Mask Argan Lite"
+     ],
+     [
+      "BTY-0454",
+      0.882,
+      "Hair Mask Argan Premium"
+     ],
+     [
+      "BTY-0424",
+      0.8781,
+      "Hair Mask Argan Pro"
+     ]
+    ],
+    "ar": [
+     [
+      "BTY-0409",
+      0.8943,
+      "Hair Mask Argan"
+     ],
+     [
+      "BTY-0454",
+      0.8928,
+      "Hair Mask Argan Premium"
+     ],
+     [
+      "BTY-0439",
+      0.8913,
+      "Hair Mask Argan Plus"
+     ],
+     [
+      "BTY-0469",
+      0.8898,
+      "Hair Mask Argan Lite"
+     ],
+     [
+      "BTY-0499",
+      0.8889,
+      "Hair Mask Argan 7"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "beauty",
+   "en": "Blackseed Oil",
+   "ar": "زيت حبة البركة",
+   "relevant": [
+    "BTY-0410",
+    "BTY-0425",
+    "BTY-0440",
+    "BTY-0455",
+    "BTY-0470",
+    "BTY-0485",
+    "BTY-0500"
+   ],
+   "hits": {
+    "en": [
+     [
+      "BTY-0410",
+      0.8676,
+      "Blackseed Oil"
+     ],
+     [
+      "BTY-0470",
+      0.8626,
+      "Blackseed Oil Lite"
+     ],
+     [
+      "BTY-0455",
+      0.8607,
+      "Blackseed Oil Premium"
+     ],
+     [
+      "BTY-0440",
+      0.8592,
+      "Blackseed Oil Plus"
+     ],
+     [
+      "BTY-0425",
+      0.856,
+      "Blackseed Oil Pro"
+     ]
+    ],
+    "ar": [
+     [
+      "BTY-0410",
+      0.8883,
+      "Blackseed Oil"
+     ],
+     [
+      "BTY-0440",
+      0.8855,
+      "Blackseed Oil Plus"
+     ],
+     [
+      "BTY-0485",
+      0.8834,
+      "Blackseed Oil 6"
+     ],
+     [
+      "BTY-0425",
+      0.8828,
+      "Blackseed Oil Pro"
+     ],
+     [
+      "BTY-0500",
+      0.8816,
+      "Blackseed Oil 7"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "beauty",
+   "en": "Whitening Cream",
+   "ar": "كريم تفتيح",
+   "relevant": [
+    "BTY-0411",
+    "BTY-0426",
+    "BTY-0441",
+    "BTY-0456",
+    "BTY-0471",
+    "BTY-0486"
+   ],
+   "hits": {
+    "en": [
+     [
+      "BTY-0456",
+      0.8641,
+      "Whitening Cream Premium"
+     ],
+     [
+      "BTY-0411",
+      0.863,
+      "Whitening Cream"
+     ],
+     [
+      "BTY-0471",
+      0.8603,
+      "Whitening Cream Lite"
+     ],
+     [
+      "BTY-0441",
+      0.8599,
+      "Whitening Cream Plus"
+     ],
+     [
+      "BTY-0426",
+      0.8564,
+      "Whitening Cream Pro"
+     ]
+    ],
+    "ar": [
+     [
+      "BTY-0426",
+      0.875,
+      "Whitening Cream Pro"
+     ],
+     [
+      "BTY-0486",
+      0.8748,
+      "Whitening Cream 6"
+     ],
+     [
+      "BTY-0411",
+      0.8746,
+      "Whitening Cream"
+     ],
+     [
+      "BTY-0441",
+      0.8743,
+      "Whitening Cream Plus"
+     ],
+     [
+      "BTY-0471",
+      0.8726,
+      "Whitening Cream Lite"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "beauty",
+   "en": "Perfume Gift Set",
+   "ar": "طقم عطور هدية",
+   "relevant": [
+    "BTY-0412",
+    "BTY-0427",
+    "BTY-0442",
+    "BTY-0457",
+    "BTY-0472",
+    "BTY-0487"
+   ],
+   "hits": {
+    "en": [
+     [
+      "BTY-0427",
+      0.8788,
+      "Perfume Gift Set Pro"
+     ],
+     [
+      "BTY-0412",
+      0.8786,
+      "Perfume Gift Set"
+     ],
+     [
+      "BTY-0457",
+      0.8778,
+      "Perfume Gift Set Premium"
+     ],
+     [
+      "BTY-0472",
+      0.8742,
+      "Perfume Gift Set Lite"
+     ],
+     [
+      "BTY-0487",
+      0.874,
+      "Perfume Gift Set 6"
+     ]
+    ],
+    "ar": [
+     [
+      "BTY-0412",
+      0.8841,
+      "Perfume Gift Set"
+     ],
+     [
+      "BTY-0442",
+      0.8786,
+      "Perfume Gift Set Plus"
+     ],
+     [
+      "BTY-0457",
+      0.8774,
+      "Perfume Gift Set Premium"
+     ],
+     [
+      "BTY-0487",
+      0.8772,
+      "Perfume Gift Set 6"
+     ],
+     [
+      "BTY-0472",
+      0.8744,
+      "Perfume Gift Set Lite"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "beauty",
+   "en": "Natural Soap Set",
+   "ar": "طقم صابون طبيعي",
+   "relevant": [
+    "BTY-0413",
+    "BTY-0428",
+    "BTY-0443",
+    "BTY-0458",
+    "BTY-0473",
+    "BTY-0488"
+   ],
+   "hits": {
+    "en": [
+     [
+      "BTY-0413",
+      0.8945,
+      "Natural Soap Set"
+     ],
+     [
+      "BTY-0428",
+      0.8905,
+      "Natural Soap Set Pro"
+     ],
+     [
+      "BTY-0473",
+      0.8867,
+      "Natural Soap Set Lite"
+     ],
+     [
+      "BTY-0443",
+      0.886,
+      "Natural Soap Set Plus"
+     ],
+     [
+      "BTY-0488",
+      0.8836,
+      "Natural Soap Set 6"
+     ]
+    ],
+    "ar": [
+     [
+      "BTY-0413",
+      0.8877,
+      "Natural Soap Set"
+     ],
+     [
+      "BTY-0443",
+      0.8846,
+      "Natural Soap Set Plus"
+     ],
+     [
+      "BTY-0488",
+      0.8839,
+      "Natural Soap Set 6"
+     ],
+     [
+      "BTY-0458",
+      0.8824,
+      "Natural Soap Set Premium"
+     ],
+     [
+      "BTY-0428",
+      0.8808,
+      "Natural Soap Set Pro"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "beauty",
+   "en": "Vitamin C Serum",
+   "ar": "سيروم فيتامين C",
+   "relevant": [
+    "BTY-0414",
+    "BTY-0429",
+    "BTY-0444",
+    "BTY-0459",
+    "BTY-0474",
+    "BTY-0489"
+   ],
+   "hits": {
+    "en": [
+     [
+      "BTY-0414",
+      0.8871,
+      "Vitamin C Serum"
+     ],
+     [
+      "BTY-0444",
+      0.8835,
+      "Vitamin C Serum Plus"
+     ],
+     [
+      "BTY-0489",
+      0.8824,
+      "Vitamin C Serum 6"
+     ],
+     [
+      "BTY-0474",
+      0.8823,
+      "Vitamin C Serum Lite"
+     ],
+     [
+      "BTY-0429",
+      0.8813,
+      "Vitamin C Serum Pro"
+     ]
+    ],
+    "ar": [
+     [
+      "BTY-0414",
+      0.8996,
+      "Vitamin C Serum"
+     ],
+     [
+      "BTY-0459",
+      0.8973,
+      "Vitamin C Serum Premium"
+     ],
+     [
+      "BTY-0489",
+      0.8931,
+      "Vitamin C Serum 6"
+     ],
+     [
+      "BTY-0444",
+      0.8926,
+      "Vitamin C Serum Plus"
+     ],
+     [
+      "BTY-0429",
+      0.8921,
+      "Vitamin C Serum Pro"
+     ]
+    ]
+   }
+  },
+  {
+   "category": "beauty",
+   "en": "Brow Pencil",
+   "ar": "قلم حواجب",
+   "relevant": [
+    "BTY-0415",
+    "BTY-0430",
+    "BTY-0445",
+    "BTY-0460",
+    "BTY-0475",
+    "BTY-0490"
+   ],
+   "hits": {
+    "en": [
+     [
+      "BTY-0430",
+      0.8599,
+      "Brow Pencil Pro"
+     ],
+     [
+      "BTY-0415",
+      0.8582,
+      "Brow Pencil"
+     ],
+     [
+      "BTY-0460",
+      0.857,
+      "Brow Pencil Premium"
+     ],
+     [
+      "BTY-0445",
+      0.8503,
+      "Brow Pencil Plus"
+     ],
+     [
+      "BTY-0475",
+      0.845,
+      "Brow Pencil Lite"
+     ]
+    ],
+    "ar": [
+     [
+      "BTY-0415",
+      0.8714,
+      "Brow Pencil"
+     ],
+     [
+      "BTY-0460",
+      0.8701,
+      "Brow Pencil Premium"
+     ],
+     [
+      "BTY-0445",
+      0.8682,
+      "Brow Pencil Plus"
+     ],
+     [
+      "BTY-0430",
+      0.8681,
+      "Brow Pencil Pro"
+     ],
+     [
+      "BTY-0490",
+      0.8649,
+      "Brow Pencil 6"
+     ]
+    ]
+   }
+  }
+ ],
+ "absent": [
+  {
+   "en": "sports shoes",
+   "ar": "جزمة رياضية",
+   "hits": {
+    "en": [
+     [
+      "FSH-0112",
+      0.8096,
+      "Sports Leggings 8"
+     ],
+     [
+      "FSH-0097",
+      0.8081,
+      "Sports Leggings 7"
+     ],
+     [
+      "FSH-0082",
+      0.8079,
+      "Sports Leggings 6"
+     ],
+     [
+      "FSH-0067",
+      0.8074,
+      "Sports Leggings Lite"
+     ],
+     [
+      "FSH-0022",
+      0.8072,
+      "Sports Leggings Pro"
+     ]
+    ],
+    "ar": [
+     [
+      "FSH-0052",
+      0.8076,
+      "Sports Leggings Premium"
+     ],
+     [
+      "FSH-0067",
+      0.8072,
+      "Sports Leggings Lite"
+     ],
+     [
+      "FSH-0037",
+      0.8054,
+      "Sports Leggings Plus"
+     ],
+     [
+      "FSH-0007",
+      0.803,
+      "Sports Leggings"
+     ],
+     [
+      "FSH-0082",
+      0.8021,
+      "Sports Leggings 6"
+     ]
+    ]
+   }
+  },
+  {
+   "en": "Nike shoes",
+   "ar": "حذاء نايكي",
+   "hits": {
+    "en": [
+     [
+      "FSH-0112",
+      0.7731,
+      "Sports Leggings 8"
+     ],
+     [
+      "FSH-0007",
+      0.7727,
+      "Sports Leggings"
+     ],
+     [
+      "FSH-0097",
+      0.7725,
+      "Sports Leggings 7"
+     ],
+     [
+      "FSH-0022",
+      0.7722,
+      "Sports Leggings Pro"
+     ],
+     [
+      "FSH-0052",
+      0.772,
+      "Sports Leggings Premium"
+     ]
+    ],
+    "ar": [
+     [
+      "FSH-0050",
+      0.7982,
+      "Maxi Skirt Premium"
+     ],
+     [
+      "FSH-0005",
+      0.7956,
+      "Maxi Skirt"
+     ],
+     [
+      "FSH-0095",
+      0.7921,
+      "Maxi Skirt 7"
+     ],
+     [
+      "FSH-0035",
+      0.7919,
+      "Maxi Skirt Plus"
+     ],
+     [
+      "FSH-0065",
+      0.7918,
+      "Maxi Skirt Lite"
+     ]
+    ]
+   }
+  },
+  {
+   "en": "iPhone 15",
+   "ar": "ايفون 15",
+   "hits": {
+    "en": [
+     [
+      "ELC-0156",
+      0.7621,
+      "Phone Case Premium Plus"
+     ],
+     [
+      "ELC-0186",
+      0.7614,
+      "Phone Case Premium Lite"
+     ],
+     [
+      "ELC-0201",
+      0.7597,
+      "Phone Case Premium 6"
+     ],
+     [
+      "ELC-0126",
+      0.7596,
+      "Phone Case Premium"
+     ],
+     [
+      "ELC-0141",
+      0.7582,
+      "Phone Case Premium Pro"
+     ]
+    ],
+    "ar": [
+     [
+      "ELC-0156",
+      0.775,
+      "Phone Case Premium Plus"
+     ],
+     [
+      "ELC-0126",
+      0.7727,
+      "Phone Case Premium"
+     ],
+     [
+      "ELC-0201",
+      0.7724,
+      "Phone Case Premium 6"
+     ],
+     [
+      "FD-0353",
+      0.7722,
+      "Saffron Premium 5g Plus"
+     ],
+     [
+      "FD-0323",
+      0.7697,
+      "Saffron Premium 5g"
+     ]
+    ]
+   }
+  },
+  {
+   "en": "Samsung TV",
+   "ar": "تلفزيون سامسونج",
+   "hits": {
+    "en": [
+     [
+      "ELC-0176",
+      0.7596,
+      "Portable Monitor Premium"
+     ],
+     [
+      "ELC-0131",
+      0.7567,
+      "Portable Monitor"
+     ],
+     [
+      "ELC-0180",
+      0.7553,
+      "Tablet Stand Premium"
+     ],
+     [
+      "ELC-0132",
+      0.7536,
+      "Gaming Headset"
+     ],
+     [
+      "ELC-0161",
+      0.7526,
+      "Portable Monitor Plus"
+     ]
+    ],
+    "ar": [
+     [
+      "ELC-0176",
+      0.792,
+      "Portable Monitor Premium"
+     ],
+     [
+      "ELC-0206",
+      0.7852,
+      "Portable Monitor 6"
+     ],
+     [
+      "ELC-0131",
+      0.7849,
+      "Portable Monitor"
+     ],
+     [
+      "ELC-0171",
+      0.7848,
+      "Phone Case Premium Premium"
+     ],
+     [
+      "ELC-0161",
+      0.784,
+      "Portable Monitor Plus"
+     ]
+    ]
+   }
+  },
+  {
+   "en": "football boots",
+   "ar": "حذاء كرة قدم",
+   "hits": {
+    "en": [
+     [
+      "FSH-0071",
+      0.7881,
+      "Palazzo Pants Lite"
+     ],
+     [
+      "FSH-0011",
+      0.7878,
+      "Palazzo Pants"
+     ],
+     [
+      "FSH-0026",
+      0.7842,
+      "Palazzo Pants Pro"
+     ],
+     [
+      "FSH-0056",
+      0.7841,
+      "Palazzo Pants Premium"
+     ],
+     [
+      "FSH-0086",
+      0.7838,
+      "Palazzo Pants 6"
+     ]
+    ],
+    "ar": [
+     [
+      "FSH-0052",
+      0.8129,
+      "Sports Leggings Premium"
+     ],
+     [
+      "FSH-0007",
+      0.8122,
+      "Sports Leggings"
+     ],
+     [
+      "FSH-0067",
+      0.8119,
+      "Sports Leggings Lite"
+     ],
+     [
+      "FSH-0037",
+      0.8119,
+      "Sports Leggings Plus"
+     ],
+     [
+      "FSH-0022",
+      0.8105,
+      "Sports Leggings Pro"
+     ]
+    ]
+   }
+  },
+  {
+   "en": "electric guitar",
+   "ar": "جيتار كهربائي",
+   "hits": {
+    "en": [
+     [
+      "ELC-0133",
+      0.7784,
+      "Smart Plug"
+     ],
+     [
+      "ELC-0130",
+      0.7778,
+      "Wireless Charger"
+     ],
+     [
+      "ELC-0190",
+      0.7777,
+      "Wireless Charger Lite"
+     ],
+     [
+      "ELC-0132",
+      0.7766,
+      "Gaming Headset"
+     ],
+     [
+      "ELC-0208",
+      0.7751,
+      "Smart Plug 6"
+     ]
+    ],
+    "ar": [
+     [
+      "ELC-0130",
+      0.7858,
+      "Wireless Charger"
+     ],
+     [
+      "ELC-0190",
+      0.7858,
+      "Wireless Charger Lite"
+     ],
+     [
+      "ELC-0192",
+      0.7849,
+      "Gaming Headset Lite"
+     ],
+     [
+      "ELC-0132",
+      0.7848,
+      "Gaming Headset"
+     ],
+     [
+      "ELC-0184",
+      0.7846,
+      "Bluetooth Speaker Lite"
+     ]
+    ]
+   }
+  },
+  {
+   "en": "car tyres",
+   "ar": "إطارات سيارة",
+   "hits": {
+    "en": [
+     [
+      "FD-0333",
+      0.7749,
+      "Dried Figs 500g"
+     ],
+     [
+      "FD-0378",
+      0.7736,
+      "Dried Figs 500g Premium"
+     ],
+     [
+      "FD-0349",
+      0.7731,
+      "Karak Tea Blend Pro"
+     ],
+     [
+      "FD-0363",
+      0.7726,
+      "Dried Figs 500g Plus"
+     ],
+     [
+      "FD-0379",
+      0.771,
+      "Karak Tea Blend Premium"
+     ]
+    ],
+    "ar": [
+     [
+      "BTY-0484",
+      0.7768,
+      "Hair Mask Argan 6"
+     ],
+     [
+      "FSH-0080",
+      0.7761,
+      "Maxi Skirt 6"
+     ],
+     [
+      "ELC-0202",
+      0.7754,
+      "Ring Light 6"
+     ],
+     [
+      "FSH-0050",
+      0.7753,
+      "Maxi Skirt Premium"
+     ],
+     [
+      "FSH-0095",
+      0.775,
+      "Maxi Skirt 7"
+     ]
+    ]
+   }
+  },
+  {
+   "en": "PlayStation 5",
+   "ar": "بلايستيشن 5",
+   "hits": {
+    "en": [
+     [
+      "ELC-0207",
+      0.7616,
+      "Gaming Headset 6"
+     ],
+     [
+      "ELC-0177",
+      0.7616,
+      "Gaming Headset Premium"
+     ],
+     [
+      "ELC-0162",
+      0.7612,
+      "Gaming Headset Plus"
+     ],
+     [
+      "ELC-0192",
+      0.7611,
+      "Gaming Headset Lite"
+     ],
+     [
+      "ELC-0147",
+      0.7595,
+      "Gaming Headset Pro"
+     ]
+    ],
+    "ar": [
+     [
+      "ELC-0162",
+      0.7659,
+      "Gaming Headset Plus"
+     ],
+     [
+      "HOM-0259",
+      0.7636,
+      "Storage Baskets Plus"
+     ],
+     [
+      "ELC-0164",
+      0.7611,
+      "Action Camera Plus"
+     ],
+     [
+      "FSH-0086",
+      0.7606,
+      "Palazzo Pants 6"
+     ],
+     [
+      "FD-0353",
+      0.7587,
+      "Saffron Premium 5g Plus"
+     ]
+    ]
+   }
+  }
+ ]
+}

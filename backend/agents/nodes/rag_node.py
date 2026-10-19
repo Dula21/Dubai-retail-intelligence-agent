@@ -62,7 +62,7 @@ logger = structlog.get_logger(__name__)
 # ── Configuration constants ────────────────────────────────────────────────────
 
 CONFIDENCE_FLOOR = 0.72
-MARGIN_THRESHOLD = 0.01   # hypothesis, see module docstring (was 0.05)
+MARGIN_THRESHOLD = 0.015   # hypothesis, see module docstring (was 0.05)
 TOP_K_RETRIEVAL  = 20     # fetch enough SKUs that variant-collapsing still leaves >= 3 products
 CHUNKS_TO_RETURN = 3      # distinct products returned
 

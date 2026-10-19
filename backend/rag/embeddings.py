@@ -49,11 +49,14 @@ except ImportError:
 # Constants
 # ---------------------------------------------------------------------------
 
-# ENGINEERING DECISION: Model selection
-# multilingual-e5-large: best multilingual model as of mid-2025 for
-# Arabic-English retail search use case. 560-dim embeddings.
-# Alternative: intfloat/multilingual-e5-base (faster, slightly lower quality)
-EMBEDDING_MODEL_NAME = "intfloat/multilingual-e5-large"
+# ENGINEERING DECISION: Model selection (revised after measurement, October 2026)
+# multilingual-e5-large was the first choice for quality, but on a 4-CPU Docker host it costs about
+# 465 ms per query (p95 about 1.1 s), so /search missed the 500 ms target (p95 872 ms).
+# multilingual-e5-small costs about 35 ms (p95 94 ms). On the 59-query Gulf set, top-1 fell from
+# 0.932 to 0.864 and right-product-in-top-3 from 100% to 96.6% (see eval/RESULTS.md).
+# Chosen for latency; the accuracy cost is documented there.
+# Override with the EMBEDDING_MODEL environment variable, for example to evaluate another model.
+EMBEDDING_MODEL_NAME = os.environ.get("EMBEDDING_MODEL", "intfloat/multilingual-e5-small")
 
 # Confidence gate threshold — never return a result below this similarity score
 # ENGINEERING DECISION: Why 0.72?

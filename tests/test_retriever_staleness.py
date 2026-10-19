@@ -94,6 +94,28 @@ def test_force_reingest_rebuilds_even_when_matching(store):
     assert store.embedding_manager.calls > calls
 
 
+def test_changing_the_embedding_model_triggers_a_reindex(tmp_path, monkeypatch):
+    """Same catalogue, different model: the old vectors must not be reused (different space, maybe different size)."""
+    monkeypatch.setattr(r, "chunk_catalogue_for_embedding", fake_chunker)
+    path = str(tmp_path / "chroma")
+
+    class Cfg:
+        def __init__(self, name):
+            self.model_name = name
+
+    big, small = FakeEmbedder(), FakeEmbedder()
+    big.config, small.config = Cfg("intfloat/multilingual-e5-large"), Cfg("intfloat/multilingual-e5-small")
+
+    s1 = r.RetailVectorStore(persist_directory=path, embedding_manager=big)
+    s1.ingest_catalogue(catalogue(5))
+    first = names(s1)
+
+    s2 = r.RetailVectorStore(persist_directory=path, embedding_manager=small)
+    assert s2.ingest_catalogue(catalogue(5)) == 5
+    assert small.calls > 0                       # it really re-embedded with the new model
+    assert names(s2) != first and len(names(s2)) == 1
+
+
 def test_fingerprint_is_stable_and_content_sensitive():
     a = r.RetailVectorStore._fingerprint(fake_chunker(catalogue(3)))
     assert a == r.RetailVectorStore._fingerprint(fake_chunker(catalogue(3)))

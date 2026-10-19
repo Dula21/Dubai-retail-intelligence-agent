@@ -214,10 +214,12 @@ class RetailVectorStore:
         return self._collection
 
     @staticmethod
-    def _fingerprint(chunks: list[dict]) -> str:
-        """Short hash of exactly what would be embedded (ids + texts): changes with the catalogue
-        content AND with the chunking strategy, so either one triggers a re-index."""
+    def _fingerprint(chunks: list[dict], model_name: str = "") -> str:
+        """Short hash of exactly what would be embedded (ids + texts) AND the model that embeds it:
+        changes with the catalogue content, the chunking strategy and the embedding model, so any of
+        them triggers a re-index. (Vectors from two models are not comparable and may differ in size.)"""
         digest = hashlib.sha256()
+        digest.update(f"model\t{model_name}\n".encode("utf-8"))
         for c in chunks:
             digest.update(f"{c['doc_id']}\t{c['text']}\n".encode("utf-8"))
         return digest.hexdigest()[:12]
@@ -264,7 +266,8 @@ class RetailVectorStore:
         scale this becomes incremental upserts keyed by a per-SKU content hash.
         """
         chunks = chunk_catalogue_for_embedding(catalogue_rows)
-        fingerprint = self._fingerprint(chunks)
+        model_name = getattr(getattr(self.embedding_manager, "config", None), "model_name", "")
+        fingerprint = self._fingerprint(chunks, model_name)
         self._active_name = f"{self.COLLECTION_NAME}_{fingerprint}"
         self._collection = None   # re-resolve against the fingerprinted name
         self._prune_old_collections(keep=self._active_name)

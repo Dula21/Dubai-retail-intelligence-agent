@@ -1,0 +1,70 @@
+{
+  "measured_at_utc": "2026-10-19T10:21:10+00:00",
+  "base_url": "http://localhost:8000",
+  "environment": {
+    "os": "Windows-10-10.0.19045-SP0",
+    "cpu_count": 4,
+    "python": "3.14.4",
+    "runs_in": "Docker on CPU (no GPU)"
+  },
+  "method": "single client, sequential requests, client-side round trip in ms",
+  "target_ms_catalogue_p95": 500,
+  "target_verdict": "PASS",
+  "agent_rate_limited": false,
+  "results": [
+    {
+      "case": "search_repeat",
+      "ok": 50,
+      "errors": 0,
+      "p50_ms": 47.0,
+      "p95_ms": 87.8,
+      "p99_ms": 98.7,
+      "min_ms": 39.0,
+      "max_ms": 98.7,
+      "mean_ms": 51.8,
+      "server_p50_ms": 38.8,
+      "server_p95_ms": 65.1
+    },
+    {
+      "case": "search_distinct",
+      "ok": 50,
+      "errors": 0,
+      "p50_ms": 43.6,
+      "p95_ms": 76.1,
+      "p99_ms": 105.4,
+      "min_ms": 38.1,
+      "max_ms": 105.4,
+      "mean_ms": 49.2,
+      "server_p50_ms": 36.6,
+      "server_p95_ms": 64.4
+    },
+    {
+      "case": "agent_cold",
+      "ok": 8,
+      "errors": 0,
+      "p50_ms": 14534.2,
+      "p95_ms": 20630.4,
+      "p99_ms": 20630.4,
+      "min_ms": 2063.7,
+      "max_ms": 20630.4,
+      "mean_ms": 12874.4
+    },
+    {
+      "case": "agent_cached",
+      "ok": 20,
+      "errors": 0,
+      "p50_ms": 9.9,
+      "p95_ms": 25.9,
+      "p99_ms": 26.0,
+      "min_ms": 7.5,
+      "max_ms": 26.0,
+      "mean_ms": 12.0
+    }
+  ],
+  "limits": [
+    "one client, no concurrency (see load test for that)",
+    "synthetic catalogue of 500 SKUs",
+    "p99 over ~50 samples is effectively the slowest request",
+    "agent_cold depends on Groq free-tier speed and rate limits"
+  ]
+}
