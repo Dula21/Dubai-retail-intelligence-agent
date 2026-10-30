@@ -1,6 +1,6 @@
 # Bilingual retrieval evaluation (Dubai Retail Intelligence Agent)
 
-Date: 2026-10-05 (Phase 1) · Phase 2 section added 2026-10-14 · Embedding-model section added 2026-10-19 · Baseline commit: `6fdc697` · Model for the Phase 1 results below: `intfloat/multilingual-e5-large` (production model is now e5-small, see the last results section) · Vector store: ChromaDB (cosine)
+Date: 2026-10-05 (Phase 1) · Phase 2 section added 2026-10-14 · Embedding-model section added 2026-10-19 · Agent latency and empty-answer section added 2026-10-31 · Baseline commit: `6fdc697` · Model for the Phase 1 results below: `intfloat/multilingual-e5-large` (production model is now e5-small, see the last results section) · Vector store: ChromaDB (cosine)
 
 > **Data transparency:** the catalogue and all queries are **synthetic**. No real retailer data or real user logs were used.
 > Queries were drafted with an AI assistant and have not been validated by native Gulf Arabic speakers.
@@ -126,7 +126,7 @@ The server-reported time was 490 ms of a 502 ms round trip for e5-large, so almo
 |---|---|---|---|---|---|---|
 | e5-large | 0.932 (55/59) | 0.923 | 0.933 | 1.00 | 100% | 75/75 |
 | e5-base | 0.864 (51/59) | 0.872 | 0.800 | 1.00 | 96.6% | 74/75 |
-| e5-small | 0.864 (51/59) | 0.846 | 0.867 | 1.00 | 96.6% | not recorded |
+| e5-small | 0.864 (51/59) | 0.846 | 0.867 | 1.00 | 96.6% | EN 75/75, AR 74/75 |
 
 Base and small tie overall; differences between them are one query per group. The extra misses (versus large) are mostly near-ties between neighbouring products, for example `ملابس سباحة للمحجبات` (right product second by 0.005), plus cases where the right product fell out of the top 3 (`مخدات للمجلس` for both smaller models, `dates فاخر` for small, `سبيكر` for base).
 
@@ -144,10 +144,38 @@ Production threshold changed from 0.01 (large) to 0.015 (small). Same caveat as 
 Switched production to **e5-small**: 13x faster at the median, meets both project targets (accuracy above 85%, catalogue query under 500 ms). Cost: about 7 points of top-1 on this sample; the 85% margin is thin on 59 synthetic queries. Rejected for now: two models (small for search, large for the agent) because of the extra RAM, two indexes and code; ONNX/int8 quantisation of e5-large (not tested); caching query embeddings (does not help the cold path).
 A bug found on the way: the index fingerprint did not include the model name, so switching models would have reused the old index. Fixed, with a test.
 
-### Agent latency (not improved by this change, and expected not to be)
-The agent path takes 10 to 20 seconds when it calls Groq (n=8 per run, free tier, large variation: median 9.8 s with e5-large, 14.5 s with e5-small; with 8 requests this is most likely run-to-run noise, since the agent does not spend its time in the embedding step). The embedding step was about 5% of it. Where the rest goes has not been profiled per node. A cached agent answer takes about 10 ms.
+Test status after the switch: 179 passed locally (Python 3.14) and in the container.
 
-Test status after the switch: 179 passed locally (Python 3.14).
+## Agent latency and the empty-answer bug (2026-10-31)
+
+**Method.** Per-node wall-clock timing (`backend/agents/timing.py`, wraps each node, writes `node_timings_ms` to the state) and `eval/profile_agent.py`, which calls the agent directly (no HTTP, no cache) on "what should I stock before X" questions, 4 s apart. End-to-end numbers from `eval/measure_latency.py`, which counts an answer with confidence 0.0 as degraded and leaves it out of the timings.
+
+### Finding 1: where the time goes
+The Groq call is the large majority of a run; sales analysis is next; the embedding step was never the problem. Before the fix, the profile showed the recommendation node at 93% of the median.
+
+### Finding 2: most agent answers were failing (before the fix)
+| | Questions | Real answer | Trace-only fallback (confidence 0.0) |
+|---|---|---|---|
+| Before | 6 | 2 | 4 (log: `empty model response (token budget used up before an answer?)`) |
+| After | 24 (8 profile + 2 x 8 measure runs) | 24 | 0 |
+
+Cause: `openai/gpt-oss-20b` spends hidden reasoning tokens against the completion budget (`GROQ_MAX_TOKENS`, 1500). When reasoning ran long nothing was left for the visible answer. The two successful answers before the fix used 2,702 and 3,043 tokens; after the fix about 2,000 to 2,140. Three of the four failures were fast (2.0 to 4.3 s in the recommendation step) and one burned the whole budget in 18 s, so the earlier agent latency figures (median 14.5 s, p95 20.6 s, n=8) mixed failures and successes and **should not be used**; the 9.8 s figure quoted for e5-large may have the same problem (those runs did not record failures).
+
+Fix: send `reasoning_effort="low"` for gpt-oss models (config: `GROQ_REASONING_EFFORT`). The parameter is documented for GPT-OSS models on Groq according to a third-party provider page; it was passed through `extra_body` so it does not depend on the installed SDK version.
+
+Not established: (a) whether answer quality at `low` is as good as at `medium` (no comparison run); (b) how much of the improvement is the setting and how much is Groq-side variation, since only 6 runs exist before the fix. 24 of 24 after versus 2 of 6 before is strong evidence, not a controlled experiment.
+
+### Finding 3: latency after the fix
+| Run | n | Real answers | p50 | Slowest |
+|---|---|---|---|---|
+| measure_latency, run 1 | 8 | 8 | 1.33 s | 19.5 s |
+| measure_latency, run 2 | 8 | 8 | 1.34 s | 8.4 s |
+| profile_agent (7 after warm-up) | 7 | 7 | 1.33 s | 11.4 s |
+
+Typical run about 1.3 s, with occasional spikes of 5 to 20 s that are almost entirely the Groq call (typical Groq call 0.7 to 0.9 s; 4.8 to 11 s in 3 of 7 profile questions). The cause of the spikes is not established. The first request after a container start takes about 8 s (6.4 s of it loading the 365,000-row sales file into memory); preloading at startup is not done. A cached agent answer takes about 9 to 12 ms.
+
+### Finding 4: `/search` latency varies between runs on a laptop
+`search_distinct` p95 across 7 runs: 71, 76, 82, 86, 90, 99 and 694 ms; p50 41 to 44 ms in six runs and 68 ms in the seventh. In the 694 ms run the server-reported latency p95 (257 ms) was far below the client round trip, so part of the delay happened outside the search handler. Cause not established (Docker Desktop networking or background load are possibilities, not findings). The target (under 500 ms) was met in 6 of 7 runs.
 
 ## Limitations
 

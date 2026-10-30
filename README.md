@@ -4,7 +4,7 @@
 > Aims to give sellers who cannot afford a dedicated merchandising manager an autonomous
 > merchandising layer: what to stock, when to order it, and why.
 
-**Status:** Phase 2 complete (LangGraph agentic loop, calendar-driven seasonality, event-planning route) · 179 tests passing
+**Status:** Phase 2 complete (LangGraph agentic loop, calendar-driven seasonality, event-planning route) · 183 tests passing
 **Stack:** LangGraph · LangChain · ChromaDB · multilingual-e5-small · Groq · FastAPI · Redis · Docker
 **Wired, not yet used:** PostgreSQL (audit log, Phase 3) · **Planned:** Prophet forecasting (Phase 3)
 **Data:** Synthetic. 500 SKUs, daily sales history, a UAE retail calendar for 2024–2027. See [Dataset](#dataset).
@@ -182,11 +182,19 @@ updates, an LRU eviction policy and Redis keys partitioned by product category.
   changed catalogue builds a new collection, old ones are pruned. Covered by 10 tests; 178 pass locally and in Docker
   on a fresh volume.
 - **`.env` risk in the image.** `.dockerignore` keeps secrets, history and generated data out of the build context.
+- **Empty LLM answers (found by per-node timing, fixed).** The first per-node profile showed 4 of 6 agent questions ending
+  in the trace-only fallback with confidence 0.0: `openai/gpt-oss-20b` is a reasoning model, and hidden reasoning tokens
+  used up the completion budget before any visible answer was written. The unit tests could not see this because they use
+  a fake model client. Fix: `reasoning_effort` is sent as `low` for gpt-oss models (`GROQ_REASONING_EFFORT` to change it).
+  After the fix, 24 of 24 questions returned real answers (see Performance). Not yet compared: answer quality at `low`
+  versus `medium` reasoning.
 
 ### Known issues (open)
 - Lift multipliers are synthetic, not learned from history. Equal-lift SKUs are ranked by runway.
 - No order-quantity engine yet; confidence is not calibrated (Phase 3).
-- Agent answers that call the LLM take about 10 to 20 seconds (see Performance). Where that time goes has not been profiled per node yet.
+- Agent latency is usually about 1.3 s but has occasional spikes of 5 to 20 s. Nearly all of that time is the single Groq call; the cause of the spikes is not established (free-tier queueing is a guess, not a finding).
+- The first agent request after a container start takes about 8 s because the 365,000-row sales file is loaded lazily. Preloading it at startup is not done yet.
+- Search latency on a laptop is not perfectly stable: in 7 runs the `/search` p95 was 71 to 99 ms six times and 694 ms once (cause not established).
 - The smaller embedding model costs about 7 points of top-1 accuracy on the Gulf set; the 85% target is met only narrowly.
 
 ---
@@ -195,15 +203,17 @@ updates, an LRU eviction policy and Redis keys partitioned by product category.
 
 Measured with `eval/measure_latency.py`: one client, sequential requests, client-side round trip, Docker on a 4-CPU laptop (no GPU), synthetic 500-SKU catalogue, e5-small.
 
-| Case | n | p50 | p95 |
-|---|---|---|---|
-| `/search`, 50 different English and Arabic queries (cold embedding) | 50 | 44 ms | 76 ms |
-| `/search`, same query repeated | 50 | 47 ms | 88 ms |
-| Agent, distinct questions (calls Groq) | 8 | 14.5 s | 20.6 s |
-| Agent, same question repeated (Redis hit) | 20 | 10 ms | 26 ms |
+Search figures come from 7 separate runs of `eval/measure_latency.py` (50 requests each); agent figures from 2 runs of 8 distinct questions plus one direct profile run.
 
-Target: catalogue query p95 under 500 ms: **met** (76 ms). With e5-large the same test gave a p95 of 872 ms.
-Limits: `/search` has no cache of its own (repeat and distinct queries cost the same); agent numbers come from only 8 requests on the Groq free tier and vary a lot; p99 over 50 samples is effectively the slowest request. This is not a load test.
+| Case | Result |
+|---|---|
+| `/search`, 50 different English and Arabic queries (cold embedding) | p50 41 to 44 ms in 6 of 7 runs (68 ms in the other). p95: 71, 76, 82, 86, 90, 99 ms in six runs and **694 ms in one run**. Target (p95 under 500 ms) met in 6 of 7 runs. |
+| `/search`, same query repeated | p50 42 to 74 ms, p95 86 to 195 ms |
+| Agent, distinct questions (calls Groq) | 16 questions in 2 runs, all real answers. p50 1.33 s in both runs; slowest request 19.5 s and 8.4 s. |
+| Agent, same question repeated (Redis hit) | p50 9 to 12 ms, p95 14 to 22 ms (n=20 per run) |
+
+Where the agent's time goes (direct profile, `eval/profile_agent.py`, 7 questions after the first): the Groq call is about two thirds of a typical run, sales analysis about 28% (0.37 s), everything else under 2%. Typical Groq call 0.7 to 0.9 s; in 3 of those 7 questions it took 4.8 to 11 s.
+Limits: `/search` has no cache of its own; agent numbers come from small samples on the Groq free tier, so no p95 is quoted (with 8 requests it is just the slowest one); one client, no concurrency, so this is not a load test; laptop under Docker, not a server.
 
 ---
 
@@ -229,10 +239,10 @@ announced; the catalogue has no festival-specific products yet (diyas, sweet box
 
 ## Tests
 
-179 tests across: Phase 1 retrieval and data checks, synthetic-data invariants, real-CSV inventory checks, intent and
+183 tests across: Phase 1 retrieval and data checks, synthetic-data invariants, real-CSV inventory checks, intent and
 routing, calendar seasonality, the recommendation node (fake model client), the event-planning route end to end on real
 data, sales-event analysis, the API layer (null relevance for calendar-selected SKUs, cache version, health), the RAG
-node with the real retriever, the real-retriever smoke cases, and stale-index detection (fake embedder, real Chroma).
+node with the real retriever, the real-retriever smoke cases, stale-index detection (fake embedder, real Chroma), and the per-node timing wrapper.
 
 ```
 python -m pytest tests -q

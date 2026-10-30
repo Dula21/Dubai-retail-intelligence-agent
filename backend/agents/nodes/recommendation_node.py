@@ -75,7 +75,11 @@ def _max_tokens() -> int:
     try:
         return int(os.environ.get("GROQ_MAX_TOKENS", DEFAULT_MAX_TOKENS))
     except ValueError:
-        return DEFAULT_MAX_TOKENS
+        return 
+    
+def _reasoning_effort() -> str:
+    value = os.environ.get("GROQ_REASONING_EFFORT", "low").lower()
+    return value if value in ("low", "medium", "high") else "low"
 
 
 # ── Prompt templates ───────────────────────────────────────────────────────────
@@ -362,6 +366,7 @@ async def recommendation_node(state: AgentState) -> dict:
             ],
             max_tokens=_max_tokens(),
             temperature=0.15,
+            extra_body={"reasoning_effort": _reasoning_effort()} if "gpt-oss" in model else None,
         )
         recommendation = (response.choices[0].message.content or "").strip()
         if not recommendation:

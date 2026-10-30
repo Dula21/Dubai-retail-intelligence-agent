@@ -106,10 +106,11 @@ def pct(sorted_vals: list[float], p: float) -> float:
     return sorted_vals[min(k, len(sorted_vals)) - 1]
 
 
-def summarise(name: str, ms: list[float], errors: int, server_ms: list[float] | None = None) -> dict:
+def summarise(name: str, ms: list[float], errors: int, server_ms: list[float] | None = None,
+              degraded: int = 0) -> dict:
     s = sorted(ms)
     out = {
-        "case": name, "ok": len(ms), "errors": errors,
+        "case": name, "ok": len(ms), "errors": errors, "degraded": degraded,
         "p50_ms": round(pct(s, 50), 1) if s else None,
         "p95_ms": round(pct(s, 95), 1) if s else None,
         "p99_ms": round(pct(s, 99), 1) if s else None,
@@ -137,12 +138,22 @@ def run_search(base: str, queries: list[str]) -> tuple[list[float], list[float],
     return ms, server, errors
 
 
-def run_agent(base: str, queries: list[str], pause_s: float) -> tuple[list[float], int, bool]:
-    ms, errors, rate_limited = [], 0, False
+def run_agent(base: str, queries: list[str], pause_s: float) -> tuple[list[float], int, bool, int]:
+    """
+    Returns (timings of genuine answers, HTTP errors, rate_limited, degraded count).
+
+    A degraded answer is HTTP 200 with confidence 0.0: the LLM step failed (for example an empty model
+    response) and the API returned the trace-only fallback. It is NOT counted in the latency figures,
+    because a fast failure would make the agent look faster than it is. It is reported separately.
+    """
+    ms, errors, rate_limited, degraded = [], 0, False, 0
     for q in queries:
         t, status, body = post(f"{base}/api/v1/agent/query", {"query": q})
         if status == 200 and body is not None:
-            ms.append(t)
+            if float(body.get("confidence") or 0.0) <= 0.0:
+                degraded += 1
+            else:
+                ms.append(t)
         else:
             errors += 1
             if status == 429:
@@ -150,21 +161,21 @@ def run_agent(base: str, queries: list[str], pause_s: float) -> tuple[list[float
                 print("  got HTTP 429 (rate limit); stopping this case", file=sys.stderr)
                 break
         time.sleep(pause_s)
-    return ms, errors, rate_limited
+    return ms, errors, rate_limited, degraded
 
 
 def print_table(rows: list[dict]) -> None:
-    head = f"{'case':<18}{'n':>4}{'err':>5}{'p50':>9}{'p95':>9}{'p99':>9}{'min':>9}{'max':>9}"
+    head = f"{'case':<18}{'n':>4}{'err':>5}{'deg':>5}{'p50':>9}{'p95':>9}{'p99':>9}{'min':>9}{'max':>9}"
     print("\n" + head)
     print("-" * len(head))
     for r in rows:
         if r["p50_ms"] is None:
-            print(f"{r['case']:<18}{r['ok']:>4}{r['errors']:>5}   no successful requests")
+            print(f"{r['case']:<18}{r['ok']:>4}{r['errors']:>5}{r['degraded']:>5}   no successful requests")
             continue
-        print(f"{r['case']:<18}{r['ok']:>4}{r['errors']:>5}{r['p50_ms']:>9}{r['p95_ms']:>9}"
+        print(f"{r['case']:<18}{r['ok']:>4}{r['errors']:>5}{r['degraded']:>5}{r['p50_ms']:>9}{r['p95_ms']:>9}"
               f"{r['p99_ms']:>9}{r['min_ms']:>9}{r['max_ms']:>9}")
         if "server_p50_ms" in r:
-            print(f"{'  (server latency_ms)':<18}{'':>9}{r['server_p50_ms']:>9}{r['server_p95_ms']:>9}")
+            print(f"{'  (server latency_ms)':<18}{'':>14}{r['server_p50_ms']:>9}{r['server_p95_ms']:>9}")
 
 
 def main() -> int:
@@ -204,12 +215,12 @@ def main() -> int:
     if not args.skip_agent:
         print(f"agent_cold: {args.agent_n} distinct queries, {args.agent_pause}s apart")
         aq = AGENT_QUERIES[: args.agent_n]
-        ms, err, rate_limited = run_agent(base, aq, args.agent_pause)
-        rows.append(summarise("agent_cold", ms, err))
+        ms, err, rate_limited, degraded = run_agent(base, aq, args.agent_pause)
+        rows.append(summarise("agent_cold", ms, err, degraded=degraded))
         if not rate_limited:
             print("agent_cached: same query x20 (Redis hit)")
-            ms, err, _ = run_agent(base, [aq[0]] * 20, 0.0)
-            rows.append(summarise("agent_cached", ms, err))
+            ms, err, _, degraded = run_agent(base, [aq[0]] * 20, 0.0)
+            rows.append(summarise("agent_cached", ms, err, degraded=degraded))
 
     print_table(rows)
 
@@ -233,7 +244,8 @@ def main() -> int:
         "limits": ["one client, no concurrency (see load test for that)",
                    "synthetic catalogue of 500 SKUs",
                    "p99 over ~50 samples is effectively the slowest request",
-                   "agent_cold depends on Groq free-tier speed and rate limits"],
+                   "agent_cold depends on Groq free-tier speed and rate limits",
+                   "degraded answers (confidence 0.0) are excluded from agent timings and counted separately"],
     }
     with open(args.out, "w", encoding="utf-8") as f:
         json.dump(report, f, indent=2, ensure_ascii=False)

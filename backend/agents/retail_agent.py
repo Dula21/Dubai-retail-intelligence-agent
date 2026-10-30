@@ -59,6 +59,7 @@ from .nodes.recommendation_node import recommendation_node
 from .nodes.sales_node import sales_analysis_node
 from .nodes.seasonality_node import seasonality_check_node
 from .state import AgentState, SeasonalitySignal
+from .timing import timed_node
 
 logger = structlog.get_logger(__name__)
 
@@ -136,13 +137,14 @@ def build_retail_agent() -> StateGraph:
     graph = StateGraph(AgentState)
 
     # _node suffix on all names avoids clash with AgentState field names
-    graph.add_node("rag_retrieval_node",      rag_retrieval_node)
-    graph.add_node("event_candidates_node",   event_candidates_node)
-    graph.add_node("fallback_node",           fallback_node)
-    graph.add_node("sales_analysis_node",     sales_analysis_node)
-    graph.add_node("inventory_check_node",    inventory_check_node)
-    graph.add_node("seasonality_check_node",  seasonality_check_node)
-    graph.add_node("recommendation_node",     recommendation_node)
+    graph.add_node("rag_retrieval_node",      timed_node("rag_retrieval_node",      rag_retrieval_node))
+    graph.add_node("event_candidates_node",   timed_node("event_candidates_node",   event_candidates_node))
+    graph.add_node("fallback_node",           timed_node("fallback_node",           fallback_node))
+    graph.add_node("sales_analysis_node",     timed_node("sales_analysis_node",     sales_analysis_node))
+    graph.add_node("inventory_check_node",    timed_node("inventory_check_node",    inventory_check_node))
+    graph.add_node("seasonality_check_node",  timed_node("seasonality_check_node",  seasonality_check_node))
+    graph.add_node("recommendation_node",     timed_node("recommendation_node",     recommendation_node))
+
 
     graph.add_conditional_edges(
         START,
@@ -244,6 +246,8 @@ async def run_agent(
         fallback=result.get("fallback_triggered"),
         confidence=result.get("recommendation_confidence"),
         trace_steps=len(result.get("reasoning_trace", [])),
+        node_timings_ms=result.get("node_timings_ms"),
+
     )
 
     return result

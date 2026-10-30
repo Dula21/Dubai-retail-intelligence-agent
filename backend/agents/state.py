@@ -66,3 +66,4 @@ class AgentState(TypedDict):
     recommendation_confidence: float
     fallback_triggered: bool
     error: Optional[str]
+    node_timings_ms: NotRequired[dict]  # {node_name: milliseconds}, written by agents/timing.py
