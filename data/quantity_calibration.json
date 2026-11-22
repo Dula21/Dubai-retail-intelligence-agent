@@ -1,0 +1,19 @@
+{
+  "safety": {"service_level": 0.9, "edges": [49.84401907138718, 109.93454201270917], "q": [0.8038015044077937, 0.4706633925369954, 0.2897567580641508], "n": [158, 158, 159], "global_q": 0.4850330019279183, "n_total": 475},
+  "coverage": {
+    "overall": 0.899,
+    "events_with_history": 0.944,
+    "events_without_history": 0.782,
+    "n_overall": 526,
+    "n_events_without_history": 147
+  },
+  "validated_horizon_days": 30,
+  "provenance": {
+    "source": "eval/backtest_quantity.py --sample-skus 100 --workers 2 --compare-masking, run on the real 500-SKU synthetic dataset",
+    "forecaster": "F_prophet_run (censoring-aware, mask mode run)",
+    "split": "calibrate on windows ended before 2026-01-09; test on order dates on or after it; test cases are SKUs the event lifts",
+    "events_with_history_derived": "computed from the reported totals: (0.899*526 - 0.782*147) / (526 - 147), about 0.944. Re-run the backtest to replace it with a directly measured value",
+    "per_category_coverage": {"beauty": 0.839, "electronics": 0.923, "fashion": 0.898, "food": 0.968, "home": 0.889},
+    "caveat": "synthetic data whose event lifts come from event_lifts.csv: validates the pipeline, not real Dubai demand. Re-calibrate whenever the data is regenerated"
+  }
+}

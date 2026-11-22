@@ -29,6 +29,9 @@ Graph topology (two entry routes):
 
   no candidates (unknown event, nothing lifted) --> seasonality_check_node --> recommendation_node
 
+Phase 3 adds quantity_node between seasonality_check_node and recommendation_node: the deterministic order
+quantity engine. The recommendation node explains its numbers and never computes one.
+
 Two routes because the two kinds of question need different first steps:
   * product questions ("units left of FSH-0014", "summer dresses under AED 200") start with retrieval,
     and a factual one that retrieval cannot answer confidently gets the hard "insufficient data" fallback;
@@ -57,6 +60,7 @@ from .nodes.inventory_node import inventory_check_node
 from .nodes.rag_node import rag_retrieval_node
 from .nodes.recommendation_node import recommendation_node
 from .nodes.sales_node import sales_analysis_node
+from .nodes.quantity_node import quantity_node
 from .nodes.seasonality_node import seasonality_check_node
 from .state import AgentState, SeasonalitySignal
 from .timing import timed_node
@@ -143,6 +147,7 @@ def build_retail_agent() -> StateGraph:
     graph.add_node("sales_analysis_node",     timed_node("sales_analysis_node",     sales_analysis_node))
     graph.add_node("inventory_check_node",    timed_node("inventory_check_node",    inventory_check_node))
     graph.add_node("seasonality_check_node",  timed_node("seasonality_check_node",  seasonality_check_node))
+    graph.add_node("quantity_node",           timed_node("quantity_node",           quantity_node))
     graph.add_node("recommendation_node",     timed_node("recommendation_node",     recommendation_node))
 
 
@@ -185,7 +190,8 @@ def build_retail_agent() -> StateGraph:
 
     graph.add_edge("fallback_node",          END)
     graph.add_edge("inventory_check_node",   "seasonality_check_node")
-    graph.add_edge("seasonality_check_node", "recommendation_node")
+    graph.add_edge("seasonality_check_node", "quantity_node")      # Phase 3: deterministic order quantity (no LLM)
+    graph.add_edge("quantity_node",          "recommendation_node")
     graph.add_edge("recommendation_node",    END)
 
     compiled = graph.compile()
@@ -251,3 +257,4 @@ async def run_agent(
     )
 
     return result
+

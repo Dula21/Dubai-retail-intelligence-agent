@@ -1,4 +1,4 @@
-"""
+﻿"""
 tests/test_recommendation_node.py
 ----------------------------------
 Recommendation node with a fake Groq client (no network, no key needed).
@@ -57,7 +57,7 @@ def test_success_uses_model_from_env(monkeypatch):
     client = FakeClient(content="Stock is fine.\nMONITOR")
     out = run(monkeypatch, client)
     assert client.kwargs["model"] == "some/test-model"
-    assert out["recommendation"].endswith("MONITOR")
+    assert out["recommendation"].rstrip().endswith("**Action:** INVESTIGATE")
     assert "some/test-model" in out["reasoning_trace"][-1]
     assert "error" not in out
 
@@ -118,7 +118,7 @@ def test_no_event_says_baseline():
     assert "90 days" in rn._format_seasonality({})
 
 
-# ── planning answers: stock today vs event deadline, no quantities, honest confidence ──────────
+# â”€â”€ planning answers: stock today vs event deadline, no quantities, honest confidence â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 WATCH = {
     "upcoming_event": "Ramadan", "days_until_event": 119, "expected_demand_multiplier": 3.5,
@@ -155,7 +155,7 @@ def test_watch_alert_separates_stock_problem_from_event_deadline(monkeypatch):
     p = prompt_of(client)
     assert "stock today: 1 of 1 listed SKUs are CRITICAL right now" in p
     assert "alert WATCH" in p and "NOT urgent for the event yet" in p
-    assert "order-by date: 2027-01-02 (82 days left)" in p
+    assert "order-by date: 2027-01-02 (82 days left to place the order)" in p
 
 
 def test_non_critical_stock_is_not_reported_as_a_problem(monkeypatch):
@@ -213,3 +213,4 @@ def test_observed_range_line_and_rule_keep_expected_and_observed_apart(monkeypat
     assert "Observed Ramadan lift in past years across these SKUs: 1.9x to 1.9x" in p
     assert "an expectation, not a past result" in p
     assert "Never call the expected multiplier a past, observed or historical lift" in rn.SYSTEM_PROMPT
+

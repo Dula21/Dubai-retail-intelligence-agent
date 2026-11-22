@@ -11,8 +11,8 @@ so the answer can say plainly that the retailer is late instead of describing a 
 
 Planning answers keep two questions apart (TIMING section of the prompt): is stock critical today, and
 is the EVENT order deadline urgent. A WATCH alert is never described as urgent; critical stock is
-reported as a separate, current problem. No order quantities are stated: a reorder point is a
-trigger level, and the deterministic quantity engine is Phase 3.
+reported as a separate, current problem. Order quantities come ONLY from the deterministic quantity
+engine (ORDER QUANTITIES section): this node explains them and never computes one.
 
 Hallucination prevention:
   All data passed to the LLM is injected from AgentState. The prompt
@@ -41,6 +41,7 @@ Bilingual output:
 from __future__ import annotations
 
 import os
+import re
 
 import structlog
 from groq import AsyncGroq, RateLimitError
@@ -75,8 +76,9 @@ def _max_tokens() -> int:
     try:
         return int(os.environ.get("GROQ_MAX_TOKENS", DEFAULT_MAX_TOKENS))
     except ValueError:
-        return 
-    
+        return DEFAULT_MAX_TOKENS
+
+
 def _reasoning_effort() -> str:
     value = os.environ.get("GROQ_REASONING_EFFORT", "low").lower()
     return value if value in ("low", "medium", "high") else "low"
@@ -93,15 +95,16 @@ Rules you must follow without exception:
 2. If data for a field is missing or marked -1, state "insufficient data" for that field
 3. Cite which data source supports each claim (e.g. "Based on 30-day sales average")
 4. Keep the recommendation under 200 words — retailers are busy
-5. End with a clear action: REORDER NOW / MONITOR / INVESTIGATE / NO ACTION NEEDED
+5. Write ONLY what the data shows. The system writes the recommendation and the action label (rule 17)
 6. If responding in Arabic, keep SKU codes, AED values, and numbers in their original form
 7. Dates in the answer must come from the DATA section. If the order-by date has PASSED, say so
    plainly and recommend expediting; never describe a passed deadline as upcoming
-8. Never invent rules, formulas, safety-stock percentages or order quantities. If DATA contains no
-   suggested quantity, say the quantity must be confirmed by the retailer
+8. Never invent rules, formulas, safety-stock percentages or order quantities. If ORDER QUANTITIES has no
+   quantity for a SKU, say the quantity cannot be computed and give the reason shown there
 9. If DATA says the supplier lead time is assumed, or that event dates are an estimate, say so
-10. A reorder point is a trigger level, NOT an order quantity. Never write "reorder N units" using a
-    reorder point, a sales rate or the demand multiplier. State no order quantities at all
+10. A reorder point is a trigger level, NOT an order quantity. Never derive a quantity from a reorder
+    point, a sales rate or the demand multiplier. The only quantities you may state are those listed
+    under ORDER QUANTITIES, copied exactly. Never add, round, split or adjust them
 11. Keep two questions apart, using the TIMING section: (a) is stock critical TODAY, whatever the
     event, and (b) is the EVENT order deadline urgent. If the alert level is WATCH, say the event
     deadline is not yet urgent and give the date; a critical stock level is then a separate,
@@ -111,6 +114,25 @@ Rules you must follow without exception:
     calendar lift table (UAE SEASONALITY). The OBSERVED lift comes from past sales (SALES SIGNALS).
     Never call the expected multiplier a past, observed or historical lift, and never cite
     SALES SIGNALS for the calendar multiplier
+13. For every quantity, state its caveats in plain words, using the sentences given in ORDER QUANTITIES.
+    Never print raw caveat codes (words with underscores). State the coverage estimate exactly as written;
+    if it says "none", say it was not validated. Never call it a probability of being right: it is the
+    share of past held-out windows the target covered
+14. A quantity marked INDICATIVE ONLY is a planning estimate, never an order to place now: say it will be
+    recomputed on the order-by date and give that date. Never use it to justify the REORDER NOW label.
+    Order quantities size the EVENT window; never claim an order will fix today's stock level, bring
+    stock above a reorder point, or cover a lift, beyond what ORDER QUANTITIES itself states
+15. The order-by date is the LATEST day to place the order. Write "order by <date>" or "on or before <date>";
+    never "on or after", "from" or "starting" that date. After it, the order arrives too late for the event
+16. Always state the caveats that change how far the numbers can be trusted, in the first paragraph of the
+    answer: (a) if a stock figure is N days old, say so wherever you quote stock, and never call stale stock
+    "current" or "now"; (b) if a window is beyond what was validated or has no event, say it was not validated.
+    The system appends the full list of order quantities after your answer, so do not write that list yourself;
+    refer to SKUs by id, explain, and never state a quantity that is not in ORDER QUANTITIES
+17. Do NOT write a recommendation, an instruction to order, a quantity, or an action label (REORDER NOW /
+    MONITOR / ...): the system writes those from its own rules, after your text. Describe the situation only.
+    The days to the order-by date and the days to the event are different numbers: use each only for what it
+    is named
 """
 
 RECOMMENDATION_PROMPT = """\
@@ -133,13 +155,14 @@ UAE SEASONALITY:
 TIMING (stock today and the event deadline are separate questions):
 {timing_text}
 
+ORDER QUANTITIES (computed by the deterministic engine; state these exactly, never compute your own):
+{quantity_text}
+
 RETRIEVAL CONFIDENCE: {confidence:.2f} (threshold: 0.72)
 
 Based on the data above, generate a retail merchandising recommendation in {language}.
-Structure your response:
-1. What the data shows (2–3 sentences, citing sources)
-2. The recommendation (specific and actionable)
-3. The action label on the last line: REORDER NOW / MONITOR / INVESTIGATE / NO ACTION NEEDED
+Write what the data shows in 2-4 sentences, citing sources, and stop. Do not write a recommendation,
+an instruction to order, any quantity, or an action label: the system adds the recommendation after your text.
 """
 
 
@@ -222,7 +245,7 @@ def _order_by_line(signal: SeasonalitySignal) -> str | None:
     elif days_left == 0:
         status = "today"
     else:
-        status = f"{days_left} days left"
+        status = f"{days_left} days left to place the order"
     return f"order-by date: {order_by}" + (f" ({status})" if status else "")
 
 
@@ -285,6 +308,72 @@ def _format_timing(state: AgentState) -> str:
     return f"  • {stock}\n  • {event}"
 
 
+_FLAG_SENTENCES = {
+    "stock_snapshot_stale": "the stock figure is {age} days old",
+    "stock_projected_without_replenishment": "stock at the window start is projected assuming no deliveries arrive",
+    "open_orders_unknown": "open purchase orders are unknown and assumed to be zero",
+    "high_masked_share": "many days of this SKU's history were stock-outs, so the forecast learned less",
+    "beyond_validated_horizon": "the window starts {horizon} days after the last data, farther than the backtest validated",
+    "lead_time_assumed": "the supplier lead time is assumed",
+    "non_event_window": "this window has no event, and the backtest only validated event windows",
+}
+
+
+def _caveat_sentences(r: dict) -> list[str]:
+    """Plain-language caveats, so the model never has to translate (or print) raw flag codes."""
+    out = []
+    for flag in r.get("flags") or []:
+        if flag.startswith("events_without_history"):
+            out.append("an overlapping event has no past occurrence to learn from (measured coverage is lower)")
+        elif flag in _FLAG_SENTENCES:
+            out.append(_FLAG_SENTENCES[flag].format(age=r.get("snapshot_age_days"), horizon=r.get("horizon_days")))
+    return out
+
+
+def _format_quantities(results: list) -> str:
+    """The engine's numbers, one line per SKU, with every input and caveat the model must state."""
+    if not results:
+        return "No quantity computed (quantity engine produced no result)"
+    lines = []
+    for r in results:
+        if r.get("order_qty") is None:
+            reason = "; ".join(_caveat_sentences(r)) or ", ".join(r.get("flags") or ["unknown"]).replace("_", " ")
+            lines.append(f"  • {r['sku_id']}: NO QUANTITY ({reason})")
+            continue
+        cov = (f"coverage estimate {r['coverage_estimate']:.0%} of past held-out windows ({r['coverage_basis']})"
+               if r.get("coverage_estimate") is not None else f"coverage estimate: none ({r.get('coverage_basis', '')})")
+        if r.get("indicative_only"):
+            head = (f"INDICATIVE ONLY, about {r['order_qty']} units (planning estimate, NOT an order to place now; it is "
+                    f"recomputed on the order-by date {r.get('order_by_date') or 'when the window comes within the validated horizon'})")
+        else:
+            head = f"ORDER {r['order_qty']} units"
+        lines.append(
+            f"  • {r['sku_id']}: {head} | window {r['window_start']} to {r['window_end']} "
+            f"| forecast {r['forecast_units']} units x safety {r['safety_multiplier']} = target {r['target_units']} "
+            f"| stock {r['on_hand_snapshot']} on {r['snapshot_date']}, projected {r['projected_on_hand']} at window start "
+            f"| open orders {r['open_orders']} | {cov}"
+            + (f" | caveats in plain words: {'; '.join(_caveat_sentences(r))}" if _caveat_sentences(r) else ""))
+    return "\n".join(lines)
+
+
+# A quantity with no measured coverage (outside the validated horizon) must not sit next to a high confidence.
+MAX_QUANTITY_LINES = 12
+UNVALIDATED_CONFIDENCE_CAP = 0.4        # below the 0.5 line the API documents as "indicative"
+
+
+def _apply_quantity_confidence(confidence: float, results: list) -> float:
+    """
+    Cap the data-coverage score by what the backtest measured for the quantities in this answer:
+    the lowest measured coverage among them, or UNVALIDATED_CONFIDENCE_CAP when any quantity has none.
+    """
+    made = [r for r in results if r.get("order_qty") is not None]
+    if not made:
+        return confidence
+    if any(r.get("coverage_estimate") is None for r in made):
+        return round(min(confidence, UNVALIDATED_CONFIDENCE_CAP), 2)
+    return round(min(confidence, min(r["coverage_estimate"] for r in made)), 2)
+
+
 def _select_language_label(query_language: str) -> str:
     if query_language == "ar":
         return "Arabic"
@@ -299,7 +388,8 @@ def _is_event_selection(state: AgentState) -> bool:
 
 def _compute_confidence(state: AgentState) -> float:
     """
-    Data-coverage score for the recommendation (NOT a calibrated probability; rework planned in Phase 3).
+    Data-coverage score for the recommendation (NOT a calibrated probability). Quantities then cap it
+    (see _apply_quantity_confidence): the score never exceeds the measured coverage of the quantities given.
 
     Retrieval path:  retrieval similarity 40%, sales data 30%, inventory data 20%, no error 10%.
     Event-planning path: SKUs were chosen by the calendar lift table, not by similarity, so there is no
@@ -316,6 +406,180 @@ def _compute_confidence(state: AgentState) -> float:
         return round(max(selection + has_sales + has_inventory + no_error - penalty, 0.0), 2)
     retrieval = state.get("retrieval_confidence", 0.0) * 0.4
     return round(min(retrieval + has_sales + has_inventory + no_error, 1.0), 2)
+
+
+# ── Deterministic additions to the model's text ────────────────────────────────
+
+# The model sometimes writes non-breaking hyphens and spaces (U+2011, U+202F), which break copy, search and date parsing.
+_TEXT_FIXES = {"\u2010": "-", "\u2011": "-", "\u202f": " ", "\u00a0": " "}
+
+
+def _normalize_text(text: str) -> str:
+    """Replace look-alike hyphens and spaces with plain ones. En dashes are left alone: they are legitimate in ranges."""
+    for bad, good in _TEXT_FIXES.items():
+        text = text.replace(bad, good)
+    return text
+
+
+def _quantities_block(results: list, query_language: str = "en") -> str:
+    """
+    The engine's quantities, written by code, not by the model. The model explains; it cannot change these numbers,
+    and it sometimes leaves them out. Same facts as the order_recommendations field of the API response.
+    """
+    if not results:
+        return ""
+    ar = query_language == "ar"
+    units = "وحدة" if ar else "units"
+    head = ("**كميات الطلب (من محرك التنبؤ، وليس من النموذج اللغوي)**" if ar else
+            "**Order quantities (from the forecasting engine, not the language model)**")
+    lines = []
+    for r in results[:MAX_QUANTITY_LINES]:
+        if r.get("order_qty") is None:
+            reason = "; ".join(_caveat_sentences(r)) or "not enough data"
+            lines.append(f"- {r['sku_id']}: no quantity ({reason})")
+            continue
+        qty = f"{r['order_qty']:,} {units}"
+        if r.get("indicative_only"):
+            when = f"indicative only; recomputed by {r['order_by_date']}" if r.get("order_by_date") else "indicative only"
+        else:
+            when = "order now" if not r.get("order_by_date") else f"order by {r['order_by_date']}"
+        cov = (f"coverage {r['coverage_estimate']:.0%}" if r.get("coverage_estimate") is not None else "coverage not validated")
+        lines.append(f"- {r['sku_id']}: **{qty}** ({when}; window {r['window_start']} to {r['window_end']}; {cov})")
+    if len(results) > MAX_QUANTITY_LINES:
+        lines.append(f"- … and {len(results) - MAX_QUANTITY_LINES} more in the order_recommendations field")
+    return head + "\n" + "\n".join(lines)
+
+
+ACTION_LABELS = ("REORDER NOW", "MONITOR", "INVESTIGATE", "NO ACTION NEEDED")
+_LABEL_RE = "|".join(re.escape(x) for x in ACTION_LABELS)
+# A trailing label the model wrote itself: optional heading line ("**Action label**"), then the label alone.
+_TRAILING_LABEL = re.compile(
+    rf"(?:\n+[ \t]*(?:#+\s*|\*\*)?(?:action(?: label)?|recommendation label)[ \t]*:?(?:\*\*)?[ \t]*)?"
+    rf"\n+[ \t]*(?:\*\*)?(?:action(?: label)?:\s*)?(?:{_LABEL_RE})(?:\*\*)?[ \t.]*\s*$", re.IGNORECASE)
+
+
+def action_label(state: AgentState) -> str:
+    """
+    The action label is DECIDED HERE from the engine's own signals, not by the language model (same reason as the
+    quantities: the model contradicted the engine, saying REORDER NOW for an order-by date 291 days away).
+      event order-by passed / close / event running  -> REORDER NOW
+      stock critical today and the stock figure is fresh -> REORDER NOW
+      stock critical today but the figure is stale   -> INVESTIGATE (an old snapshot cannot justify an order)
+      event order-by still ahead (WATCH)             -> MONITOR
+      nothing lifts these products and stock is fine -> NO ACTION NEEDED
+      no usable data                                 -> INVESTIGATE
+    """
+    level = ((state.get("seasonality_signal") or {}).get("alert_level") or "none").lower()
+    signals = [i for i in (state.get("inventory_signals") or []) if i.get("current_stock") != -1]
+    critical = any(i.get("is_critical") for i in signals)
+    stale = any("stock_snapshot_stale" in (r.get("flags") or []) for r in (state.get("quantity_results") or []))
+    if level in ("critical", "act"):
+        return "REORDER NOW"
+    if critical:
+        return "INVESTIGATE" if stale else "REORDER NOW"
+    if level == "watch":
+        return "MONITOR"
+    if not signals and level == "none":
+        return "INVESTIGATE"
+    return "NO ACTION NEEDED"
+
+
+def _strip_model_label(text: str) -> str:
+    return _TRAILING_LABEL.sub("", text.rstrip()).rstrip()
+
+
+# A section the model wrote anyway ("**Recommendation** ..."): cut from its heading to the end.
+_MODEL_RECOMMENDATION = re.compile(
+    r"\n[ \t]*(?:#+[ \t]*)?\*{0,2}(?:the[ \t]+)?(?:recommendation|action)\*{0,2}[ \t]*:?\*{0,2}[ \t]*(?:\n|$)",
+    re.IGNORECASE)
+
+
+def _cut_model_recommendation(text: str) -> str:
+    m = _MODEL_RECOMMENDATION.search("\n" + text)
+    return (("\n" + text)[:m.start()]).strip() if m else text
+
+
+def _event_clause(sig: dict, ar: bool) -> str:
+    """The event timing, from the signals. Order-by days and event days are stated separately, on purpose."""
+    event, order_by = sig.get("upcoming_event"), sig.get("order_by_date")
+    if not event:
+        return ""
+    until, left = sig.get("days_until_event"), sig.get("days_to_order_by")
+    if until is not None and until <= 0:
+        return (f"{event} جارٍ الآن." if ar else f"{event} is running now.")
+    start = (f"يبدأ {event} بعد {until} يومًا" if ar else f"{event} starts in {until} days") if until is not None else event
+    if not order_by:
+        return start + "."
+    if left is None:
+        by = f"آخر موعد للطلب {order_by}" if ar else f"order by {order_by}"
+    elif left < 0:
+        by = (f"فات آخر موعد للطلب ({order_by}) منذ {-left} يومًا" if ar
+              else f"the order-by date ({order_by}) passed {-left} days ago")
+    elif left == 0:
+        by = f"آخر موعد للطلب اليوم ({order_by})" if ar else f"the order-by date is today ({order_by})"
+    else:
+        by = (f"آخر موعد للطلب {order_by} (بعد {left} يومًا)" if ar
+              else f"last day to place the order: {order_by} ({left} days from now)")
+    return f"{start}؛ {by}." if ar else f"{start}; {by}."
+
+
+def recommendation_sentence(state: AgentState, label: str, query_language: str = "en") -> str:
+    """
+    The instruction to the reader, written by code from the same signals as the label, so the label, the dates and
+    the sentence cannot disagree. Every number and date here comes from the engine, never from the language model.
+    """
+    ar = query_language == "ar"
+    sig = state.get("seasonality_signal") or {}
+    known = [i for i in (state.get("inventory_signals") or []) if i.get("current_stock") != -1]
+    critical = [i["sku_id"] for i in known if i.get("is_critical")]
+    ages = [r.get("snapshot_age_days") for r in (state.get("quantity_results") or [])
+            if "stock_snapshot_stale" in (r.get("flags") or []) and r.get("snapshot_age_days") is not None]
+    age = max(ages) if ages else None
+    event = _event_clause(sig, ar)
+    ids = ", ".join(critical[:6]) + (f" +{len(critical) - 6}" if len(critical) > 6 else "")
+    quant = (" الكميات أدناه إرشادية وتُحسب من جديد في موعد الطلب." if ar
+             else " The quantities below are indicative and are recomputed on the order-by date.")
+    level = (sig.get("alert_level") or "none").lower()
+
+    if label == "REORDER NOW":
+        if level in ("critical", "act"):
+            head = (f"اطلب الآن: {event}" if ar else f"Place the order now: {event}")
+        else:
+            head = (f"المخزون حرج الآن في {len(critical)} من {len(known)} منتجًا ({ids}): اطلب تجديد المخزون الآن."
+                    if ar else f"Stock is critical on {len(critical)} of {len(known)} listed SKUs ({ids}): "
+                               f"place a replenishment order now.")
+            if event:
+                head += " " + event
+        return head
+    if label == "INVESTIGATE":
+        if critical:
+            old = f" عمره {age} يومًا" if ar and age else (f" is {age} days old" if age else " may be out of date")
+            head = (f"يظهر المخزون حرجًا في {len(critical)} من {len(known)} منتجًا ({ids})، لكن الرقم{old}: "
+                    f"تحقق من المخزون الحالي قبل أي طلب." if ar else
+                    f"Stock reads critical on {len(critical)} of {len(known)} listed SKUs ({ids}), but the figure{old}: "
+                    f"confirm current stock before ordering.")
+            return head + (" " + event if event else "") + (quant if event else "")
+        return ("لا توجد بيانات كافية للتوصية بإجراء: راجع بيانات المخزون لهذه المنتجات." if ar else
+                "There is not enough data to recommend an action: check the inventory data for these products.")
+    if label == "MONITOR":
+        return ((f"لا حاجة لطلب الآن. {event}" if ar else f"No order is needed yet. {event}") + quant)
+    return ("لا إجراء مطلوب: المخزون غير حرج ولا توجد مناسبة ترفع الطلب على هذه المنتجات." if ar else
+            "No action needed: stock is not critical and no event lifts these products.")
+
+
+def _finalize_text(recommendation: str, results: list, query_language: str, label: str | None = None,
+                   state: AgentState | None = None) -> str:
+    """The model's explanation, then everything that moves money, written by code: recommendation, label, quantities."""
+    text = _normalize_text(recommendation)
+    arabic = query_language == "ar"
+    if label:
+        text = _strip_model_label(_cut_model_recommendation(text))
+        if state is not None:
+            text += (f"\n\n**{'التوصية' if arabic else 'Recommendation'}**\n"
+                     f"{recommendation_sentence(state, label, query_language)}")
+        text += f"\n\n**{'الإجراء' if arabic else 'Action'}:** {label}"
+    block = _quantities_block(results, query_language)
+    return f"{text}\n\n{block}" if block else text
 
 
 def _degraded_answer(state: AgentState, headline: str) -> str:
@@ -340,7 +604,7 @@ async def recommendation_node(state: AgentState) -> dict:
         Partial state dict with recommendation, confidence, and trace entry.
         On a degraded answer it also sets `error`, so callers can skip caching it.
     """
-    confidence = _compute_confidence(state)
+    confidence = _apply_quantity_confidence(_compute_confidence(state), (state.get("quantity_results") or []))
     language   = _select_language_label(state.get("query_language", "en"))
     model      = _model_name()
     error: str | None = None
@@ -352,6 +616,7 @@ async def recommendation_node(state: AgentState) -> dict:
         inventory_text=_format_inventory(state.get("inventory_signals", [])),
         seasonality_text=_format_seasonality(state.get("seasonality_signal", {})),
         timing_text=_format_timing(state),
+        quantity_text=_format_quantities((state.get("quantity_results") or [])),
         confidence=state.get("retrieval_confidence", 0.0),
         language=language,
     )
@@ -403,6 +668,8 @@ async def recommendation_node(state: AgentState) -> dict:
         trace      = f"Recommendation: LLM unavailable ({type(exc).__name__}) — trace-only fallback returned"
         error      = f"recommendation: {type(exc).__name__}"
 
+    recommendation = _finalize_text(recommendation, (state.get("quantity_results") or []),
+                                    state.get("query_language", "en"), label=action_label(state), state=state)
     update = {
         "recommendation":            recommendation,
         "recommendation_confidence": confidence,
@@ -411,3 +678,4 @@ async def recommendation_node(state: AgentState) -> dict:
     if error:
         update["error"] = error
     return update
+

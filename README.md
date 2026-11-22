@@ -4,9 +4,8 @@
 > Aims to give sellers who cannot afford a dedicated merchandising manager an autonomous
 > merchandising layer: what to stock, when to order it, and why.
 
-**Status:** Phase 2 complete (LangGraph agentic loop, calendar-driven seasonality, event-planning route) · 183 tests passing
-**Stack:** LangGraph · LangChain · ChromaDB · multilingual-e5-small · Groq · FastAPI · Redis · Docker
-**Wired, not yet used:** PostgreSQL (audit log, Phase 3) · **Planned:** Prophet forecasting (Phase 3)
+**Status:** Phase 3 complete (forecast-based order quantities, calibrated confidence, autonomous trigger, human override, audit log, Next.js dashboard) · 308 tests passing
+**Stack:** LangGraph · LangChain · ChromaDB · multilingual-e5-small · Prophet · Groq · FastAPI · PostgreSQL + Alembic · Redis · Next.js · Docker
 **Data:** Synthetic. 500 SKUs, daily sales history, a UAE retail calendar for 2024–2027. See [Dataset](#dataset).
 
 ---
@@ -40,6 +39,14 @@ API layer: language detection (Unicode Arabic ratio) + rule-based intent classif
              +-- reorder / analysis -> sales_analysis -> inventory_check -> seasonality_check -> recommendation
 
 Every node appends to a human-readable reasoning trace that is returned to the caller.
+
+Phase 3 adds a quantity node to the event-planning route and a background scan beside the request path:
+
+```
+event_planning ... -> seasonality_check -> quantity_node (Prophet + safety multiplier, no LLM) -> recommendation
+timer / POST /scan -> cheap screen over all SKUs -> Prophet sizing for triggered SKUs only -> recommendations (PostgreSQL)
+human: approve / modify / reject  ->  stored beside the system's recommendation, append-only event log
+```
 Redis caches answers for 1 hour; the key is (code version, normalised query, date).
 ```
 
@@ -163,6 +170,83 @@ updates, an LRU eviction policy and Redis keys partitioned by product category.
 
 ---
 
+## Phase 3: autonomous reorder engine
+
+**All data is synthetic.** Numbers show that the pipeline works, not how real Dubai demand behaves. Full evaluation and
+the wording to use for each claim: [eval/PHASE3_RESULTS.md](eval/PHASE3_RESULTS.md).
+
+### What it does
+
+- **Order quantity**: `ceil(max(0, forecast x (1 + q) - projected on hand - open orders))`, where the forecast is a Prophet
+  fit per SKU with the UAE calendar as holidays and `q` is a split-conformal safety multiplier for the chosen service level.
+  The language model never computes a quantity.
+- **Calibrated confidence**: confidence is the measured held-out coverage of targets like this one (89.9% on the 526 lifted-SKU test cases;
+  about 94% for events with history; 78.2% for events without). Anything without a measurement (a window beyond the
+  validated 30-day horizon, a window with no event, stock older than 7 days) is capped at 0.4 and says why.
+- **Autonomous trigger**: no question needed. A runway rule (stock runs out before a new order could arrive) and an event
+  rule (the order-by date for an event is within a 7-day notice window) screen every SKU cheaply; only triggered SKUs are sized
+  with Prophet (empty shelves first, then most overdue, at most 40 per scan; the rest are reported as `deferred`).
+- **Human override**: approve, modify (reason and a different quantity required) or reject (reason required). The system's
+  recommendation is never edited; the human decision is stored beside it with an append-only event log. A decision is final
+  and race-safe (the second of two simultaneous decisions gets 409).
+- **Dashboard**: `frontend/` (Next.js 14, same repo, same-origin proxy to the API). `docker compose -f docker-compose.yml -f docker-compose.frontend.yml up -d --build`, then http://localhost:3000.
+
+### API
+
+| Endpoint | Purpose |
+|---|---|
+| `POST /api/v1/agent/scan` | Run a scan now (`as_of` replays a past date; `limit` caps sized SKUs) |
+| `GET /api/v1/agent/recommendations` | List (`status`, `sku_id`); says whether it read PostgreSQL or memory |
+| `GET /api/v1/agent/recommendations/{rec_id}` | One recommendation, with its decision history |
+| `POST /api/v1/agent/recommendations/{rec_id}/decision` | approve / modify / reject (404, 409, 422, 503) |
+
+The database schema is owned by Alembic: `docker compose exec api alembic upgrade head`. Background scan interval:
+`REORDER_SCAN_INTERVAL_MINUTES` (default 360, 0 disables).
+
+### Decision 18: the language model explains; code decides every claim that moves money
+
+**Decision.** In a chat answer the model writes only "what the data shows". Code writes the recommendation sentence, the
+action label (REORDER NOW / MONITOR / INVESTIGATE / NO ACTION NEEDED), the dates and every order quantity, from the same
+signals that drive the engine. A recommendation or label the model writes anyway is cut and replaced.
+**Alternative.** Keep asking for the label and quantities in the prompt and tighten the wording.
+**Why.** Measured on the live Diwali question: with prompt rules alone the model said "REORDER NOW" for an order-by date 291
+days away, copied the wrong day count for the event, told the reader to place orders the engine had marked "not an order to
+place now", and quoted a 45-day-old stock figure as current. Four prompt revisions did not hold; a prompt is advice, not
+enforcement, on a small free-tier model. The retailer acts on the instruction, so it must not depend on wording luck.
+**Trade-off.** Less free-form answers. The explanation paragraph is still model-written and can misstate a number (see
+known limits); the recommendation, label and quantities cannot.
+
+Other Phase 3 decisions (coverage as the headline precision claim; Alembic instead of init.sql; never overwrite the system
+quantity; stale stock as a hard fallback; Next.js instead of Gradio) are written up as decision / alternative / why / trade-off
+in the project decision log.
+
+### Scale ceilings (what breaks, and the next step)
+
+| Area | Works now | Breaks at | Next architectural step |
+|---|---|---|---|
+| Forecasting | One lazy Prophet fit per SKU, cached; scan caps sizing at 40 SKUs | Thousands of triggered SKUs per scan | Batch forecasts written to PostgreSQL; the request path only reads |
+| Scan | In-process asyncio loop | A sleeping free-tier Space (it scans on wake-up); several API replicas would each scan | A separate worker with a lock, event-driven by inventory updates |
+| Audit log | One PostgreSQL, two tables | Millions of rows | Monthly partitions, streamed to a warehouse |
+| Cache | 1 h TTL Redis keyed on query, date, code version | Millions of keys | Event-driven invalidation, LRU, keys partitioned by category |
+| Auth | None: the decision's actor name is self-declared | Any shared deployment | SSO, and an actor taken from the identity, not the request |
+
+### Known limits of Phase 3 (stated before an interviewer finds them)
+
+- Synthetic data generated from the same lift table the calendar uses; the engine does not read that table (a test enforces
+  it), but the simple structure flatters every number.
+- The "above 80% precision" target is **not met** under the strict joint reading (covered and overshoot within 30%: 41%; 66%
+  at 50%). The headline is 89.9% coverage with a median 31.9% overshoot, reported together.
+- Every backtest case was an event window. Non-event and beyond-horizon quantities carry no coverage claim (confidence 0.4).
+  Beauty coverage is 84% (about 1.7 standard errors under target); overlapping events are biased about -10%.
+- Confidence is group coverage, not a per-SKU probability.
+- The inventory snapshot has no date (treated as dated at the last sales date, so it reads stale today) and open purchase orders
+  are unknown (assumed 0). While the snapshot is stale the runway rule is "not assessed"; only event recommendations appear.
+- The model-written explanation paragraph can still misstate a number (for example quote the wrong day count). The
+  recommendation, label and quantities are code-written and cannot.
+- Replay scans (`as_of` in the past) share the audit table with real ones (labelled `replay`); there is no purge command yet.
+
+---
+
 ## Production bugs found and fixed
 
 - **LangGraph node name clash.** LangGraph raises `ValueError` if a node name equals an `AgentState` field name. All
@@ -191,7 +275,6 @@ updates, an LRU eviction policy and Redis keys partitioned by product category.
 
 ### Known issues (open)
 - Lift multipliers are synthetic, not learned from history. Equal-lift SKUs are ranked by runway.
-- No order-quantity engine yet; confidence is not calibrated (Phase 3).
 - Agent latency is usually about 1.3 s but has occasional spikes of 5 to 20 s. Nearly all of that time is the single Groq call; the cause of the spikes is not established (free-tier queueing is a guess, not a finding).
 - The first agent request after a container start takes about 8 s because the 365,000-row sales file is loaded lazily. Preloading it at startup is not done yet.
 - Search latency on a laptop is not perfectly stable: in 7 runs the `/search` p95 was 71 to 99 ms six times and 694 ms once (cause not established).
@@ -239,8 +322,8 @@ announced; the catalogue has no festival-specific products yet (diyas, sweet box
 
 ## Tests
 
-183 tests across: Phase 1 retrieval and data checks, synthetic-data invariants, real-CSV inventory checks, intent and
-routing, calendar seasonality, the recommendation node (fake model client), the event-planning route end to end on real
+308 tests across: Phase 1 retrieval and data checks, synthetic-data invariants, real-CSV inventory checks, intent and
+routing, calendar seasonality, the recommendation node (fake model client), the quantity engine and its backtest invariants, the reorder trigger, the override rules and audit log (through the real Alembic migration), the event-planning route end to end on real
 data, sales-event analysis, the API layer (null relevance for calendar-selected SKUs, cache version, health), the RAG
 node with the real retriever, the real-retriever smoke cases, stale-index detection (fake embedder, real Chroma), and the per-node timing wrapper.
 
@@ -266,7 +349,8 @@ Third project in a production AI engineering portfolio targeting a full-time AI 
 |-------|-------|--------|
 | 1 | Bilingual RAG over the product catalogue | Complete |
 | 2 | LangGraph agentic loop, event planning | Complete |
-| 3 | Autonomous reorder engine: quantities, calibrated confidence, human override, audit log | Planned |
+| 3 | Autonomous reorder engine: quantities, calibrated confidence, human override, audit log, dashboard | Complete |
 | 4 | Arabic dialect polish and bilingual response generation | Planned |
 
 *Started: August 2026 · GitHub: github.com/Dula21*
+
