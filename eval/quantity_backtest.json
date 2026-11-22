@@ -1,0 +1,349 @@
+{
+  "data_dir": "/app/data/synthetic",
+  "skus": 100,
+  "cases": 1500,
+  "split_date": "2026-01-09",
+  "service_level": 0.9,
+  "headline_tolerance": 0.3,
+  "caveat": "synthetic data; lifts generated from event_lifts.csv; validates the pipeline, not real Dubai demand",
+  "forecasters": {
+    "F_prophet_run": {
+      "forecaster": "F_prophet_run",
+      "calibration_cases": 475,
+      "test_cases": 760,
+      "safety": {
+        "service_level": 0.9,
+        "edges": [
+          49.84401907138718,
+          109.93454201270917
+        ],
+        "q": [
+          0.8038015044077937,
+          0.4706633925369954,
+          0.2897567580641508
+        ],
+        "n": [
+          158,
+          158,
+          159
+        ],
+        "global_q": 0.4850330019279183,
+        "n_total": 475
+      },
+      "test_all": {
+        "n": 760,
+        "coverage": 0.912,
+        "wape": 0.113,
+        "bias": -0.052,
+        "median_overshoot_when_covered": 0.32,
+        "precision@20": 0.233,
+        "precision@30": 0.416,
+        "precision@50": 0.661
+      },
+      "test_lifted_skus": {
+        "n": 526,
+        "coverage": 0.899,
+        "wape": 0.121,
+        "bias": -0.066,
+        "median_overshoot_when_covered": 0.319,
+        "precision@20": 0.241,
+        "precision@30": 0.411,
+        "precision@50": 0.66
+      },
+      "by_category_lifted": {
+        "beauty": {
+          "n": 112,
+          "coverage": 0.839,
+          "wape": 0.152,
+          "bias": -0.115,
+          "median_overshoot_when_covered": 0.258,
+          "precision@20": 0.339,
+          "precision@30": 0.473,
+          "precision@50": 0.652
+        },
+        "electronics": {
+          "n": 65,
+          "coverage": 0.923,
+          "wape": 0.125,
+          "bias": -0.051,
+          "median_overshoot_when_covered": 0.519,
+          "precision@20": 0.108,
+          "precision@30": 0.2,
+          "precision@50": 0.446
+        },
+        "fashion": {
+          "n": 166,
+          "coverage": 0.898,
+          "wape": 0.124,
+          "bias": -0.079,
+          "median_overshoot_when_covered": 0.313,
+          "precision@20": 0.187,
+          "precision@30": 0.416,
+          "precision@50": 0.669
+        },
+        "food": {
+          "n": 93,
+          "coverage": 0.968,
+          "wape": 0.09,
+          "bias": -0.032,
+          "median_overshoot_when_covered": 0.301,
+          "precision@20": 0.312,
+          "precision@30": 0.484,
+          "precision@50": 0.86
+        },
+        "home": {
+          "n": 90,
+          "coverage": 0.889,
+          "wape": 0.15,
+          "bias": -0.062,
+          "median_overshoot_when_covered": 0.336,
+          "precision@20": 0.244,
+          "precision@30": 0.4,
+          "precision@50": 0.6
+        }
+      },
+      "test_lifted_events_without_history": {
+        "n": 147,
+        "coverage": 0.782,
+        "wape": 0.142,
+        "bias": -0.118,
+        "median_overshoot_when_covered": 0.244,
+        "precision@20": 0.34,
+        "precision@30": 0.503,
+        "precision@50": 0.653
+      }
+    },
+    "F_lift_table": {
+      "forecaster": "F_lift_table",
+      "calibration_cases": 500,
+      "test_cases": 760,
+      "safety": {
+        "service_level": 0.9,
+        "edges": [
+          52.001224489795916,
+          115.03333333333336
+        ],
+        "q": [
+          0.9675010979358807,
+          0.46809712027103356,
+          0.3468466951749218
+        ],
+        "n": [
+          167,
+          165,
+          168
+        ],
+        "global_q": 0.5318627450980388,
+        "n_total": 500
+      },
+      "test_all": {
+        "n": 760,
+        "coverage": 0.987,
+        "wape": 0.407,
+        "bias": 0.334,
+        "median_overshoot_when_covered": 0.897,
+        "precision@20": 0.059,
+        "precision@30": 0.128,
+        "precision@50": 0.305
+      },
+      "test_lifted_skus": {
+        "n": 526,
+        "coverage": 0.994,
+        "wape": 0.521,
+        "bias": 0.487,
+        "median_overshoot_when_covered": 1.062,
+        "precision@20": 0.029,
+        "precision@30": 0.084,
+        "precision@50": 0.24
+      },
+      "by_category_lifted": {
+        "beauty": {
+          "n": 112,
+          "coverage": 1.0,
+          "wape": 0.852,
+          "bias": 0.836,
+          "median_overshoot_when_covered": 1.35,
+          "precision@20": 0.027,
+          "precision@30": 0.062,
+          "precision@50": 0.134
+        },
+        "electronics": {
+          "n": 65,
+          "coverage": 0.985,
+          "wape": 0.176,
+          "bias": 0.108,
+          "median_overshoot_when_covered": 1.081,
+          "precision@20": 0.0,
+          "precision@30": 0.046,
+          "precision@50": 0.231
+        },
+        "fashion": {
+          "n": 166,
+          "coverage": 1.0,
+          "wape": 0.803,
+          "bias": 0.767,
+          "median_overshoot_when_covered": 1.409,
+          "precision@20": 0.03,
+          "precision@30": 0.066,
+          "precision@50": 0.163
+        },
+        "food": {
+          "n": 93,
+          "coverage": 1.0,
+          "wape": 0.193,
+          "bias": 0.16,
+          "median_overshoot_when_covered": 0.527,
+          "precision@20": 0.032,
+          "precision@30": 0.161,
+          "precision@50": 0.473
+        },
+        "home": {
+          "n": 90,
+          "coverage": 0.978,
+          "wape": 0.456,
+          "bias": 0.402,
+          "median_overshoot_when_covered": 0.832,
+          "precision@20": 0.044,
+          "precision@30": 0.089,
+          "precision@50": 0.278
+        }
+      },
+      "test_lifted_events_without_history": {
+        "n": 147,
+        "coverage": 1.0,
+        "wape": 0.72,
+        "bias": 0.697,
+        "median_overshoot_when_covered": 1.386,
+        "precision@20": 0.007,
+        "precision@30": 0.068,
+        "precision@50": 0.204
+      }
+    },
+    "F_naive": {
+      "forecaster": "F_naive",
+      "calibration_cases": 500,
+      "test_cases": 758,
+      "safety": {
+        "service_level": 0.9,
+        "edges": [
+          36.0,
+          72.89682539682539
+        ],
+        "q": [
+          1.674698795180723,
+          1.766169154228855,
+          1.5336538461538463
+        ],
+        "n": [
+          166,
+          167,
+          167
+        ],
+        "global_q": 1.6341463414634145,
+        "n_total": 500
+      },
+      "test_all": {
+        "n": 758,
+        "coverage": 0.893,
+        "wape": 0.361,
+        "bias": -0.279,
+        "median_overshoot_when_covered": 1.01,
+        "precision@20": 0.069,
+        "precision@30": 0.116,
+        "precision@50": 0.193
+      },
+      "test_lifted_skus": {
+        "n": 525,
+        "coverage": 0.855,
+        "wape": 0.455,
+        "bias": -0.381,
+        "median_overshoot_when_covered": 0.777,
+        "precision@20": 0.097,
+        "precision@30": 0.162,
+        "precision@50": 0.255
+      },
+      "by_category_lifted": {
+        "beauty": {
+          "n": 111,
+          "coverage": 0.811,
+          "wape": 0.396,
+          "bias": -0.314,
+          "median_overshoot_when_covered": 0.719,
+          "precision@20": 0.09,
+          "precision@30": 0.189,
+          "precision@50": 0.288
+        },
+        "electronics": {
+          "n": 65,
+          "coverage": 1.0,
+          "wape": 0.334,
+          "bias": -0.318,
+          "median_overshoot_when_covered": 0.911,
+          "precision@20": 0.046,
+          "precision@30": 0.092,
+          "precision@50": 0.169
+        },
+        "fashion": {
+          "n": 166,
+          "coverage": 0.94,
+          "wape": 0.429,
+          "bias": -0.216,
+          "median_overshoot_when_covered": 0.79,
+          "precision@20": 0.139,
+          "precision@30": 0.199,
+          "precision@50": 0.277
+        },
+        "food": {
+          "n": 93,
+          "coverage": 0.613,
+          "wape": 0.548,
+          "bias": -0.548,
+          "median_overshoot_when_covered": 0.604,
+          "precision@20": 0.054,
+          "precision@30": 0.129,
+          "precision@50": 0.226
+        },
+        "home": {
+          "n": 90,
+          "coverage": 0.9,
+          "wape": 0.381,
+          "bias": -0.365,
+          "median_overshoot_when_covered": 0.828,
+          "precision@20": 0.111,
+          "precision@30": 0.144,
+          "precision@50": 0.267
+        }
+      },
+      "test_lifted_events_without_history": {
+        "n": 146,
+        "coverage": 0.651,
+        "wape": 0.488,
+        "bias": -0.395,
+        "median_overshoot_when_covered": 0.648,
+        "precision@20": 0.151,
+        "precision@30": 0.233,
+        "precision@50": 0.274
+      }
+    }
+  },
+  "masking": {
+    "run": {
+      "n": 1455,
+      "wape": 0.119,
+      "bias": -0.055,
+      "bias_lifted_skus": -0.072
+    },
+    "none": {
+      "n": 1500,
+      "wape": 0.288,
+      "bias": -0.262,
+      "bias_lifted_skus": -0.323
+    },
+    "flag": {
+      "n": 1478,
+      "wape": 0.124,
+      "bias": -0.064,
+      "bias_lifted_skus": -0.079
+    }
+  }
+}

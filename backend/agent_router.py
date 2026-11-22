@@ -9,6 +9,8 @@ Included in main.py with:
 
 Endpoints:
     POST /api/v1/agent/query  — Main agent query
+    POST /api/v1/agent/scan   — Run the autonomous reorder scan now (no question asked)
+    GET  /api/v1/agent/recommendations — Recommendations the scan has raised (status / sku filters)
     GET  /api/v1/agent/health — Agent graph health check
 
 Redis caching:
@@ -45,16 +47,21 @@ import os
 from datetime import date
 
 import structlog
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, HTTPException, Query, Request
 from fastapi.responses import JSONResponse
 
+from .agents import reorder_repo, reorder_scan
+from services import reorder_db, reorder_override  # top-level `services`: same import path the agents use
 from .agents.retail_agent import run_agent
 from .agents.state import SeasonalitySignal
 from .models.agent_models import (
     AgentQueryRequest,
     AgentQueryResponse,
     FallbackResponse,
+    OrderQuantityResponse,
     RetrievedProductResponse,
+    DecisionRequest,
+    ScanRequest,
     SeasonalityResponse,
 )
 from .services.intent_classifier import classify_intent, detect_language, is_factual_intent
@@ -64,7 +71,7 @@ router = APIRouter(tags=["agent"])
 
 CACHE_TTL_SECONDS = int(os.getenv("AGENT_CACHE_TTL", "3600"))
 # Bump when node logic, prompts or the response shape change (old cached answers then stop matching).
-CACHE_VERSION = os.getenv("AGENT_CACHE_VERSION", "p2-planning-1")
+CACHE_VERSION = os.getenv("AGENT_CACHE_VERSION", "p3-quantity-1")
 
 
 def _cache_key(query: str) -> str:
@@ -191,6 +198,10 @@ async def agent_query(
         confidence=state.get("recommendation_confidence", 0.0),
         reasoning_trace=state.get("reasoning_trace", []),
         retrieved_products=retrieved_products,
+        order_recommendations=[] if hard_fallback else [
+            OrderQuantityResponse(**{k: v for k, v in q.items() if k in OrderQuantityResponse.model_fields})
+            for q in (state.get("quantity_results") or [])
+        ],
         seasonality=seasonality,
         fallback_triggered=state.get("fallback_triggered", False),
         query_language=query_language,
@@ -222,6 +233,58 @@ async def agent_query(
     return response
 
 
+@router.post("/scan")
+async def run_reorder_scan(body: ScanRequest | None = None) -> dict:
+    """
+    Run the autonomous reorder scan now. The same scan runs on a timer (REORDER_SCAN_INTERVAL_MINUTES) with no
+    request at all; this endpoint is for demos, replays (`as_of`) and on-demand refresh after a data upload.
+    """
+    body = body or ScanRequest()
+    try:
+        return await reorder_scan.run_scan(as_of=body.as_of, limit=body.limit)
+    except RuntimeError as exc:
+        raise HTTPException(status_code=409, detail=str(exc))
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc))
+
+
+@router.get("/recommendations")
+async def list_recommendations(
+    status: str | None = Query(default=None, description="pending | approved | rejected | modified"),
+    sku_id: str | None = None,
+) -> dict:
+    """Recommendations raised by the scan, most urgent first, plus a summary of the last scan."""
+    items, source = await reorder_repo.list_recs(status, sku_id)
+    return {"count": len(items), "source": source, "last_scan": reorder_scan.last_scan(), "recommendations": items}
+
+
+@router.get("/recommendations/{rec_id}")
+async def get_recommendation(rec_id: str) -> dict:
+    """One recommendation with its full audit history (created, then any human decision)."""
+    rec, history, source = await reorder_repo.get_one(rec_id)
+    if rec is None:
+        raise HTTPException(status_code=404, detail=f"no recommendation {rec_id}")
+    return {"source": source, "recommendation": rec, "history": history}
+
+
+@router.post("/recommendations/{rec_id}/decision")
+async def decide_recommendation(rec_id: str, body: DecisionRequest) -> dict:
+    """
+    Human override: approve, reject, or modify the quantity of a recommendation. The system's own numbers and trace are
+    kept; the decision is stored beside them and appended to the audit log. A decision is final.
+    """
+    try:
+        rec, persisted = await reorder_repo.decide(rec_id, body.decision, body.actor, body.reason, body.quantity)
+    except LookupError:
+        raise HTTPException(status_code=404, detail=f"no recommendation {rec_id}")
+    except reorder_override.OverrideError as exc:
+        raise HTTPException(status_code=409 if exc.code == "conflict" else 422, detail=str(exc))
+    except reorder_db.DatabaseUnavailable as exc:
+        raise HTTPException(status_code=503, detail=f"decision NOT recorded: the audit database is unavailable "
+                                                     f"({exc}). If this is a new database run: alembic upgrade head")
+    return {"persisted": persisted, "recommendation": rec}
+
+
 @router.get("/health")
 async def agent_health() -> dict:
     """Agent health check — confirms LangGraph graph is compiled."""
@@ -236,8 +299,11 @@ async def agent_health() -> dict:
             "sales_analysis_node",
             "inventory_check_node",
             "seasonality_check_node",
+            "quantity_node",
             "recommendation_node",
             "fallback_node",
         ],
-        "phase": 2,
+        "autonomous_scan": True,
+        "phase": 3,
     }
+

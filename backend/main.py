@@ -16,6 +16,7 @@ Endpoints:
 
 from __future__ import annotations
 
+import asyncio
 import os
 import time
 from contextlib import asynccontextmanager
@@ -42,6 +43,31 @@ SALES_PATH     = os.path.join(DATA_DIR, "sales_history.csv")
 CHROMA_DIR     = os.getenv("CHROMA_DIR", ".chroma_db")
 FORCE_REINGEST = os.getenv("FORCE_REINGEST", "false").lower() == "true"
 REDIS_URL      = os.getenv("REDIS_URL", "redis://localhost:6379")
+
+REORDER_SCAN_INTERVAL_MINUTES   = int(os.getenv("REORDER_SCAN_INTERVAL_MINUTES", "360"))
+REORDER_SCAN_FIRST_DELAY_SECONDS = int(os.getenv("REORDER_SCAN_FIRST_DELAY_SECONDS", "180"))
+
+
+async def _scan_loop() -> None:
+    """
+    Run the reorder scan forever: first after a delay (so startup and the first requests are not competing with
+    Prophet fits), then every REORDER_SCAN_INTERVAL_MINUTES. A failed scan is logged and the loop carries on.
+    DECISION: an in-process asyncio loop, not a cron service. Free tier has no scheduler, and a container that is
+    asleep (Hugging Face Spaces) scans on wake-up. Next architectural step at scale: a separate worker or scheduled job.
+    """
+    from .agents import reorder_scan
+    await asyncio.sleep(REORDER_SCAN_FIRST_DELAY_SECONDS)
+    while True:
+        try:
+            result = await reorder_scan.run_scan()
+            logger.info("reorder_scan_scheduled_done", recommendations=len(result["recommendations"]),
+                        triggered=result["triggered"])
+        except asyncio.CancelledError:
+            raise
+        except Exception as exc:
+            logger.error("reorder_scan_scheduled_failed", error=str(exc))
+        await asyncio.sleep(REORDER_SCAN_INTERVAL_MINUTES * 60)
+
 
 # ---------------------------------------------------------------------------
 # Global retriever instance (shared across requests)
@@ -95,11 +121,30 @@ async def lifespan(app: FastAPI):
     set_retriever(retriever)
     logger.info("rag_node_retriever_set")
 
+    # Phase 3: load the sales history and the quantity calibration once, at startup, so the first
+    # reorder question does not pay for a 365k-row CSV read.
+    try:
+        from .agents.nodes.quantity_node import load_calibration
+        from .agents.nodes.sales_node import _load_sales_df
+        _load_sales_df()
+        logger.info("quantity_calibration_loaded", present=load_calibration() is not None)
+    except Exception as e:  # never block startup on this; the nodes degrade and say so
+        logger.warning("phase3_preload_failed", error=str(e))
+
     logger.info("startup_complete", **init_result)
+
+    # Phase 3: the autonomous reorder scan runs on a timer with no request. 0 disables it.
+    scan_task = None
+    if REORDER_SCAN_INTERVAL_MINUTES > 0:
+        scan_task = asyncio.create_task(_scan_loop())
+        logger.info("reorder_scan_loop_started", every_minutes=REORDER_SCAN_INTERVAL_MINUTES,
+                    first_run_in_seconds=REORDER_SCAN_FIRST_DELAY_SECONDS)
 
     yield  # Application runs here
 
     # ── Shutdown ───────────────────────────────────────────────────────────
+    if scan_task:
+        scan_task.cancel()
     if app.state.redis:
         await app.state.redis.aclose()
     logger.info("shutdown")
@@ -254,3 +299,5 @@ async def search_products(request: SearchRequest):
     )
 
     return SearchResponse(**result, latency_ms=latency_ms)
+
+

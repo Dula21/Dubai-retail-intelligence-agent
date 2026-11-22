@@ -16,7 +16,8 @@ API schema with field-level descriptions is a signal of production thinking.
 
 from __future__ import annotations
 
-from typing import Optional
+from datetime import date
+from typing import Literal, Optional
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -82,6 +83,32 @@ class SeasonalityResponse(BaseModel):
     alert_level: str = "none"
 
 
+class OrderQuantityResponse(BaseModel):
+    """One deterministic order quantity from the quantity engine (never produced by the LLM)."""
+    sku_id: str
+    order_qty: Optional[int] = Field(None, description="Units to order; null = insufficient data (see flags)")
+    window_start: Optional[str] = None
+    window_end: Optional[str] = None
+    forecast_units: Optional[float] = Field(None, description="Forecast demand over the cover window")
+    safety_multiplier: Optional[float] = None
+    target_units: Optional[float] = Field(None, description="forecast x safety multiplier")
+    on_hand_snapshot: Optional[int] = None
+    snapshot_date: Optional[str] = None
+    snapshot_age_days: Optional[int] = None
+    projected_on_hand: Optional[float] = Field(None, description="Stock projected to the window start, no replenishment assumed")
+    open_orders: int = 0
+    coverage_estimate: Optional[float] = Field(
+        None, ge=0.0, le=1.0,
+        description="Share of past held-out backtest windows this kind of target covered. NOT a probability for this "
+                    "SKU. null = outside what the backtest validated")
+    coverage_basis: str = ""
+    indicative_only: bool = Field(
+        False, description="True = planning estimate for a window beyond what the backtest validated: do not order "
+                           "this now; it is recomputed on order_by_date")
+    order_by_date: Optional[str] = Field(None, description="Date the order should be placed (event route only)")
+    flags: list[str] = Field(default_factory=list)
+
+
 # ── Main response ──────────────────────────────────────────────────────────────
 
 class AgentQueryResponse(BaseModel):
@@ -92,7 +119,8 @@ class AgentQueryResponse(BaseModel):
     It is what makes the system explainable to a retailer asking
     "why did you tell me to reorder 200 units?"
 
-    confidence: data-coverage score (0.0–1.0), not a calibrated probability. Below 0.5 should be
+    confidence: data-coverage score (0.0–1.0), not a calibrated probability. With order quantities it is also
+    capped by their measured coverage, and at 0.4 when a quantity lies outside the validated horizon. Below 0.5 should be
     treated as indicative rather than definitive by the caller. On the event-planning route it
     never reaches 1.0 (SKUs are chosen from a synthetic lift table, not retrieved by similarity).
     """
@@ -117,6 +145,12 @@ class AgentQueryResponse(BaseModel):
     retrieved_products: list[RetrievedProductResponse] = Field(
         default_factory=list,
         description="Top product catalogue matches for this query",
+    )
+
+    # Phase 3: deterministic quantities (the recommendation text only explains these)
+    order_recommendations: list[OrderQuantityResponse] = Field(
+        default_factory=list,
+        description="Order quantity per candidate SKU, computed by the quantity engine with every input and caveat",
     )
 
     # Seasonality context
@@ -158,3 +192,27 @@ class FallbackResponse(BaseModel):
         "Try rephrasing your query with a specific product name, "
         "SKU number, or category (e.g. 'footwear', 'electronics')."
     )
+
+
+
+# ── Autonomous reorder scan (Phase 3) ──────────────────────────────────────────
+
+class ScanRequest(BaseModel):
+    """Run the autonomous reorder scan now. Both fields are optional."""
+    as_of: Optional[date] = Field(
+        default=None,
+        description="Scan as of this date (default today). A past date is a replay: the data ends at the last "
+                    "sales date, so use that date to see what the agent would have raised then.",
+    )
+    limit: Optional[int] = Field(
+        default=None, ge=1, le=500,
+        description="Most triggered SKUs to size with the quantity engine in this scan (default 40, most urgent first).",
+    )
+
+
+class DecisionRequest(BaseModel):
+    """A human decision on one recommendation. The system's own recommendation is kept as it was."""
+    decision: Literal["approve", "reject", "modify"]
+    actor: str = Field(min_length=1, max_length=80, description="Who is deciding (name or user id)")
+    reason: Optional[str] = Field(default=None, max_length=1000, description="Required for reject and modify")
+    quantity: Optional[int] = Field(default=None, ge=0, le=1_000_000, description="Required for modify: the quantity to order")

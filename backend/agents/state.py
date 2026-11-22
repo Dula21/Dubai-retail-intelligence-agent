@@ -67,3 +67,5 @@ class AgentState(TypedDict):
     fallback_triggered: bool
     error: Optional[str]
     node_timings_ms: NotRequired[dict]  # {node_name: milliseconds}, written by agents/timing.py
+    quantity_results: NotRequired[list]  # Phase 3: QuantityResult dicts from the quantity engine (agents/nodes/quantity_node.py)
+

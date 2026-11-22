@@ -1,0 +1,14 @@
+# Adds the Next.js frontend next to the existing stack. Use it as an override file:
+#   docker compose -f docker-compose.yml -f docker-compose.frontend.yml up -d --build
+# Then open http://localhost:3000
+services:
+  frontend:
+    build: ./frontend
+    container_name: retail_agent_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      BACKEND_URL: http://api:8000      # the compose service name of the FastAPI container
+    depends_on:
+      - api
+    restart: unless-stopped
